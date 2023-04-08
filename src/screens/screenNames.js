@@ -10,4 +10,5 @@ export const SCREEN_NAMES={
     FORGOT_PASSWORD: 'ForgotPassword',
     LOGIN_VERIFICATION: 'LoginVerification',
     FORGOT_VERIFICATION: 'ForgotVerification',
+    LIST_OF_GROUPS: 'ListOfGroups',
 }

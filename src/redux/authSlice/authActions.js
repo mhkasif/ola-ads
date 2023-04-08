@@ -18,11 +18,14 @@ export const loginAction =
         type: 'success',
         text1: 'Login Success',
         text2: 'Welcome to the app',
+        visibilityTime: 900,
       });
-      await sleep(2000)
+      await sleep(1000);
+
       dispatch(addAuth(response));
+
     } catch (error) {
-        console.log({error})
+      console.log({error});
       Toast.show({
         type: 'error',
         text1: 'Login Failed',

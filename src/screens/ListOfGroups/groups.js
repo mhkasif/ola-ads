@@ -1,0 +1,73 @@
+//randomly generate id, name, description, and members and image for groups
+export const LIST_OF_GROUPS = [
+  {
+    id: 1,
+    name: 'Group 1',
+    description: 'Group 1 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 2,
+    name: 'Group 2',
+    description: 'Group 2 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 3,
+    name: 'Group 3',
+    description: 'Group 3 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 4,
+    name: 'Group 4',
+    description: 'Group 4 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 5,
+    name: 'Group 5',
+    description: 'Group 5 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 6,
+    name: 'Group 6',
+    description: 'Group 6 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 7,
+    name: 'Group 7',
+    description: 'Group 7 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 8,
+    name: 'Group 8',
+    description: 'Group 8 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 9,
+    name: 'Group 9',
+    description: 'Group 9 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+  {
+    id: 10,
+    name: 'Group 10',
+    description: 'Group 10 description',
+    members: 5,
+    image: 'https://picsum.photos/200/300',
+  },
+];
