@@ -4,6 +4,13 @@ const config = {
   useSystemColorMode: false,
   initialColorMode: 'light',
 };
+const font = {
+  //use Montserrat
+  heading: 'Montserrat',
+  body: 'Montserrat',
+  mono: 'Montserrat',
+
+};
 const colors = {
   primary: {
     50: '#EEF2F6',
@@ -18,5 +25,5 @@ const colors = {
     900: '#111822',
   },
 };
-const theme = extendTheme({config, colors});
+const theme = extendTheme({config, colors, font});
 export default theme;

@@ -1,22 +1,27 @@
-import {Formik} from 'formik';
+import CustomButton from '@components/CustomButton/CustomButton';
+import CustomInput from '@components/CustomInput/CustomInput';
+import CustomText from '@components/CustomText/CustomText';
+import FacebookButton from '@components/FacebookButton/FacebookButton';
+import GoogleButton from '@components/GoogleButton/GoogleButton';
+import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '@utils/colors';
+import Logo from 'assets/logo.png';
+import { Formik } from 'formik';
 import {
   Box,
-  Button,
   Center,
-  FormControl,
+  Divider,
   HStack,
   Heading,
+  Image,
   Link,
+  StatusBar,
   VStack,
 } from 'native-base';
-import {Text, View} from 'react-native';
+import { connect } from 'react-redux';
+import { loginAction } from 'redux/authSlice/authActions';
 import * as Yup from 'yup';
-import CustomInput from '@components/CustomInput/CustomInput';
-import {sleep} from '../../utils/helpers';
-import {useNavigation} from '@react-navigation/native';
-import {SCREEN_NAMES} from '../screenNames';
-import {connect} from 'react-redux';
-import {loginAction} from 'redux/authSlice/authActions';
+import { SCREEN_NAMES } from '../screenNames';
 
 const formValidation = Yup.object().shape({
   email: Yup.string()
@@ -36,7 +41,7 @@ const LoginScreen = ({loginAction}) => {
     console.log({values});
     try {
       await loginAction(values);
-      navigate(SCREEN_NAMES.LIST_OF_GROUPS);
+      navigate(SCREEN_NAMES.MAIN);
 
       return;
     } catch (error) {
@@ -48,25 +53,62 @@ const LoginScreen = ({loginAction}) => {
       name: 'email',
       label: 'Email',
       type: 'email',
-      placeholder: 'Enter your email',
       validate: true,
+      inputProps: {
+        placeholder: 'Enter your email',
+        keyboardType: 'email-address',
+      },
     },
     {
       name: 'password',
       label: 'Password',
       type: 'password',
-      placeholder: 'Enter your password',
       validate: true,
+      inputProps: {
+        placeholder: 'Enter your password',
+        secureTextEntry: true,
+      },
     },
   ];
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleLogin}
-      validationSchema={formValidation}>
-      {({isSubmitting, handleSubmit}) => (
-        <Center w="100%">
-          <Box safeArea p="2" py="8" w="90%" maxW="290">
+    // <KeyboardAvoidingInputWrapper >
+    <Box
+      // bg="pink.500"
+      style={{
+        flex: 1,
+      }}>
+      <StatusBar />
+      <Box
+        bg={{
+          linearGradient: {
+            colors: ['#72439A', '#13C2EE'],
+            start: [0, 0],
+            end: [1, 1],
+            locations: [0.1747, 1.461],
+          },
+        }}
+        style={{
+          height: '28%',
+        }}>
+        <Center
+          style={{
+            paddingTop: '20%',
+          }}>
+          <Image source={Logo} alt="Logo" />
+        </Center>
+      </Box>
+      <Box
+        bg="white"
+        // bg="red.500"
+        // margin
+        borderTopRadius={30}
+        style={{
+          flex: 1,
+          marginTop: '-6%',
+          // height: '100%',
+        }}>
+        <Center bg="transparent" w="100%">
+          <Box bg="transparent" p="2" py="8" w="90%">
             <Heading
               size="lg"
               fontWeight="600"
@@ -86,74 +128,80 @@ const LoginScreen = ({loginAction}) => {
               size="xs">
               Sign in to continue!
             </Heading>
-
-            <VStack space={3} mt="5">
-              {fields.map(field => (
-                <CustomInput  {...field} key={field.name} />
-              ))}
+            <Formik
+              initialValues={initialValues}
+              onSubmit={handleLogin}
+              validationSchema={formValidation}>
+              {({isSubmitting, handleSubmit}) => (
+                <VStack space={3} mt="5">
+                  {fields.map(field => (
+                    <CustomInput {...field} key={field.name} />
+                  ))}
+                  <Link
+                    onPress={() => navigate(SCREEN_NAMES.FORGOT_PASSWORD)}
+                    _text={{
+                      fontSize: 'xs',
+                      fontWeight: '500',
+                      color: COLORS.primary,
+                      underline: false,
+                    }}
+                    // alignSelf="flex-end"
+                    mt="1">
+                    Forget Password?
+                  </Link>
+                  <CustomButton
+                    buttonProps={{
+                      // colorScheme: 'indigo',
+                      onPress: handleSubmit,
+                      isLoading: isSubmitting,
+                      isLoadingText: 'Logging...',
+                    }}>
+                    Login
+                  </CustomButton>
+                </VStack>
+              )}
+            </Formik>
+            <HStack mt="6" justifyContent="center">
+              <CustomText
+                fontSize="sm"
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}>
+                Don't you have an account?{' '}
+              </CustomText>
               <Link
                 _text={{
-                  fontSize: 'xs',
-                  fontWeight: '500',
-                  color: 'indigo.500',
+                  color: COLORS.primary,
+                  fontWeight: 'medium',
+                  fontSize: 'sm',
+                  underline: false,
                 }}
-                alignSelf="flex-end"
-                mt="1">
-                Forget Password?
+                onPress={() => navigate(SCREEN_NAMES.SIGNUP)}>
+                Sign Up
               </Link>
-              <Button
-                mt="2"
-                colorScheme="indigo"
-                onPress={handleSubmit}
-                isLoading={isSubmitting}
-                isLoadingText="Logging...">
-                Login
-              </Button>
-              <HStack mt="6" justifyContent="center">
-                <Text
-                  fontSize="sm"
-                  color="coolGray.600"
-                  _dark={{
-                    color: 'warmGray.200',
-                  }}>
-                  I'm a new user.{' '}
-                </Text>
-                <Link
-                  _text={{
-                    color: 'indigo.500',
-                    fontWeight: 'medium',
-                    fontSize: 'sm',
-                  }}
-                  href="#">
-                  Sign Up
-                </Link>
-              </HStack>
-            </VStack>
+            </HStack>
+            <Box
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              my={4}>
+              <Divider w="45%" borderColor="gray.300" />
+              <CustomText mx={3} color="gray.300">
+                OR
+              </CustomText>
+              <Divider w="45%" borderColor="gray.300" />
+            </Box>
+
+            <HStack space={3} justifyContent="center">
+              <FacebookButton w="45%" />
+              <GoogleButton w="45%" />
+            </HStack>
           </Box>
         </Center>
-      )}
-    </Formik>
-    // <Formik
-    //   onSubmit={handleSubmit}
-    //   initialValues={initialValues}
-    //   validationSchema={formValidation}>
-    //   {() => (
-    //     <Form>
-    //       <CustomInput
-    //         name="email"
-    //         label="Email"
-    //         placeholder="Enter E-mail address"
-    //         w="100%"
-    //       />
-    //       <CustomInput
-    //         w="100%"
-    //         name="password"
-    //         label="Password"
-    //         placeholder="Enter Password"
-    //       />
-    //     </Form>
-    //   )}
-    // </Formik>
+      </Box>
+    </Box>
+    // {/* </KeyboardAvoidingInputWrapper> */}
   );
 };
 const actions = {

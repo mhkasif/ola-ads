@@ -1,6 +1,6 @@
 import {generateRandomId, sleep} from '@utils/helpers';
 import Toast from 'react-native-toast-message';
-import {addAuth} from './authSlice';
+import {addAuth, removeAuth} from './authSlice';
 export const loginAction =
   ({email, password}) =>
   async dispatch => {
@@ -23,13 +23,21 @@ export const loginAction =
       await sleep(1000);
 
       dispatch(addAuth(response));
-
     } catch (error) {
       console.log({error});
       Toast.show({
         type: 'error',
-        text1: 'Login Failed',
+        text1: 'Logout Failed',
         text2: 'Please try again',
       });
     }
   };
+
+export const logoutAction = () => async dispatch => {
+  try {
+    await sleep(1000);
+    dispatch(removeAuth());
+  } catch (error) {
+    console.log({error});
+  }
+};

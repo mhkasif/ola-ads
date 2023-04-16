@@ -6,12 +6,16 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import theme from '../../theme';
 import {persistor, store} from 'redux/store';
-
+const config = {
+  dependencies: {
+    'linear-gradient': require('react-native-linear-gradient').default,
+  },
+};
 const AppContainer = props => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <NativeBaseProvider theme={theme}>
+        <NativeBaseProvider theme={theme} config={config}>
           <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
             {props.children}
           </PersistGate>

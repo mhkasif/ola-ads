@@ -1,11 +1,15 @@
+//tell it to use js as jsx
+
 {
   "compilerOptions": {
+    "target": "es6",
     "baseUrl": "src",
     "paths": {
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build", "**/node_modules/*"]
 }
