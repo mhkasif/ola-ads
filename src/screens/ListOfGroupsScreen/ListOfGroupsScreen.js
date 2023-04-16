@@ -2,9 +2,12 @@
 import {
   AspectRatio,
   Avatar,
+  Badge,
   Box,
   Center,
+  Container,
   FlatList,
+  Flex,
   HStack,
   Heading,
   Image,
@@ -24,6 +27,7 @@ import {Animated, Dimensions, useWindowDimensions} from 'react-native';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import {COLORS} from '@utils/colors';
+import CustomBadge from '@components/CustomBadge/CustomBadge';
 
 function ListOfGroups() {
   const [listData, setListData] = useState(LIST_OF_GROUPS);
@@ -85,7 +89,7 @@ function ListOfGroups() {
   );
 
   return (
-    <Box bg="white" flex="1">
+    <Box bg={COLORS.bg} flex="1" p={3}>
       <FlatList
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({x}) => <RenderItem key={x} />}
@@ -96,86 +100,72 @@ function ListOfGroups() {
 // export default ListOfGroups;
 
 const RenderItem = ({item, index}) => (
-  <Box alignItems="center">
-    <Box
-      maxW="80"
-      rounded="lg"
-      overflow="hidden"
-      borderColor="coolGray.200"
-      borderWidth="1"
-      _dark={{
-        borderColor: 'coolGray.600',
-        backgroundColor: 'gray.700',
-      }}
-      _web={{
-        shadow: 2,
-        borderWidth: 0,
-      }}
-      _light={{
-        backgroundColor: 'gray.50',
-      }}>
-      <Box>
-        <AspectRatio w="100%" ratio={16 / 9}>
-          <Image
-            source={{
-              uri: 'https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg',
-            }}
-            alt="image"
-          />
-        </AspectRatio>
-        <Center
-          bg="violet.500"
-          _dark={{
-            bg: 'violet.400',
-          }}
-          _text={{
-            color: 'warmGray.50',
-            fontWeight: '700',
-            fontSize: 'xs',
-          }}
-          position="absolute"
-          bottom="0"
-          px="3"
-          py="1.5">
-          PHOTOS
-        </Center>
-      </Box>
-      <Stack p="4" space={3}>
-        <Stack space={2}>
-          <Heading size="md" ml="-1">
-            The Garden City
-          </Heading>
-          <CustomText
-            fontSize="xs"
-            _light={{
-              color: 'violet.500',
-            }}
-            _dark={{
-              color: 'violet.400',
-            }}
-            fontWeight="500"
-            ml="-0.5"
-            mt="-1">
-            The Silicon Valley of India.
-          </CustomText>
-        </Stack>
-        <CustomText fontWeight="400">
-          Bengaluru (also called Bangalore) is the center of India's high-tech
-          industry. The city is also known for its parks and nightlife.
-        </CustomText>
-        <HStack alignItems="center" space={4} justifyContent="space-between">
-          <HStack alignItems="center">
-            <CustomText
-              color="coolGray.600"
-              _dark={{
-                color: 'warmGray.200',
+  <Box
+    p={2}
+    // maxW="80"
+    mt={3}
+    rounded="lg"
+    overflow="hidden"
+    borderColor="coolGray.200"
+    borderWidth="1"
+    _dark={{
+      borderColor: 'coolGray.600',
+      backgroundColor: 'gray.700',
+    }}
+    _light={{
+      backgroundColor: '#fff',
+    }}>
+    <Box space={1} flexDirection="row" alignItems="center">
+      <Image
+        rounded="lg"
+        h={135}
+        w={160}
+        source={{
+          uri: 'https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg',
+        }}
+        alt="image"
+      />
+      <Box paddingLeft={3} paddingRight={1} py={1} flex="1" space={3}>
+        <VStack space={2}>
+          <Box>
+            <Heading
+              color={COLORS.primaryDark}
+              fontWeight="medium"
+              size="sm"
+              letterSpacing="lg"
+              lineHeight="lg"
+              style={{
+                textTransform: 'capitalize',
               }}
-              fontWeight="400">
-              6 mins ago
-            </CustomText>
+              // ml="-1"
+            >
+              We are hiring lets join our team Now
+            </Heading>
+          </Box>
+          <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
+            {Array(6)
+              .fill('Group')
+              .map((x, i) => (
+                // <Box key={x + i}>
+                <CustomBadge my={1} key={x + i}>{`${x} ${i + 1}`}</CustomBadge>
+                // </Box>
+              ))}
           </HStack>
-        </HStack>
-      </Stack>
+          <CustomText
+            color="coolGray.400"
+            _dark={{
+              color: 'warmGray.200',
+            }}
+            style={{
+              fontSize: 10,
+            }}
+            letterSpacing="lg"
+            // fontWeight="400"
+          >
+            Posted On: 13/May/2023 12:45 PM
+          </CustomText>
+        </VStack>
+      </Box>
     </Box>
   </Box>
 );
@@ -234,19 +224,9 @@ function Example() {
     return (
       <Box flexDirection="row">
         {props.navigationState.routes.map((route, i) => {
-          const opacity = props.position.interpolate({
-            inputRange,
-            outputRange: inputRange.map(inputIndex =>
-              inputIndex === i ? 1 : 0.5,
-            ),
-          });
-          const color =
-            index === i
-              ? useColorModeValue('#000', '#e5e5e5')
-              : useColorModeValue('#1f2937', '#a1a1aa');
           const borderColor =
             index === i
-              ? 'cyan.500'
+              ? COLORS.primary
               : useColorModeValue('coolGray.200', 'gray.400');
           return (
             <Box
@@ -254,21 +234,19 @@ function Example() {
               borderColor={borderColor}
               flex={1}
               alignItems="center"
-              p="3"
+              p={3}
               key={route.title}
               bg="transparent"
+              onPress={() => {
+                console.log(i, 'sadsa');
+                setIndex(i);
+              }}
               cursor="pointer">
               {/* <Pressable
                 >
 
               </Pressable> */}
-              <CustomButton
-                key={route.title}
-                secondary={index !== i}
-                onPress={() => {
-                  console.log(i);
-                  setIndex(i);
-                }}>
+              <CustomButton px={2} key={route.title} secondary={index !== i}>
                 {route.title}
               </CustomButton>
             </Box>

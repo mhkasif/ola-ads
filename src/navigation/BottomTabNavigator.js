@@ -1,14 +1,14 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
   useNavigation,
 } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ListOfGroups from 'screens/ListOfGroupsScreen/ListOfGroupsScreen';
 import UserProfile from 'screens/UserProfileScreen/UserProfileScreen';
-import { SCREEN_NAMES } from 'screens/screenNames';
+import {SCREEN_NAMES} from 'screens/screenNames';
 
 const renderIcon = ({route, color, size}) => {
   let iconName;
@@ -68,7 +68,7 @@ const BottomTabNavigator = ({route}) => {
 
           tabBarItemStyle: {
             marginHorizontal: 20,
-            borderTopWidth: focusedRoute === route.name ? 2 : 0,
+            borderTopWidth: (focusedRoute || 'Home') === route.name ? 2 : 0,
             borderColor: '#0C0F3D',
           },
           tabBarIcon: props => renderIcon({route, ...props}),

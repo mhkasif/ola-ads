@@ -3,4 +3,5 @@ export const COLORS = {
   primary: '#0C0F3D',
   secondary: '#F2F2F2',
   bg: '#F5F7FB',
+  white: '#FFFFFF',
 };

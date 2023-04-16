@@ -14,5 +14,5 @@ export const SCREEN_NAMES = {
   FORGOT_PASSWORD: 'ForgotPassword',
   LOGIN_VERIFICATION: 'LoginVerification',
   FORGOT_VERIFICATION: 'ForgotVerification',
-  POSTS: 'POSTS',
+  POSTS: 'Posts',
 };

@@ -32,8 +32,8 @@ const formValidation = Yup.object().shape({
     .required('Password is required'),
 });
 const initialValues = {
-  email: '',
-  password: '',
+  email: 'haseeb@gmail.com',
+  password: '324565trewf',
 };
 const LoginScreen = ({loginAction}) => {
   const {navigate} = useNavigation();
