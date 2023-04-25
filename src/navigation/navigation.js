@@ -13,25 +13,19 @@ const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      >
       <Stack.Screen
         name={SCREEN_NAMES.SPLASH}
         component={SplashScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false,
+
+        }}
       />
       <Stack.Screen
         name={SCREEN_NAMES.CHANGE_PASSWORD}
         component={ChangePasswordScreen}
-        options={{
-          headerTitleAlign: 'center',
-          headerStyle: {
-            height: 100,
-            backgroundColor: 'transparent',
-          },
-          headerBackground: HeaderBackground,
 
-          headerTintColor: '#fff',
-        }}
       />
 
       <Stack.Screen

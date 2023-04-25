@@ -29,6 +29,7 @@ import {SCREEN_NAMES} from 'screens/screenNames';
 import * as Yup from 'yup';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const fields = [
   {name: 'userName', label: 'Username', validate: true},
@@ -182,21 +183,33 @@ const Card = ({name, icon, bg, onPress = null}) => (
     </Pressable>
   </Box>
 );
-const ImageActionSheet = ({isOpen, onClose}) => (
-  <Actionsheet isOpen={isOpen} onClose={onClose}>
-    <Actionsheet.Content>
-      {/* <Box w="100%" h={60} px={4} justifyContent="center">
+const ImageActionSheet = ({isOpen, onClose}) => {
+  const handleLibraryOpen = async () => {
+    try {
+      const x=await launchImageLibrary();
+      console.log(x)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return (
+    <Actionsheet isOpen={isOpen} onClose={onClose}>
+      <Actionsheet.Content>
+        {/* <Box w="100%" h={60} px={4} justifyContent="center">
     <CustomText fontSize="16" color="gray.500" _dark={{
     color: "gray.300"
   }}>
       Albums
     </CustomText>
   </Box> */}
-      <Actionsheet.Item>Choose From Library</Actionsheet.Item>
-      <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
-    </Actionsheet.Content>
-  </Actionsheet>
-);
+        <Actionsheet.Item onPress={handleLibraryOpen}>
+          Choose From Library
+        </Actionsheet.Item>
+        <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
+      </Actionsheet.Content>
+    </Actionsheet>
+  );
+};
 const mapStateToProps = state => ({
   user: state.auth?.user,
 });
