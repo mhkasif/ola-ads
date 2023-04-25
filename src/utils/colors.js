@@ -5,5 +5,5 @@ export const COLORS = {
   bg: '#F5F7FB',
   white: '#FFFFFF',
   danger: '#EB4335',
-  muted: '#9EA0A5',
+  muted: '#525f7fb3',
 };

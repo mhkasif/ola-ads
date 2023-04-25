@@ -1,32 +1,24 @@
-import CustomButton from '@components/CustomButton/CustomButton';
-import CustomInput from '@components/CustomInput/CustomInput';
-import {sleep} from '@utils/helpers';
-import {Formik} from 'formik';
-import {Box, Center, Flex, HStack, Heading, Image, VStack} from 'native-base';
-import React from 'react';
-import * as Yup from 'yup';
-import User from 'assets/profileIcons/user.png';
-import Password from 'assets/profileIcons/password.png';
-import Plan from 'assets/profileIcons/plan.png';
-import Phone from 'assets/profileIcons/phone.png';
-import Terms from 'assets/profileIcons/terms.png';
-import Logout from 'assets/profileIcons/logout.png';
 import CustomText from '@components/CustomText/CustomText';
+import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
+import {sleep} from '@utils/helpers';
+import Logout from 'assets/profileIcons/logout.png';
+import Password from 'assets/profileIcons/password.png';
+import Phone from 'assets/profileIcons/phone.png';
+import Plan from 'assets/profileIcons/plan.png';
+import Terms from 'assets/profileIcons/terms.png';
+import User from 'assets/profileIcons/user.png';
+import {Box, Center, Flex, Heading, Image, Pressable} from 'native-base';
+import React from 'react';
 import {connect} from 'react-redux';
+import {SCREEN_NAMES} from 'screens/screenNames';
+import * as Yup from 'yup';
+
 const fields = [
   {name: 'userName', label: 'Username', validate: true},
   {name: 'fullName', label: 'Full Name', validate: true},
   {name: 'email', label: 'Email', validate: true, type: 'email'},
   {name: 'phoneNumber', label: 'Phone Number', validate: true, type: 'number'},
-];
-const cards = [
-  {name: 'Activate / Deactivate', icon: User},
-  {name: 'Change Password', icon: Password},
-  {name: 'Choose Your Plan', icon: Plan},
-  {name: 'Contact Us', icon: Phone},
-  {name: 'Terms & Conditions', icon: Terms},
-  {name: 'Logout', icon: Logout, bg: COLORS.danger},
 ];
 const initialValues = fields.reduce((acc, field) => {
   acc[field.name] = '';
@@ -41,7 +33,20 @@ const formValidation = Yup.object().shape({
   ),
 });
 const UserProfile = ({user}) => {
-  console.log({user});
+  const {navigate} = useNavigation();
+
+  const cards = [
+    {name: 'Activate / Deactivate', icon: User},
+    {
+      name: 'Change Password',
+      icon: Password,
+      onPress: () => navigate(SCREEN_NAMES.CHANGE_PASSWORD),
+    },
+    {name: 'Choose Your Plan', icon: Plan},
+    {name: 'Contact Us', icon: Phone},
+    {name: 'Terms & Conditions', icon: Terms},
+    {name: 'Logout', icon: Logout, bg: COLORS.danger},
+  ];
   const submitProfile = async () => {
     await sleep(1000);
     return;
@@ -74,8 +79,8 @@ const UserProfile = ({user}) => {
           flexWrap="wrap"
           width="95%"
           my={4}>
-          {cards.map((card, index) => (
-            <Card key={index} name={card.name} icon={card.icon} bg={card.bg} />
+          {cards.map(card => (
+            <Card key={card.name} {...card} />
           ))}
         </Flex>
         {/* </Box> */}
@@ -84,7 +89,7 @@ const UserProfile = ({user}) => {
   );
 };
 
-const Card = ({name, icon, bg}) => (
+const Card = ({name, icon, bg, onPress = null}) => (
   <Box
     shadow={1}
     bg={bg || COLORS.white}
@@ -96,8 +101,10 @@ const Card = ({name, icon, bg}) => (
     py={2}
     m={2}
     h={84}>
-    <Image source={icon} alt={name} />
-    <CustomText color={bg ? COLORS.white : COLORS.primary}>{name}</CustomText>
+    <Pressable onPress={onPress}>
+      <Image source={icon} alt={name} />
+      <CustomText color={bg ? COLORS.white : COLORS.primary}>{name}</CustomText>
+    </Pressable>
   </Box>
 );
 

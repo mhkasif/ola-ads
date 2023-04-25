@@ -38,7 +38,9 @@ const CustomButton = ({
           backgroundColor: 'transparent',
         }}
         {...buttonProps}>
-        <CustomText color={secondary ? 'gray.900' : '#fff'} fontSize="md" {...textProps}>
+        <CustomText color={secondary ? 'gray.900' : '#fff'} fontSize="md" {...textProps}
+
+        >
           {children}
         </CustomText>
       </Button>

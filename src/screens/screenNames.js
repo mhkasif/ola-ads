@@ -1,7 +1,7 @@
 export const SCREEN_NAMES = {
   SPLASH: 'Splash',
   AUTH: 'AUTH',
-  CREATE_POST: 'CreatePost',
+  CREATE_POST: 'Create Post',
   HOME: 'Home',
   LOGIN: 'Login',
   SIGNUP: 'Signup',
@@ -12,7 +12,8 @@ export const SCREEN_NAMES = {
   ABOUT: 'About',
   CONTACT: 'Contact',
   FORGOT_PASSWORD: 'ForgotPassword',
-  LOGIN_VERIFICATION: 'LoginVerification',
-  FORGOT_VERIFICATION: 'ForgotVerification',
+  LOGIN_VERIFICATION: 'Login Verification',
+  FORGOT_VERIFICATION: 'Forgot Verification',
   POSTS: 'Posts',
+  CHANGE_PASSWORD: 'Change Password',
 };
