@@ -1,3 +1,4 @@
+import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
@@ -8,9 +9,19 @@ import Phone from 'assets/profileIcons/phone.png';
 import Plan from 'assets/profileIcons/plan.png';
 import Terms from 'assets/profileIcons/terms.png';
 import User from 'assets/profileIcons/user.png';
-import {Box, Center, Flex, Heading, Image, Pressable} from 'native-base';
-import React from 'react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Modal,
+  Pressable,
+} from 'native-base';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import {logoutAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 import * as Yup from 'yup';
 
@@ -32,7 +43,14 @@ const formValidation = Yup.object().shape({
     'Phone number is required.',
   ),
 });
-const UserProfile = ({user}) => {
+const UserProfile = ({user, logoutAction}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
+  const openModal = () => {
+    setIsOpen(true);
+  };
   const {navigate} = useNavigation();
 
   const cards = [
@@ -45,15 +63,19 @@ const UserProfile = ({user}) => {
     {name: 'Choose Your Plan', icon: Plan},
     {name: 'Contact Us', icon: Phone},
     {name: 'Terms & Conditions', icon: Terms},
-    {name: 'Logout', icon: Logout, bg: COLORS.danger},
+    {name: 'Logout', icon: Logout, bg: COLORS.danger, onPress: openModal},
   ];
-  const submitProfile = async () => {
-    await sleep(1000);
-    return;
+  const handleLogout = async () => {
+    logoutAction();
+    navigate(SCREEN_NAMES.LOGIN);
   };
-
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
+      <LogoutModal
+        isOpen={isOpen}
+        onClose={onClose}
+        handleLogout={handleLogout}
+      />
       <Center mt={10}>
         <Image
           bg="yellow.500"
@@ -107,8 +129,48 @@ const Card = ({name, icon, bg, onPress = null}) => (
     </Pressable>
   </Box>
 );
-
+const LogoutModal = ({onClose, isOpen, handleLogout}) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="md">
+      <Modal.Content>
+        <Modal.CloseButton />
+        <Modal.Header>Logout</Modal.Header>
+        <Modal.Body>
+          <CustomText color={COLORS.muted}>
+            Are you sure you want to logout?
+          </CustomText>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <CustomButton
+              textProps={{color: COLORS.primary}}
+              noGradient
+              buttonProps={{
+                variant: 'ghost',
+                // colorScheme: 'blueGray',
+                onPress: onClose,
+              }}>
+              Cancel
+            </CustomButton>
+            <CustomButton
+              buttonProps={{
+                bg: COLORS.danger,
+                onPress: handleLogout,
+              }}
+              noGradient
+              onPress={onClose}>
+              Yes
+            </CustomButton>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+};
 const mapStateToProps = state => ({
   user: state.auth?.user,
 });
-export default connect(mapStateToProps)(UserProfile);
+const actions = {
+  logoutAction,
+};
+export default connect(mapStateToProps, actions)(UserProfile);

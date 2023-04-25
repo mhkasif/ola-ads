@@ -7,26 +7,17 @@ import AuthStackNavigator from './AuthStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import LinearGradient from 'react-native-linear-gradient';
-const HeaderBackground = () => (
-  <LinearGradient
-  colors={['#72439A', '#13C2EE']}
-  start={{x: 0, y: 0}}
-  end={{x: 1, y: 0}}
-  style={{flex: 1}}
-/>
-);
+import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
+
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator
-      >
+    <Stack.Navigator>
       <Stack.Screen
         name={SCREEN_NAMES.SPLASH}
         component={SplashScreen}
-        options={{headerShown: false,
-
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name={SCREEN_NAMES.CHANGE_PASSWORD}
@@ -37,16 +28,9 @@ const RootNavigator = () => {
             height: 100,
             backgroundColor: 'transparent',
           },
-          headerBackground: () => (
-            <LinearGradient
-              colors={['#72439A', '#13C2EE']}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={{flex: 1}}
-            />
-          ),
-          headerTintColor: '#fff',
+          headerBackground: HeaderBackground,
 
+          headerTintColor: '#fff',
         }}
       />
 

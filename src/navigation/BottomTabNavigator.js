@@ -1,3 +1,4 @@
+import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
@@ -56,14 +57,7 @@ const BottomTabNavigator = ({route}) => {
             height: 100,
             backgroundColor: 'transparent',
           },
-          headerBackground: () => (
-            <LinearGradient
-              colors={['#72439A', '#13C2EE']}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={{flex: 1}}
-            />
-          ),
+          headerBackground:HeaderBackground,
           headerTintColor: '#fff',
 
           tabBarItemStyle: {

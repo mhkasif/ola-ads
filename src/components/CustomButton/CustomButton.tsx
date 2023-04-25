@@ -2,21 +2,39 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import {Box, Button, IButtonProps, IBoxProps} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomText, { ICustomTextProps } from '@components/CustomText/CustomText';
+import CustomText, {ICustomTextProps} from '@components/CustomText/CustomText';
 //create interface
 interface ICustomButtonProps extends IBoxProps {
   buttonProps?: IButtonProps;
   secondary?: boolean;
-textProps?: ICustomTextProps;
+  noGradient?: boolean;
+  textProps?: ICustomTextProps;
 }
 const CustomButton = ({
   buttonProps,
   children,
   secondary,
   textProps,
+  noGradient = false,
   ...props
 }: ICustomButtonProps) => {
-  return (
+  return noGradient ? (
+    <Button
+      _loading={{
+        _text: {
+          fontSize: 'md',
+          color: secondary ? 'gray.900' : '#fff',
+        },
+      }}
+      {...buttonProps}>
+      <CustomText
+        color={secondary ? 'gray.900' : '#fff'}
+        fontSize="md"
+        {...textProps}>
+        {children}
+      </CustomText>
+    </Button>
+  ) : (
     <Box
       overflow="hidden"
       borderRadius={4}
@@ -37,10 +55,17 @@ const CustomButton = ({
         style={{
           backgroundColor: 'transparent',
         }}
+        _loading={{
+          _text: {
+            fontSize: 'md',
+            color: secondary ? 'gray.900' : '#fff',
+          },
+        }}
         {...buttonProps}>
-        <CustomText color={secondary ? 'gray.900' : '#fff'} fontSize="md" {...textProps}
-
-        >
+        <CustomText
+          color={secondary ? 'gray.900' : '#fff'}
+          fontSize="md"
+          {...textProps}>
           {children}
         </CustomText>
       </Button>
