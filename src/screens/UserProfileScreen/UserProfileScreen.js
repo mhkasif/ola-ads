@@ -35,6 +35,10 @@ const initialValues = fields.reduce((acc, field) => {
   acc[field.name] = '';
   return acc;
 }, {});
+const MODAL_NAMES = {
+  LOGOUT: 'LOGOUT',
+  DEACTIVATE: 'DEACTIVATE',
+};
 const formValidation = Yup.object().shape({
   userName: Yup.string().required('Username is required.'),
   email: Yup.string().email('Email is invalid').required('Email is required.'),
@@ -44,17 +48,21 @@ const formValidation = Yup.object().shape({
   ),
 });
 const UserProfile = ({user, logoutAction}) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState('');
   const onClose = () => {
-    setIsOpen(false);
+    setModalOpen('');
   };
-  const openModal = () => {
-    setIsOpen(true);
+  const openModal = name => () => {
+    setModalOpen(name);
   };
   const {navigate} = useNavigation();
 
   const cards = [
-    {name: 'Activate / Deactivate', icon: User},
+    {
+      name: 'Deactivate Account',
+      icon: User,
+      onPress: openModal(MODAL_NAMES.DEACTIVATE),
+    },
     {
       name: 'Change Password',
       icon: Password,
@@ -63,7 +71,12 @@ const UserProfile = ({user, logoutAction}) => {
     {name: 'Choose Your Plan', icon: Plan},
     {name: 'Contact Us', icon: Phone},
     {name: 'Terms & Conditions', icon: Terms},
-    {name: 'Logout', icon: Logout, bg: COLORS.danger, onPress: openModal},
+    {
+      name: 'Logout',
+      icon: Logout,
+      bg: COLORS.danger,
+      onPress: openModal(MODAL_NAMES.LOGOUT),
+    },
   ];
   const handleLogout = async () => {
     logoutAction();
@@ -72,9 +85,14 @@ const UserProfile = ({user, logoutAction}) => {
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
       <LogoutModal
-        isOpen={isOpen}
+        isOpen={modalOpen === MODAL_NAMES.LOGOUT}
         onClose={onClose}
         handleLogout={handleLogout}
+      />
+      <DeactivateModal
+        isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
+        onClose={onClose}
+        handleDeactivate={handleLogout}
       />
       <Center mt={10}>
         <Image
@@ -156,6 +174,45 @@ const LogoutModal = ({onClose, isOpen, handleLogout}) => {
               buttonProps={{
                 bg: COLORS.danger,
                 onPress: handleLogout,
+              }}
+              noGradient
+              onPress={onClose}>
+              Yes
+            </CustomButton>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+};
+
+const DeactivateModal = ({onClose, isOpen, handleDeactivate}) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="md">
+      <Modal.Content>
+        <Modal.CloseButton />
+        <Modal.Header>Deactivate Account</Modal.Header>
+        <Modal.Body>
+          <CustomText color={COLORS.muted}>
+            Are you sure you want to Deactivate account?
+          </CustomText>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <CustomButton
+              textProps={{color: COLORS.primary}}
+              noGradient
+              buttonProps={{
+                variant: 'ghost',
+                // colorScheme: 'blueGray',
+                onPress: onClose,
+              }}>
+              Cancel
+            </CustomButton>
+            <CustomButton
+              buttonProps={{
+                bg: COLORS.danger,
+                onPress: handleDeactivate,
               }}
               noGradient
               onPress={onClose}>

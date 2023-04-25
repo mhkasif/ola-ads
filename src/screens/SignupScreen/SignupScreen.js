@@ -151,7 +151,7 @@ const SignupScreen = ({loginAction}) => {
                       isLoading: isSubmitting,
                       isLoadingText: 'Creating...',
                     }}>
-                    Creating Account
+                    Create Account
                   </CustomButton>
                 </VStack>
               )}
