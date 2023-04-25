@@ -10,11 +10,14 @@ import Plan from 'assets/profileIcons/plan.png';
 import Terms from 'assets/profileIcons/terms.png';
 import User from 'assets/profileIcons/user.png';
 import {
+  Actionsheet,
+  Avatar,
   Box,
   Button,
   Center,
   Flex,
   Heading,
+  Icon,
   Image,
   Modal,
   Pressable,
@@ -24,6 +27,8 @@ import {connect} from 'react-redux';
 import {logoutAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 import * as Yup from 'yup';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 
 const fields = [
   {name: 'userName', label: 'Username', validate: true},
@@ -38,6 +43,7 @@ const initialValues = fields.reduce((acc, field) => {
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
+  IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
 };
 const formValidation = Yup.object().shape({
   userName: Yup.string().required('Username is required.'),
@@ -84,27 +90,56 @@ const UserProfile = ({user, logoutAction}) => {
   };
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
-      <LogoutModal
+      <ConfirmationModal
+        title="Logout"
+        body="Are you sure you want to logout?"
         isOpen={modalOpen === MODAL_NAMES.LOGOUT}
         onClose={onClose}
-        handleLogout={handleLogout}
+        handleAction={handleLogout}
       />
-      <DeactivateModal
+      <ConfirmationModal
+        title="Deactivate Account"
+        body="Are you sure you want to deactivate your account?"
         isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
         onClose={onClose}
-        handleDeactivate={handleLogout}
+        handleAction={handleLogout}
+      />
+      <ImageActionSheet
+        isOpen={modalOpen === MODAL_NAMES.IMAGE_ACTION_SHEET}
+        onClose={onClose}
       />
       <Center mt={10}>
-        <Image
+        {/* <Image
           bg="yellow.500"
           size={150}
           borderRadius={100}
-          source={{
-            uri: 'https://wallpaperaccess.com/full/317501.jpg',
-          }}
+          source={}
           alt="Alternate Text"
           mb={3}
-        />
+        /> */}
+        <Pressable onPress={openModal(MODAL_NAMES.IMAGE_ACTION_SHEET)}>
+          <Avatar
+            size="2xl"
+            source={{
+              uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            }}
+            borderColor={COLORS.primary}
+            // borderWidth={2}
+            alt="Profile Picture"
+            mb={3}>
+            <Avatar.Badge
+              flex={1}
+              justifyContent="center"
+              alignItems="center"
+              bg={COLORS.primary}>
+              <Icon
+                size={4}
+                as={<MaterialIcon name="edit" />}
+                color={COLORS.white}
+              />
+            </Avatar.Badge>
+          </Avatar>
+        </Pressable>
         <Heading color={COLORS.primary} letterSpacing="xl">
           {user.name}
         </Heading>
@@ -133,7 +168,7 @@ const Card = ({name, icon, bg, onPress = null}) => (
   <Box
     shadow={1}
     bg={bg || COLORS.white}
-    justifyContent="space-around"
+    justifyContent="space-evenly"
     borderRadius={4}
     w="45%"
     // maxW="42%"
@@ -142,88 +177,26 @@ const Card = ({name, icon, bg, onPress = null}) => (
     m={2}
     h={84}>
     <Pressable onPress={onPress}>
-      <Image source={icon} alt={name} />
+      <Image source={icon} alt={name} my={2} />
       <CustomText color={bg ? COLORS.white : COLORS.primary}>{name}</CustomText>
     </Pressable>
   </Box>
 );
-const LogoutModal = ({onClose, isOpen, handleLogout}) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <Modal.Content>
-        <Modal.CloseButton />
-        <Modal.Header>Logout</Modal.Header>
-        <Modal.Body>
-          <CustomText color={COLORS.muted}>
-            Are you sure you want to logout?
-          </CustomText>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button.Group space={2}>
-            <CustomButton
-              textProps={{color: COLORS.primary}}
-              noGradient
-              buttonProps={{
-                variant: 'ghost',
-                // colorScheme: 'blueGray',
-                onPress: onClose,
-              }}>
-              Cancel
-            </CustomButton>
-            <CustomButton
-              buttonProps={{
-                bg: COLORS.danger,
-                onPress: handleLogout,
-              }}
-              noGradient
-              onPress={onClose}>
-              Yes
-            </CustomButton>
-          </Button.Group>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
-  );
-};
-
-const DeactivateModal = ({onClose, isOpen, handleDeactivate}) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <Modal.Content>
-        <Modal.CloseButton />
-        <Modal.Header>Deactivate Account</Modal.Header>
-        <Modal.Body>
-          <CustomText color={COLORS.muted}>
-            Are you sure you want to Deactivate account?
-          </CustomText>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button.Group space={2}>
-            <CustomButton
-              textProps={{color: COLORS.primary}}
-              noGradient
-              buttonProps={{
-                variant: 'ghost',
-                // colorScheme: 'blueGray',
-                onPress: onClose,
-              }}>
-              Cancel
-            </CustomButton>
-            <CustomButton
-              buttonProps={{
-                bg: COLORS.danger,
-                onPress: handleDeactivate,
-              }}
-              noGradient
-              onPress={onClose}>
-              Yes
-            </CustomButton>
-          </Button.Group>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
-  );
-};
+const ImageActionSheet = ({isOpen, onClose}) => (
+  <Actionsheet isOpen={isOpen} onClose={onClose}>
+    <Actionsheet.Content>
+      {/* <Box w="100%" h={60} px={4} justifyContent="center">
+    <CustomText fontSize="16" color="gray.500" _dark={{
+    color: "gray.300"
+  }}>
+      Albums
+    </CustomText>
+  </Box> */}
+      <Actionsheet.Item>Choose From Library</Actionsheet.Item>
+      <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
+    </Actionsheet.Content>
+  </Actionsheet>
+);
 const mapStateToProps = state => ({
   user: state.auth?.user,
 });

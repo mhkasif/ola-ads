@@ -160,8 +160,7 @@ const RenderItem = ({item, index}) => (
               fontSize: 10,
             }}
             letterSpacing="lg"
-            fontWeight="bold"
-          >
+            fontWeight="bold">
             Posted On: 13/May/2023 12:45 PM
           </CustomText>
         </VStack>
@@ -237,25 +236,23 @@ function Example() {
               p={2}
               key={route.title}
               bg="transparent"
-              onPress={() => {
-                console.log(i, 'sadsa');
-                setIndex(i);
-              }}
               cursor="pointer">
-              {/* <Pressable
-                >
-
-              </Pressable> */}
               <CustomButton
                 px={2}
                 textProps={{
                   fontWeight: 'bold',
                   letterSpacing: 'lg',
                 }}
+                buttonProps={{
+                  onPress: () => {
+                    setIndex(i);
+                  },
+                }}
                 key={route.title}
                 secondary={index !== i}>
                 {route.title}
               </CustomButton>
+              {/* </Pressable> */}
             </Box>
           );
         })}

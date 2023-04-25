@@ -11,7 +11,7 @@ export const SCREEN_NAMES = {
   SETTINGS: 'Settings',
   ABOUT: 'About',
   CONTACT: 'Contact',
-  FORGOT_PASSWORD: 'ForgotPassword',
+  FORGOT_PASSWORD: 'Forgot Password',
   LOGIN_VERIFICATION: 'Login Verification',
   FORGOT_VERIFICATION: 'Forgot Verification',
   POSTS: 'Posts',
