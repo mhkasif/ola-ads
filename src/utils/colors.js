@@ -4,4 +4,6 @@ export const COLORS = {
   secondary: '#F2F2F2',
   bg: '#F5F7FB',
   white: '#FFFFFF',
+  danger: '#EB4335',
+  muted: '#9EA0A5',
 };

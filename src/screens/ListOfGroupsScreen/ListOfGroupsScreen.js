@@ -125,8 +125,8 @@ const RenderItem = ({item, index}) => (
         }}
         alt="image"
       />
-      <Box paddingLeft={3} paddingRight={1} py={1} flex="1" space={3}>
-        <VStack space={2}>
+      <Box paddingLeft={3} paddingRight={1} py={1} flex="1">
+        <VStack space={1}>
           <Box>
             <Heading
               color={COLORS.primaryDark}
@@ -160,7 +160,7 @@ const RenderItem = ({item, index}) => (
               fontSize: 10,
             }}
             letterSpacing="lg"
-            // fontWeight="400"
+            fontWeight="bold"
           >
             Posted On: 13/May/2023 12:45 PM
           </CustomText>
@@ -220,7 +220,7 @@ function Example() {
   ]);
 
   const renderTabBar = props => {
-    const inputRange = props.navigationState.routes.map((x, i) => i);
+    // const inputRange = props.navigationState.routes.map((x, i) => i);
     return (
       <Box flexDirection="row">
         {props.navigationState.routes.map((route, i) => {
@@ -234,7 +234,7 @@ function Example() {
               borderColor={borderColor}
               flex={1}
               alignItems="center"
-              p={3}
+              p={2}
               key={route.title}
               bg="transparent"
               onPress={() => {
@@ -246,7 +246,14 @@ function Example() {
                 >
 
               </Pressable> */}
-              <CustomButton px={2} key={route.title} secondary={index !== i}>
+              <CustomButton
+                px={2}
+                textProps={{
+                  fontWeight: 'bold',
+                  letterSpacing: 'lg',
+                }}
+                key={route.title}
+                secondary={index !== i}>
                 {route.title}
               </CustomButton>
             </Box>

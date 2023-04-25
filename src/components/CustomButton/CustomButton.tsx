@@ -2,16 +2,18 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import {Box, Button, IButtonProps, IBoxProps} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomText from '@components/CustomText/CustomText';
+import CustomText, { ICustomTextProps } from '@components/CustomText/CustomText';
 //create interface
 interface ICustomButtonProps extends IBoxProps {
   buttonProps?: IButtonProps;
   secondary?: boolean;
+textProps?: ICustomTextProps;
 }
 const CustomButton = ({
   buttonProps,
   children,
   secondary,
+  textProps,
   ...props
 }: ICustomButtonProps) => {
   return (
@@ -36,7 +38,7 @@ const CustomButton = ({
           backgroundColor: 'transparent',
         }}
         {...buttonProps}>
-        <CustomText color={secondary ? 'gray.900' : '#fff'} fontSize="md">
+        <CustomText color={secondary ? 'gray.900' : '#fff'} fontSize="md" {...textProps}>
           {children}
         </CustomText>
       </Button>
