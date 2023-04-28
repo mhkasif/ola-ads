@@ -14,6 +14,7 @@ const GoogleButton = props => {
       flexDirection="row"
       alignItems="center"
       justifyContent="center"
+      _pressed={{bg: '#fff', transform: [{translateY: 1}]}}
       //   px={4}
       //   py={2}
       shadow={2}

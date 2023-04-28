@@ -3,12 +3,14 @@ import {useField, useFormikContext} from 'formik';
 import {
   FormControl,
   IInputProps,
+  ITextAreaProps,
   Icon,
   Input,
   Pressable,
+  TextArea,
   WarningOutlineIcon,
 } from 'native-base';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 
 interface CustomInputProps {
   name: string;
@@ -24,7 +26,6 @@ const CustomInput: React.FC<CustomInputProps> = ({
   inputProps = {},
   ...rest
 }: CustomInputProps) => {
-  const [show, setShow] = React.useState(false);
   const {setFieldValue, setFieldTouched} = useFormikContext();
   const handleChange = (text: string) => {
     setFieldValue(name, text);
@@ -50,10 +51,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <FormControl isInvalid={configInputField.invalid} {...rest}>
       <FormControl.Label>{label}</FormControl.Label>
-      {type !== 'password' ? (
-        <Input {...configInputField} />
-      ) : (
+      {type === 'password' ? (
         <PasswordInput {...configInputField} />
+      ) : type === 'textarea' ? (
+        <TextAreaInput {...configInputField} />
+      ) : (
+        <Input {...configInputField} />
       )}
       <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
         {configInputField.helperText}
@@ -68,12 +71,12 @@ const PasswordInput: React.FC<CustomInputProps> = ({
   const [show, setShow] = React.useState(false);
   return (
     <Input
-    {...props}
+      {...props}
       type={show ? 'text' : 'password'}
       InputRightElement={
         <Pressable onPress={() => setShow(!show)}>
           <Icon
-            as={<MaterialIcons name={show ? 'visibility' : 'visibility-off'} />}
+            as={<MaterialIcon name={show ? 'visibility' : 'visibility-off'} />}
             size={5}
             mr="2"
             color="muted.400"
@@ -84,4 +87,7 @@ const PasswordInput: React.FC<CustomInputProps> = ({
   );
 };
 
+const TextAreaInput = (props:any) => {
+  return <TextArea {...props} />;
+};
 export default CustomInput;

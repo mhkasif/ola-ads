@@ -20,13 +20,13 @@ import {
 } from 'native-base';
 import {connect} from 'react-redux';
 import {loginAction} from 'redux/authSlice/authActions';
-import * as Yup from 'yup';
 import {SCREEN_NAMES} from '../screenNames';
+import YUP from '@components/YUP/YUP';
 
-const formValidation = Yup.object().shape({
-  email: Yup.string().email('Email is invalid').required('Email is required.'),
-  fullName: Yup.string().required('Full name is required.'),
-  password: Yup.string()
+const formValidation = YUP.object().shape({
+  email: YUP.string().email('Email is invalid').required('Email is required.'),
+  fullName: YUP.string().required('Full name is required.'),
+  password: YUP.string()
     .required('Password is required')
     .min(8, 'Password must be atleast 8 character long.'),
 });
@@ -87,10 +87,11 @@ const SignupScreen = ({loginAction}) => {
       <Box
         bg={{
           linearGradient: {
-            colors: ['#72439A', '#13C2EE'],
-            start: [0, 0],
-            end: [1, 1],
-            locations: [0.1747, 1.461],
+            colors:['rgba(11, 114, 140, 0.83)', '#08576A', '#191E6D', '#543073'],
+            // colors:{['#72439A', '#13C2EE']},
+            start:{x: 0, y: 0},
+            end:{x: 1, y: 0},
+            locations:[0.0066, 0.0067, 0.4389, 0.9611],
           },
         }}
         style={{

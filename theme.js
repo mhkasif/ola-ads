@@ -9,7 +9,6 @@ const font = {
   heading: 'Montserrat',
   body: 'Montserrat',
   mono: 'Montserrat',
-
 };
 const colors = {
   primary: {
@@ -23,6 +22,21 @@ const colors = {
     700: '#334866',
     800: '#223044',
     900: '#111822',
+  },
+  primarydark: {
+
+    50: '#0D103D',
+    200: '#0D103D',
+    100: '#0D103D',
+    300: '#0D103D',
+    400: '#0D103D',
+    500: '#0D103D',
+    600: '#0D103D',
+    700: '#0D103D',
+    800: '#0D103D',
+    900: '#0D103D',
+
+
   },
 };
 const theme = extendTheme({config, colors, font});

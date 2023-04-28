@@ -3,10 +3,10 @@ import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import FacebookButton from '@components/FacebookButton/FacebookButton';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '@utils/colors';
+import {useNavigation} from '@react-navigation/native';
+import {COLORS} from '@utils/colors';
 import Logo from 'assets/logo.png';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 import {
   Box,
   Center,
@@ -18,16 +18,18 @@ import {
   StatusBar,
   VStack,
 } from 'native-base';
-import { connect } from 'react-redux';
-import { loginAction } from 'redux/authSlice/authActions';
-import * as Yup from 'yup';
-import { SCREEN_NAMES } from '../screenNames';
+import {connect} from 'react-redux';
+import {loginAction} from 'redux/authSlice/authActions';
 
-const formValidation = Yup.object().shape({
-  email: Yup.string()
+import {SCREEN_NAMES} from '../screenNames';
+import YUP from '@components/YUP/YUP';
+import {linearGradient} from '@utils/colors';
+
+const formValidation = YUP.object().shape({
+  email: YUP.string()
     .email('Please enter a valid email address')
     .required('Email address is required'),
-  password: Yup.string()
+  password: YUP.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
 });
@@ -42,6 +44,7 @@ const LoginScreen = ({loginAction}) => {
     try {
       await loginAction(values);
       navigate(SCREEN_NAMES.MAIN);
+      // navigate(SCREEN_NAMES.OTP)
 
       return;
     } catch (error) {
@@ -80,12 +83,7 @@ const LoginScreen = ({loginAction}) => {
       <StatusBar />
       <Box
         bg={{
-          linearGradient: {
-            colors: ['#72439A', '#13C2EE'],
-            start: [0, 0],
-            end: [1, 1],
-            locations: [0.1747, 1.461],
-          },
+          linearGradient,
         }}
         style={{
           height: '28%',
@@ -126,7 +124,7 @@ const LoginScreen = ({loginAction}) => {
               color="coolGray.600"
               fontWeight="medium"
               size="xs">
-              Sign in to continue!
+              Login to continue!
             </Heading>
             <Formik
               initialValues={initialValues}
@@ -147,7 +145,7 @@ const LoginScreen = ({loginAction}) => {
                     }}
                     // alignSelf="flex-end"
                     mt="1">
-                    Forget Password?
+                    Forgot your password?
                   </Link>
                   <CustomButton
                     buttonProps={{

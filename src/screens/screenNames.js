@@ -1,11 +1,11 @@
 export const SCREEN_NAMES = {
   SPLASH: 'Splash',
   AUTH: 'AUTH',
-  CREATE_POST: 'Create Post',
+  CREATE_AD: 'Create Ad',
   HOME: 'Home',
   LOGIN: 'Login',
   SIGNUP: 'Signup',
-  PLANS: 'Plans',
+  PLANS: 'Subscription Plans',
   MAIN: 'Main',
   PROFILE: 'Profile',
   SETTINGS: 'Settings',
@@ -16,4 +16,6 @@ export const SCREEN_NAMES = {
   FORGOT_VERIFICATION: 'Forgot Verification',
   POSTS: 'Posts',
   CHANGE_PASSWORD: 'Change Password',
+  OTP: 'OTP',
+  EDIT_PROFILE: 'Edit Profile',
 };

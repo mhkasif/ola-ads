@@ -1,8 +1,7 @@
-import CustomButton from '@components/CustomButton/CustomButton';
+import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
 import Logout from 'assets/profileIcons/logout.png';
 import Password from 'assets/profileIcons/password.png';
 import Phone from 'assets/profileIcons/phone.png';
@@ -10,50 +9,23 @@ import Plan from 'assets/profileIcons/plan.png';
 import Terms from 'assets/profileIcons/terms.png';
 import User from 'assets/profileIcons/user.png';
 import {
-  Actionsheet,
   Avatar,
   Box,
-  Button,
   Center,
   Flex,
   Heading,
-  Icon,
   Image,
-  Modal,
   Pressable,
 } from 'native-base';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {logoutAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
-import * as Yup from 'yup';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const fields = [
-  {name: 'userName', label: 'Username', validate: true},
-  {name: 'fullName', label: 'Full Name', validate: true},
-  {name: 'email', label: 'Email', validate: true, type: 'email'},
-  {name: 'phoneNumber', label: 'Phone Number', validate: true, type: 'number'},
-];
-const initialValues = fields.reduce((acc, field) => {
-  acc[field.name] = '';
-  return acc;
-}, {});
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
-  IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
 };
-const formValidation = Yup.object().shape({
-  userName: Yup.string().required('Username is required.'),
-  email: Yup.string().email('Email is invalid').required('Email is required.'),
-  fullName: Yup.string().required('Full name is required.'),
-  phoneNumber: Yup.number('Phone number must be a number').required(
-    'Phone number is required.',
-  ),
-});
 const UserProfile = ({user, logoutAction}) => {
   const [modalOpen, setModalOpen] = useState('');
   const onClose = () => {
@@ -75,7 +47,11 @@ const UserProfile = ({user, logoutAction}) => {
       icon: Password,
       onPress: () => navigate(SCREEN_NAMES.CHANGE_PASSWORD),
     },
-    {name: 'Choose Your Plan', icon: Plan},
+    {
+      name: 'Choose Your Plan',
+      icon: Plan,
+      onPress: () => navigate(SCREEN_NAMES.PLANS),
+    },
     {name: 'Contact Us', icon: Phone},
     {name: 'Terms & Conditions', icon: Terms},
     {
@@ -105,42 +81,19 @@ const UserProfile = ({user, logoutAction}) => {
         onClose={onClose}
         handleAction={handleLogout}
       />
-      <ImageActionSheet
-        isOpen={modalOpen === MODAL_NAMES.IMAGE_ACTION_SHEET}
-        onClose={onClose}
-      />
+
       <Center mt={10}>
-        {/* <Image
-          bg="yellow.500"
-          size={150}
-          borderRadius={100}
-          source={}
-          alt="Alternate Text"
+        <Avatar
+          size="2xl"
+          source={{
+            uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+          }}
+          borderColor={COLORS.primary}
+          // borderWidth={2}
+          alt="Profile Picture"
           mb={3}
-        /> */}
-        <Pressable onPress={openModal(MODAL_NAMES.IMAGE_ACTION_SHEET)}>
-          <Avatar
-            size="2xl"
-            source={{
-              uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-            }}
-            borderColor={COLORS.primary}
-            // borderWidth={2}
-            alt="Profile Picture"
-            mb={3}>
-            <Avatar.Badge
-              flex={1}
-              justifyContent="center"
-              alignItems="center"
-              bg={COLORS.primary}>
-              <Icon
-                size={4}
-                as={<MaterialIcon name="edit" />}
-                color={COLORS.white}
-              />
-            </Avatar.Badge>
-          </Avatar>
-        </Pressable>
+        />
+
         <Heading color={COLORS.primary} letterSpacing="xl">
           {user.name}
         </Heading>
@@ -159,7 +112,6 @@ const UserProfile = ({user, logoutAction}) => {
             <Card key={card.name} {...card} />
           ))}
         </Flex>
-        {/* </Box> */}
       </Center>
     </Box>
   );
@@ -183,33 +135,6 @@ const Card = ({name, icon, bg, onPress = null}) => (
     </Pressable>
   </Box>
 );
-const ImageActionSheet = ({isOpen, onClose}) => {
-  const handleLibraryOpen = async () => {
-    try {
-      const x=await launchImageLibrary();
-      console.log(x)
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  return (
-    <Actionsheet isOpen={isOpen} onClose={onClose}>
-      <Actionsheet.Content>
-        {/* <Box w="100%" h={60} px={4} justifyContent="center">
-    <CustomText fontSize="16" color="gray.500" _dark={{
-    color: "gray.300"
-  }}>
-      Albums
-    </CustomText>
-  </Box> */}
-        <Actionsheet.Item onPress={handleLibraryOpen}>
-          Choose From Library
-        </Actionsheet.Item>
-        <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
-      </Actionsheet.Content>
-    </Actionsheet>
-  );
-};
 const mapStateToProps = state => ({
   user: state.auth?.user,
 });

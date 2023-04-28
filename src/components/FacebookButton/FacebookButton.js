@@ -11,6 +11,8 @@ const FacebookButton = props => {
       _hover={{bg: '#fff'}}
       _active={{bg: '#fff'}}
       _focus={{bg: '#fff'}}
+      //onpress it is showing dark
+      _pressed={{bg: '#fff', transform: [{translateY: 1}]}}
       borderRadius={4}
       //   px={4}
       //   py={2}

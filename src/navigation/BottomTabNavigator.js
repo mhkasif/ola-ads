@@ -1,13 +1,24 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+import CustomHeader from '@components/CustomHeader/CustomHeader';
 import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
+import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
+  useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import React, {useState} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {headerOptions} from '@utils/helpers';
+import {Box, Fab} from 'native-base';
+import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ListOfGroups from 'screens/ListOfGroupsScreen/ListOfGroupsScreen';
+import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
+import EditProfile from 'screens/EditProfile/EditProfile';
+import ListOfPostsScreen from 'screens/ListOfPostsScreen/ListOfPostsScreen';
+import Plans from 'screens/PlansScreen/PlansScreen';
 import UserProfile from 'screens/UserProfileScreen/UserProfileScreen';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
@@ -24,42 +35,74 @@ const renderIcon = ({route, color, size}) => {
     case SCREEN_NAMES.PLANS:
       iconName = 'attach-money';
       break;
-    case SCREEN_NAMES.CREATE_POST:
+    case SCREEN_NAMES.CREATE_AD:
       iconName = 'add';
       break;
-    case SCREEN_NAMES.PROFILE:
+    case '_' + SCREEN_NAMES.PROFILE:
       iconName = 'person';
       break;
   }
 
   return <Icon name={iconName} size={size} color={color} />;
 };
-const BottomTabNavigator = ({route}) => {
+const BottomTabNavigator = ({route, ...props}) => {
   const Tab = createBottomTabNavigator();
+  const ProfileStack = createNativeStackNavigator();
   let focusedRoute = getFocusedRouteNameFromRoute(route);
-  console.log(focusedRoute, route);
-  const [isFABOpen, setIsFABOpen] = useState(false);
+  console.log({focusedRoute}, props);
   const {navigate} = useNavigation();
-  const openFAB = () => {
-    setIsFABOpen(true);
-  };
-  const closeFAB = () => {
-    setIsFABOpen(false);
-  };
+  const isFocused = useIsFocused();
+  console.log(isFocused);
+  const ProfileStackScreens = useCallback(
+    () => (
+      <ProfileStack.Navigator
+        screenOptions={{
+          // ...headerOptions,
+          header: ({route: {name}, ...props}) => {
+            console.log(props);
+            return <CustomHeader title={name} {...props} />;
+          },
+        }}>
+        <ProfileStack.Screen
+          name={SCREEN_NAMES.PROFILE}
+          component={UserProfile}
+          options={{
+            backIcon: false,
+            headerRight: () => (
+              <Box
+                style={{
+                  marginRight: 20,
+                }}>
+                <Icon
+                  as={MaterialIcon}
+                  name="edit"
+                  size={20}
+                  color="#fff"
+                  onPress={() => navigate(SCREEN_NAMES.EDIT_PROFILE)}
+                />
+              </Box>
+            ),
+          }}
+        />
 
+        <ProfileStack.Screen
+          name={SCREEN_NAMES.CHANGE_PASSWORD}
+          component={ChangePasswordScreen}
+        />
+        <ProfileStack.Screen
+          name={SCREEN_NAMES.EDIT_PROFILE}
+          component={EditProfile}
+        />
+        <ProfileStack.Screen name={SCREEN_NAMES.PLANS} component={Plans} />
+      </ProfileStack.Navigator>
+    ),
+    [],
+  );
   return (
     <>
       <Tab.Navigator
         screenOptions={({route}) => ({
-          // headerShown: false,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            height: 100,
-            backgroundColor: 'transparent',
-          },
-          headerBackground:HeaderBackground,
-          headerTintColor: '#fff',
-
+          headerShown: false,
           tabBarItemStyle: {
             marginHorizontal: 20,
             borderTopWidth: (focusedRoute || 'Home') === route.name ? 2 : 0,
@@ -75,13 +118,56 @@ const BottomTabNavigator = ({route}) => {
           ],
           tabBarInactiveTintColor: 'gray',
         })}>
-        <Tab.Screen name={SCREEN_NAMES.HOME} component={ListOfGroups} />
+        <Tab.Screen
+          name={SCREEN_NAMES.HOME}
+          component={ListOfPostsScreen}
+          options={{
+            ...headerOptions,
+            header: ({route: {name}}) => (
+              <CustomHeader
+                options={{
+                  backIcon: false,
+                }}
+                title={name}
+              />
+            ),
+          }}
+        />
 
-        <Tab.Screen name={SCREEN_NAMES.POSTS} component={ListOfGroups} />
+        <Tab.Screen
+          name={SCREEN_NAMES.POSTS}
+          component={ListOfPostsScreen}
+          options={{
+            ...headerOptions,
+            header: ({route: {name}}) => (
+              <CustomHeader
+                options={{
+                  backIcon: false,
+                }}
+                title={name}
+              />
+            ),
+          }}
+        />
 
         {/* <Tab.Screen name={SCREEN_NAMES.P} component={PlansScreen} /> */}
-        <Tab.Screen name={SCREEN_NAMES.PROFILE} component={UserProfile} />
+        <Tab.Screen
+          name={'_' + SCREEN_NAMES.PROFILE}
+          component={ProfileStackScreens}
+        />
       </Tab.Navigator>
+
+      {isFocused &&
+        [SCREEN_NAMES.POSTS, SCREEN_NAMES.HOME,undefined].includes(focusedRoute) && (
+          <Fab
+            shadow={2}
+            // bottom={5}
+            size="lg"
+            bottom={20}
+            onPress={() => navigate(SCREEN_NAMES.CREATE_AD)}
+            icon={<Icon color="white" as={MaterialIcon} name="add" />}
+          />
+        )}
     </>
   );
 };

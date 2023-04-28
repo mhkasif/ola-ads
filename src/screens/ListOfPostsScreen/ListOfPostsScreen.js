@@ -29,7 +29,7 @@ import CustomText from '@components/CustomText/CustomText';
 import {COLORS} from '@utils/colors';
 import CustomBadge from '@components/CustomBadge/CustomBadge';
 
-function ListOfGroups() {
+function ListOfPostsScreen() {
   const [listData, setListData] = useState(LIST_OF_GROUPS);
 
   const closeRow = (rowMap, rowKey) => {
@@ -97,7 +97,7 @@ function ListOfGroups() {
     </Box>
   );
 }
-// export default ListOfGroups;
+// export default ListOfPostsScreen;
 
 const RenderItem = ({item, index}) => (
   <Box
@@ -168,11 +168,11 @@ const RenderItem = ({item, index}) => (
     </Box>
   </Box>
 );
-const FirstRoute = () => <ListOfGroups />;
+const FirstRoute = () => <ListOfPostsScreen />;
 
-const SecondRoute = () => <ListOfGroups />;
+const SecondRoute = () => <ListOfPostsScreen />;
 
-const ThirdRoute = () => <ListOfGroups />;
+const ThirdRoute = () => <ListOfPostsScreen />;
 
 const initialLayout = {
   width: Dimensions.get('window').width,

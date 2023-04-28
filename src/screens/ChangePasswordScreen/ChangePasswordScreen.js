@@ -1,28 +1,28 @@
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
+import YUP from '@components/YUP/YUP';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Formik} from 'formik';
 import {Box, Center, Divider} from 'native-base';
 import React from 'react';
-import * as Yup from 'yup';
 const initialValues = {
   currentPassword: '',
   newPassword: '',
   confirmPassword: '',
 };
-const formValidation = Yup.object().shape({
-  currentPassword: Yup.string()
+const formValidation = YUP.object().shape({
+  currentPassword: YUP.string()
     .required('Current Password is required.')
     .min(8, 'Password must be atleast 8 character long.'),
-  newPassword: Yup.string()
+  newPassword: YUP.string()
     .required('Password is required')
     .min(8, 'Password must be atleast 8 character long.'),
-  confirmPassword: Yup.string().when('password', (password, schema) => {
-    return Yup.string()
+  confirmPassword: YUP.string().when('password', (password, schema) => {
+    return YUP.string()
       .required('Confirm Password is Required')
-      .oneOf([Yup.ref('newPassword'), null], 'Password must match.');
+      .oneOf([YUP.ref('newPassword'), null], 'Password must match.');
   }),
 });
 const changePassword = async values => {

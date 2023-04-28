@@ -8,24 +8,18 @@ import BottomTabNavigator from './BottomTabNavigator';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
+import {headerOptions} from '@utils/helpers';
+import CustomHeader from '@components/CustomHeader/CustomHeader';
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator
-      >
+    <Stack.Navigator>
       <Stack.Screen
         name={SCREEN_NAMES.SPLASH}
         component={SplashScreen}
-        options={{headerShown: false,
-
-        }}
-      />
-      <Stack.Screen
-        name={SCREEN_NAMES.CHANGE_PASSWORD}
-        component={ChangePasswordScreen}
-
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -42,9 +36,14 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen
-        name={SCREEN_NAMES.CREATE_POST}
+        name={SCREEN_NAMES.CREATE_AD}
         component={CreatePost}
-        options={{headerShown: false}}
+        options={{
+          header: ({route: {name}, ...props}) => (
+            <CustomHeader title={name} {...props} />
+          ),
+        }}
+        // options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
