@@ -4,13 +4,14 @@ import {useCallback} from 'react';
 import ForgotPassword from 'screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import LoginScreen from 'screens/LoginScreen/LoginScreen';
 import OtpScreen from 'screens/OTPScreen/OTPScreen';
+import PaymentScreen from 'screens/PaymentScreen/PaymentScreen';
 import SignupScreen from 'screens/SignupScreen/SignupScreen';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
 const AuthStackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const header = useCallback(
-    ({route: {name}, ...props}) => <CustomHeader  title={name} {...props} />,
+    ({route: {name}, ...props}) => <CustomHeader title={name} {...props} />,
     [],
   );
 
@@ -22,6 +23,7 @@ const AuthStackNavigator = () => {
       <Stack.Screen name={SCREEN_NAMES.LOGIN} component={LoginScreen} />
       <Stack.Screen name={SCREEN_NAMES.SIGNUP} component={SignupScreen} />
       <Stack.Screen name={SCREEN_NAMES.OTP} component={OtpScreen} />
+      <Stack.Screen name={SCREEN_NAMES.PAYMENT} component={PaymentScreen} />
       <Stack.Screen
         name={SCREEN_NAMES.FORGOT_PASSWORD}
         component={ForgotPassword}

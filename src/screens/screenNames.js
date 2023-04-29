@@ -18,4 +18,5 @@ export const SCREEN_NAMES = {
   CHANGE_PASSWORD: 'Change Password',
   OTP: 'OTP',
   EDIT_PROFILE: 'Edit Profile',
+  PAYMENT: 'Payment',
 };
