@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
+  FlatList,
   HStack,
   Heading,
   Icon,
@@ -206,12 +207,12 @@ function ListOfPlansScreen() {
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
       <RenderItem handlePayPress={openPaymentSheet} />
-      {/* <FlatList
+      <FlatList
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({x}) => (
           <RenderItem key={x} handlePayPress={openPaymentSheet} />
         )}
-      /> */}
+      />
     </Box>
   );
 }
