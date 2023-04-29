@@ -20,6 +20,9 @@ const CustomButton = ({
 }: ICustomButtonProps) => {
   return noGradient ? (
     <Button
+    _disabled={{
+      opacity: 0.4,
+    }}
       _loading={{
         _text: {
           fontSize: 'md',

@@ -1,6 +1,6 @@
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, StackActions} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
 import Logout from 'assets/profileIcons/logout.png';
 import Password from 'assets/profileIcons/password.png';
@@ -34,7 +34,8 @@ const UserProfile = ({user, logoutAction}) => {
   const openModal = name => () => {
     setModalOpen(name);
   };
-  const {navigate} = useNavigation();
+  const {navigate, ...navigation} = useNavigation();
+  const resetAction = StackActions.replace(SCREEN_NAMES.LOGIN);
 
   const cards = [
     {
@@ -63,7 +64,7 @@ const UserProfile = ({user, logoutAction}) => {
   ];
   const handleLogout = async () => {
     logoutAction();
-    navigate(SCREEN_NAMES.LOGIN);
+    navigation.dispatch(resetAction);
   };
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>

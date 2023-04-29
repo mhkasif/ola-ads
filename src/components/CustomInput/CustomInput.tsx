@@ -87,7 +87,11 @@ const PasswordInput: React.FC<CustomInputProps> = ({
   );
 };
 
-const TextAreaInput = (props:any) => {
+const TextAreaInput = (props: any) => {
   return <TextArea {...props} />;
+};
+
+export const SimpleInput = (props: IInputProps) => {
+  return <Input {...props} />;
 };
 export default CustomInput;

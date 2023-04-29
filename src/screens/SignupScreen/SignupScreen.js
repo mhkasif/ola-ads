@@ -25,16 +25,16 @@ import YUP from '@components/YUP/YUP';
 
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
-  fullName: YUP.string().required('Full name is required.'),
+  name: YUP.string().required('Full name is required.'),
   password: YUP.string()
     .required('Password is required')
     .min(8, 'Password must be atleast 8 character long.'),
 });
 const fields = [
   {
-    name: 'fullName',
+    name: 'name',
     label: 'Full Name',
-    type: 'text',
+    // type: 'text',
     inputProps: {
       placeholder: 'Enter your full name',
     },
@@ -62,14 +62,14 @@ const fields = [
 const SignupScreen = ({loginAction}) => {
   const {navigate} = useNavigation();
   const initialValues = fields.reduce((acc, field) => {
-    acc[field.name] = '';
+    acc[field.name] = 'hse@asas.asa';
     return acc;
   });
   const handleLogin = async values => {
     console.log({values});
     try {
       await loginAction(values);
-      navigate(SCREEN_NAMES.MAIN);
+      navigate(SCREEN_NAMES.FORGOT_PASSWORD);
 
       return;
     } catch (error) {
