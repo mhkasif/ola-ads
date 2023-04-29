@@ -6,10 +6,14 @@ import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import {COLORS} from '@utils/colors';
 import Toast from 'react-native-toast-message';
+import {sleep} from '@utils/helpers';
+import {useNavigation} from '@react-navigation/native';
+import {SCREEN_NAMES} from 'screens/screenNames';
 
 const ForgotPasswordScreen = () => {
   const [inputValue, setInputValue] = React.useState('');
   const [isCodeSent, setIsCodeSent] = React.useState(false);
+  const {navigate} = useNavigation();
   const handleInputValueChange = value => {
     if (value.length > 6) return;
     setInputValue(value);
@@ -22,16 +26,22 @@ const ForgotPasswordScreen = () => {
     });
     setIsCodeSent(true);
   };
+  const submitCode = async () => {
+    // await sleep(1000);
+    navigate(SCREEN_NAMES.MAIN);
+  };
   return (
     <Box px={6} pt={10} bg={COLORS.white} w="100%" h="100%">
       <FormControl isRequired>
         <FormControl.Label>Verification Code</FormControl.Label>
         <SimpleInput
+        disabled={!isCodeSent}
           value={inputValue}
           onChangeText={handleInputValueChange}
           maxLength={6}
           rightElement={
             <CustomText
+
               onPress={isCodeSent ? null : handleCodeSent}
               color={isCodeSent ? COLORS.muted : COLORS.prim}
               mx={4}
@@ -46,7 +56,8 @@ const ForgotPasswordScreen = () => {
         <CustomButton
           mt={8}
           buttonProps={{
-            isDisabled: inputValue.length < 6,
+            isDisabled: inputValue.length < 6&&!isCodeSent,
+            onPress: submitCode,
           }}
           // disabled={inputValue.length < 6}
         >
