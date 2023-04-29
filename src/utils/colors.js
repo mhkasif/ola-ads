@@ -6,6 +6,7 @@ export const COLORS = {
   white: '#FFFFFF',
   danger: '#EB4335',
   muted: '#525f7fb3',
+  lightColor: '#E7E7E7',
 };
 export const linearGradient = {
   // colors:[

@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
+import FAB from '@components/CustomFAB/CustomFAB';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
 import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
@@ -12,7 +13,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {headerOptions} from '@utils/helpers';
-import {Box, Fab} from 'native-base';
+import {Box} from 'native-base';
 import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
@@ -158,15 +159,19 @@ const BottomTabNavigator = ({route, ...props}) => {
       </Tab.Navigator>
 
       {isFocused &&
-        [SCREEN_NAMES.POSTS, SCREEN_NAMES.HOME,undefined].includes(focusedRoute) && (
-          <Fab
+        [SCREEN_NAMES.POSTS, SCREEN_NAMES.HOME, undefined].includes(
+          focusedRoute,
+        ) && (
+          <FAB
             shadow={2}
             // bottom={5}
             size="lg"
             bottom={20}
-            onPress={() => navigate(SCREEN_NAMES.CREATE_AD)}
-            icon={<Icon color="white" as={MaterialIcon} name="add" />}
-          />
+            onPress={() => navigate(SCREEN_NAMES.CREATE_AD)}>
+            <Icon  color="white" as={MaterialIcon} name="add" style={{
+              fontSize: 20,
+            }} />
+          </FAB>
         )}
     </>
   );

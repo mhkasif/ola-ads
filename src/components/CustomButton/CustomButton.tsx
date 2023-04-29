@@ -38,6 +38,7 @@ const CustomButton = ({
     <Box
       overflow="hidden"
       borderRadius={4}
+
       bg={
         secondary
           ? 'white'
@@ -61,7 +62,11 @@ const CustomButton = ({
             color: secondary ? 'gray.900' : '#fff',
           },
         }}
-        {...buttonProps}>
+        {...buttonProps}
+        _pressed={{
+          // transform: [{translateY: 1}],
+          ...(buttonProps?._pressed || {}),
+        }}>
         <CustomText
           color={secondary ? 'gray.900' : '#fff'}
           fontSize="md"

@@ -11,10 +11,12 @@ import {
   Avatar,
   Checkbox,
   Flex,
+  Modal,
+  Button,
 } from 'native-base';
 import CustomInput from '@components/CustomInput/CustomInput';
 import {Formik} from 'formik';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import YUP from '@components/YUP/YUP';
 import CustomText from '@components/CustomText/CustomText';
 import Picture from 'assets/picture.png';
@@ -22,6 +24,7 @@ import Video from 'assets/video.png';
 import CustomButton from '@components/CustomButton/CustomButton';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {COLORS} from '@utils/colors';
+import {sleep} from '@utils/helpers';
 const fields = [
   // {
   //   my: 2,
@@ -72,6 +75,9 @@ function CreatePost({user}) {
     email: user.email,
     description: '',
   };
+  const [openModal, setOpenModal] = React.useState(false);
+  const onClose = () => setOpenModal(false);
+  const onOpen = () => setOpenModal(true);
   return (
     <>
       <Box py={5} px={4}>
@@ -98,6 +104,7 @@ function CreatePost({user}) {
               {
                 title: 'Contact',
                 buttonProps: {
+                  onPress: onOpen,
                   leftIcon: (
                     <Icon
                       as={MaterialIcon}
@@ -141,6 +148,7 @@ function CreatePost({user}) {
           <CategoryList />
         </Box>
       </Box>
+      <ConfirmationModal isOpen={openModal} onClose={onClose} />
     </>
   );
 }
@@ -175,7 +183,7 @@ const MediaItem = ({image, title, onPress}) => {
 };
 const CategoryItem = ({image, title, onPress, checked}) => {
   return (
-    <HStack my={2} alignItems="center" px={6} w="100%" >
+    <HStack my={2} alignItems="center" px={6} w="100%">
       <Avatar
         size="sm"
         source={{
@@ -184,7 +192,12 @@ const CategoryItem = ({image, title, onPress, checked}) => {
       />
       <CustomText ml={4}>Category {title}</CustomText>
       <Box alignItems="flex-end" flex={1}>
-        <Checkbox colorScheme="primarydark" value={title} defaultIsChecked={checked} />
+        <Checkbox
+          accessibilityLabel="choose numbers"
+          colorScheme="primarydark"
+          value={title}
+          defaultIsChecked={checked}
+        />
       </Box>
     </HStack>
   );
@@ -202,5 +215,93 @@ const CategoryList = () => {
         );
       }}
     />
+  );
+};
+const ConfirmationModal = ({isOpen = false, onClose = undefined}) => {
+  const user = useSelector(state => state.auth?.user);
+  const initialValues = {
+    name: user.name,
+    email: user.email,
+    phone: '',
+  };
+  // const leastDestructiveRef = useRef(null);
+  const updateContact = async values => {
+    await sleep(1000);
+    console.log(values);
+  };
+  return (
+    <Modal
+      size="lg"
+      isOpen={isOpen}
+      // leastDestructiveRef={leastDestructiveRef}
+      onClose={onClose}>
+      <Formik onSubmit={updateContact} initialValues={{...initialValues}}>
+        {({handleSubmit, isSubmitting}) => (
+          <Modal.Content>
+            <Modal.CloseButton />
+            <Modal.Header>Contact</Modal.Header>
+
+            <Modal.Body px={6}>
+              {[
+                {
+                  name: 'email',
+                  // label: 'Email',
+                  type: 'email',
+                  inputProps: {
+                    placeholder: 'Enter your email',
+                  },
+                },
+                {
+                  name: 'phone',
+                  // label: 'Phone Number',
+                  type: 'tel',
+                  inputProps: {
+                    placeholder: 'Enter your phone number',
+                  },
+                },
+              ].map((field, index) => (
+                <CustomInput key={index} {...field} />
+              ))}
+              <HStack justifyContent="space-between" mt={5}>
+                <CustomButton
+                  textProps={{color: COLORS.primaryDark, bold: true}}
+                  noGradient
+                  buttonProps={{
+                    disabled: isSubmitting,
+                    w: '47%',
+                    bg: COLORS.lightColor,
+                    _pressed: {
+                      bg: COLORS.lightColor,
+                    },
+                    // variant: 'ghost',
+                    // colorScheme: '',
+                    onPress: onClose,
+                  }}>
+                  No
+                </CustomButton>
+                <CustomButton
+                  textProps={{color: COLORS.white, bold: true}}
+                  buttonProps={{
+                    // _loading: {
+                    //   bg: COLORS.primary,
+                    // },
+                    isLoading: isSubmitting,
+                    isLoadingText: 'Submitting...',
+                    // bg: COLORS.danger,
+                    colorScheme: 'primarydark',
+                    onPress: handleSubmit,
+                    w: '47%',
+                  }}
+                  noGradient>
+                  Yes, i'm Sure
+                </CustomButton>
+              </HStack>
+            </Modal.Body>
+            {/* <Modal.Footer> */}
+            {/* </Modal.Footer> */}
+          </Modal.Content>
+        )}
+      </Formik>
+    </Modal>
   );
 };

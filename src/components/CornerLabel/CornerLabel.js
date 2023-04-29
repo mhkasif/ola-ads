@@ -1,97 +1,48 @@
-/*
- * A smart corner-label for react-native apps
- * https://github.com/react-native-component/react-native-smart-sudoku-grid/
- * Released under the MIT license
- * Copyright (c) 2016 react-native-component <moonsunfall@aliyun.com>
- */
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-import React, {
-    // PropTypes,
-    Component,
-} from 'react'
-import {
-    StyleSheet,
-    View,
-    Text,
-} from 'react-native'
+const CornerLabel = ({ children, cornerRadius, alignment = 'right', style }) => {
+  const labelHeight = Math.sqrt(Math.pow(cornerRadius, 2) / 2);
+  const labelWidth = labelHeight * 2;
+  const originOffset = Math.sqrt(Math.pow(labelHeight / 2, 2) / 2);
+  const labelHorizontalPosition = -labelWidth / 2 + originOffset;
+  const labelVerticalPosition = -labelHeight / 2 + originOffset;
+
+  const labelPosition =
+    alignment === 'left'
+      ? { left: labelHorizontalPosition, top: labelVerticalPosition }
+      : { right: labelHorizontalPosition, top: labelVerticalPosition };
+
+  const labelTransform =
+    alignment === 'left'
+      ? { transform: [{ rotate: '-45deg' }] }
+      : { transform: [{ rotate: '45deg' }] };
+
+  return (
+    <View
+      style={[
+        styles.container,
+        labelPosition,
+        labelTransform,
+        { width: labelWidth, height: labelHeight },
+      ]}
+    >
+      <View style={[styles.label, { height: labelHeight }, style]}>
+        {children}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        //transform: [{rotate: '45deg'}],
-        justifyContent: 'center',
-    },
-    label: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    text: {
-        color: '#fff',
-        // fontFamily: '.HelveticaNeueInterface-MediumP4',
-        // fontSize: 12,
-    },
-})
+  container: {
+    position: 'absolute',
+    justifyContent: 'center',
+  },
+  label: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
-export default class CornerLabel extends Component {
-
-    static defaultProps = {
-        alignment: 'right',
-    }
-
-    // static propTypes = {
-    //     style: View.propTypes.style,
-    //     textStyle: Text.propTypes.style,
-    //     cornerRadius: PropTypes.number.isRequired,
-    //     alignment: PropTypes.oneOf([
-    //         'left',
-    //         'right',
-    //     ])
-    // }
-
-    // 构造
-    constructor (props) {
-        super(props)
-        // 初始状态
-        this.state = {}
-
-        this._labelHeight = Math.sqrt(Math.pow(props.cornerRadius, 2) / 2)
-        this._labelWidth = this._labelHeight * 2
-        let originOffset = Math.sqrt(Math.pow(this._labelHeight / 2, 2) / 2)
-        let labelHorizontalPosition = -this._labelWidth / 2 + originOffset
-        let labelVerticalPosition = - this._labelHeight / 2 +  originOffset
-        if(props.alignment == 'left') {
-            this._labelPosition = {left : labelHorizontalPosition, top: labelVerticalPosition}
-            this._labelTransform = {transform: [{rotate: '-45deg'}]}
-        }
-        else {
-            this._labelPosition = {right : labelHorizontalPosition, top: labelVerticalPosition}
-            this._labelTransform = {transform: [{rotate: '45deg'}]}
-        }
-
-    }
-
-    render () {
-        return (
-            <View style={[styles.container,
-                      this._labelPosition,
-                      this._labelTransform,
-                      {width: this._labelWidth, height: this._labelHeight, },
-                       ]}>
-                <View style={[styles.label,
-                        {height: this._labelHeight},
-                        this.props.style,
-                        ]}>
-                    {this._renderChildren()}
-                </View>
-            </View>
-        )
-    }
-
-    _renderChildren () {
-        return React.Children.map(this.props.children, (child) => {
-
-            return child
-        })
-    }
-
-}
+export default CornerLabel;

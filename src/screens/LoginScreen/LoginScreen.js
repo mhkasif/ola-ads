@@ -24,6 +24,11 @@ import {loginAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from '../screenNames';
 import YUP from '@components/YUP/YUP';
 import {linearGradient} from '@utils/colors';
+import {StackActions} from '@react-navigation/native';
+
+// ...
+
+// In your login screen component, after the user has successfully logged in:
 
 const formValidation = YUP.object().shape({
   email: YUP.string()
@@ -38,12 +43,15 @@ const initialValues = {
   password: '324565trewf',
 };
 const LoginScreen = ({loginAction}) => {
-  const {navigate} = useNavigation();
+  const {navigate, ...navigation} = useNavigation();
+  const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
+
   const handleLogin = async values => {
     console.log({values});
     try {
       await loginAction(values);
-      navigate(SCREEN_NAMES.MAIN);
+      // navigate(SCREEN_NAMES.MAIN);
+      navigation.dispatch(resetAction);
       // navigate(SCREEN_NAMES.OTP)
 
       return;
