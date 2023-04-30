@@ -10,6 +10,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 import {headerOptions} from '@utils/helpers';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
+import PostScreen from 'screens/PostScreen/PostScreen';
+const header = ({route: {name}, ...props}) => (
+  <CustomHeader title={name} {...props} />
+);
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -39,11 +43,16 @@ const RootNavigator = () => {
         name={SCREEN_NAMES.CREATE_AD}
         component={CreatePost}
         options={{
-          header: ({route: {name}, ...props}) => (
-            <CustomHeader title={name} {...props} />
-          ),
+          header,
         }}
-        // options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={SCREEN_NAMES.POST_DETAILS}
+        component={PostScreen}
+        options={{
+          header,
+        }}
       />
     </Stack.Navigator>
   );

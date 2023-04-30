@@ -120,9 +120,6 @@ function ListOfPlansScreen() {
       },
       testEnv: true, // enable test mode
     });
-    const {error2} = await presentGooglePay();
-    console.log({error2});
-
 
     console.log({error});
     if (!error) {

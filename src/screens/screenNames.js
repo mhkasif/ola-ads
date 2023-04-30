@@ -15,6 +15,7 @@ export const SCREEN_NAMES = {
   LOGIN_VERIFICATION: 'Login Verification',
   FORGOT_VERIFICATION: 'Forgot Verification',
   POSTS: 'Posts',
+  POST_DETAILS: 'Post Details',
   CHANGE_PASSWORD: 'Change Password',
   OTP: 'OTP',
   EDIT_PROFILE: 'Edit Profile',
