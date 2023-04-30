@@ -88,7 +88,7 @@ const EditProfile = ({user}) => {
     setModalOpen(name);
   };
   const updateProfile = async values => {
-    console.log(values);
+    // console.log(values);
     await sleep(1000);
   };
   return (

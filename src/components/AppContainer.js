@@ -1,12 +1,14 @@
-import { StripeProvider } from '@stripe/stripe-react-native';
-import { NativeBaseProvider, Text } from 'native-base';
+import {NativeBaseProvider, Text} from 'native-base';
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from 'redux/store';
+import {NavigationContainer} from '@react-navigation/native';
+import {StatusBar} from 'react-native';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from 'redux/store';
 import theme from '../../theme';
+import LinearGradient from 'react-native-linear-gradient';
+
 const config = {
   dependencies: {
     'linear-gradient': require('react-native-linear-gradient').default,
@@ -23,7 +25,15 @@ const AppContainer = props => {
               //   urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
               merchantIdentifier="merchant.com.olaads" // required for Apple Pay
             > */}
-              {props.children}
+            <StatusBar
+              translucent={true}
+              backgroundColor={'transparent'}
+              // barStyle={'light-content'}
+            />
+            {/* <LinearGradient colors={['#FF416C', '#FF4B2B']} style={{flex: 1}}> */}
+            {/* Your app code here */}
+            {props.children}
+            {/* </LinearGradient> */}
             {/* </StripeProvider> */}
           </PersistGate>
         </NativeBaseProvider>

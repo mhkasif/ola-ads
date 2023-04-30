@@ -129,8 +129,8 @@ function CreatePost({user}) {
                 },
               },
             ].map((item, index) => (
-              <Box flex={1}>
-                <CustomButton key={index} {...item}>
+              <Box flex={1} key={index}>
+                <CustomButton  {...item}>
                   {item.title}
                 </CustomButton>
               </Box>
@@ -138,7 +138,7 @@ function CreatePost({user}) {
           </HStack>
         </Box>
       </Box>
-      <Box bg="white" flex={1} borderRadius={30}>
+      <Box bg="white" flex={1} borderTopRadius={30} mt={10} pb={5}>
         <Center>
           <CustomText fontSize="sm" color={COLORS.muted} my={2}>
             Select Category
@@ -214,6 +214,7 @@ const CategoryList = () => {
           <CategoryItem key={item} checked={item % 2 === 0} title={item} />
         );
       }}
+      keyExtractor={item => item}
     />
   );
 };

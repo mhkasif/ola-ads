@@ -18,11 +18,15 @@ import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import EditProfile from 'screens/EditProfile/EditProfile';
+import HomeScreen from 'screens/HomeScreen/HomeScreen';
 import ListOfPostsScreen from 'screens/ListOfPostsScreen/ListOfPostsScreen';
 import Plans from 'screens/PlansScreen/PlansScreen';
 import UserProfile from 'screens/UserProfileScreen/UserProfileScreen';
 import {SCREEN_NAMES} from 'screens/screenNames';
-
+const header = ({route: {name}, ...props}) => {
+  // console.log(props);
+  return <CustomHeader title={name} {...props} />;
+};
 const renderIcon = ({route, color, size}) => {
   let iconName;
 
@@ -50,19 +54,16 @@ const BottomTabNavigator = ({route, ...props}) => {
   const Tab = createBottomTabNavigator();
   const ProfileStack = createNativeStackNavigator();
   let focusedRoute = getFocusedRouteNameFromRoute(route);
-  console.log({focusedRoute}, props);
+  // console.log({focusedRoute}, props);
   const {navigate} = useNavigation();
   const isFocused = useIsFocused();
-  console.log(isFocused);
+  // console.log(isFocused);
   const ProfileStackScreens = useCallback(
     () => (
       <ProfileStack.Navigator
         screenOptions={{
           // ...headerOptions,
-          header: ({route: {name}, ...props}) => {
-            console.log(props);
-            return <CustomHeader title={name} {...props} />;
-          },
+          header,
         }}>
         <ProfileStack.Screen
           name={SCREEN_NAMES.PROFILE}
@@ -121,7 +122,7 @@ const BottomTabNavigator = ({route, ...props}) => {
         })}>
         <Tab.Screen
           name={SCREEN_NAMES.HOME}
-          component={ListOfPostsScreen}
+          component={HomeScreen}
           options={{
             ...headerOptions,
             header: ({route: {name}}) => (
@@ -155,6 +156,9 @@ const BottomTabNavigator = ({route, ...props}) => {
         <Tab.Screen
           name={'_' + SCREEN_NAMES.PROFILE}
           component={ProfileStackScreens}
+          options={{
+            tabBarLabel: SCREEN_NAMES.PROFILE,
+          }}
         />
       </Tab.Navigator>
 
@@ -168,9 +172,14 @@ const BottomTabNavigator = ({route, ...props}) => {
             size="lg"
             bottom={20}
             onPress={() => navigate(SCREEN_NAMES.CREATE_AD)}>
-            <Icon  color="white" as={MaterialIcon} name="add" style={{
-              fontSize: 20,
-            }} />
+            <Icon
+              color="white"
+              as={MaterialIcon}
+              name="add"
+              style={{
+                fontSize: 20,
+              }}
+            />
           </FAB>
         )}
     </>

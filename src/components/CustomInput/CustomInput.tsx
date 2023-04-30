@@ -56,7 +56,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       ) : type === 'textarea' ? (
         <TextAreaInput {...configInputField} />
       ) : (
-        <Input {...configInputField} />
+        <SimpleInput {...configInputField} />
       )}
       <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
         {configInputField.helperText}
@@ -70,7 +70,7 @@ const PasswordInput: React.FC<CustomInputProps> = ({
 }: CustomInputProps) => {
   const [show, setShow] = React.useState(false);
   return (
-    <Input
+    <SimpleInput
       {...props}
       type={show ? 'text' : 'password'}
       InputRightElement={
@@ -88,10 +88,24 @@ const PasswordInput: React.FC<CustomInputProps> = ({
 };
 
 const TextAreaInput = (props: any) => {
-  return <TextArea {...props} />;
+  return (
+    <TextArea
+      {...props}
+      _focus={{
+        backgroundColor: 'transparent',
+      }}
+    />
+  );
 };
 
 export const SimpleInput = (props: IInputProps) => {
-  return <Input {...props} />;
+  return (
+    <Input
+      {...props}
+      _focus={{
+        backgroundColor: 'transparent',
+      }}
+    />
+  );
 };
 export default CustomInput;

@@ -18,7 +18,11 @@ import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {initStripe, useStripe} from '@stripe/stripe-react-native';
+import {
+  initStripe,
+  useStripe,
+  usePlatformPay,
+} from '@stripe/stripe-react-native';
 import {COLORS} from '@utils/colors';
 import {Dimensions, StyleSheet} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
@@ -49,11 +53,21 @@ const styles = StyleSheet.create({
 
 function ListOfPlansScreen() {
   const [listData, setListData] = useState(LIST_OF_GROUPS);
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const {initPaymentSheet, presentPaymentSheet,presentGooglePay} = useStripe();
   const [loading, setLoading] = useState(false);
   const [paymentIntent, setPaymentIntent] = useState(null);
+  const {isPlatformPaySupported, confirmPlatformPayPayment} = usePlatformPay();
+  useEffect(() => {
+    (async function () {
+      if (!(await isPlatformPaySupported({googlePay: {testEnv: true}}))) {
+        console.log.alert('Google Pay is not supported.');
+        return;
+      } else {
+        console.log('Google Pay is supported');
+      }
+    })();
+  }, []);
 
-  const API_URL = 'https://api.stripe.com/v1';
   const createPaymentIntent = async () => {
     try {
       const response = await fetch(
@@ -67,7 +81,9 @@ function ListOfPlansScreen() {
               'Bearer ' +
               'sk_test_51N2DsJCnPuYN2rinvJzrPNwVTxISNUVcooTta4GDRNqGJ5Yb0JNibMIKj9vwNZESM2h6UkZbtvNo8vE4PZwPKQ0w00e8OsYX2y',
           },
-          body: 'amount=1000&currency=usd',
+          body: 'amount=1000&currency=usd'
+          // &payment_method_types[]=card&payment_method_types[]=platform_pay',
+          // &payment_method_types[]=giropay&payment_method_types[]=sofort&payment_method_types[]=bancontact&payment_method_atypes[]=eps&payment_method_types[]=ideal&payment_method_types[]=sepa_debit&payment_method_types[]=afterpay_clearpay&payment_method_types[]=grabpay&payment_method_types[]=alipay&payment_method_types[]=wechat'
         },
       );
 
@@ -80,41 +96,33 @@ function ListOfPlansScreen() {
     }
   };
 
-  const fetchPaymentSheetParams = async () => {
-    try {
-      const response = await createPaymentIntent();
-      console.log({response: await response.json()});
-      const {paymentIntent, ephemeralKey, customer} = response;
-      return {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-      };
-    } catch (error) {
-      console.log({error});
-      return {error};
-    }
-  };
-
   const initializePaymentSheet = async () => {
-    const ck=await createPaymentIntent();
-    console.log({paymentIntent,ck});
-    if (!paymentIntent&&!ck) {
+    const ck = await createPaymentIntent();
+    console.log({paymentIntent, ck});
+    if (!paymentIntent && !ck) {
       console.log('Payment Intent not found');
       return;
     }
 
-    const {error} = await initPaymentSheet({
-      paymentIntentClientSecret: paymentIntent||ck,
+    const {error, paymentOption} = await initPaymentSheet({
+      paymentIntentClientSecret: paymentIntent || ck,
       merchantDisplayName: 'Example, Inc.',
       customerEphemeralKeySecret: null,
       customerId: null,
-      googlePay: true,
-      allowsDelayedPaymentMethods: true,
+      customFlow: true,
+      // allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
         name: 'John Doe',
       },
+      googlePay: {
+        merchantCountryCode: 'US',
+        testEnv: true, // use test environment
+      },
+      testEnv: true, // enable test mode
     });
+    const {error2} = await presentGooglePay();
+    console.log({error2});
+
 
     console.log({error});
     if (!error) {
@@ -123,6 +131,24 @@ function ListOfPlansScreen() {
   };
   const openPaymentSheet = async () => {
     try {
+      // const {error2} = await confirmPlatformPayPayment(paymentIntent, {
+      //   client_secret: paymentIntent,
+      //   googlePay: {
+      //     testEnv: true,
+      //     merchantName: 'My merchant name',
+      //     merchantCountryCode: 'US',
+      //     currencyCode: 'USD',
+      //     billingAddressConfig: {
+      //       // format: PlatformPay.BillingAddressFormat.Full,
+      //       isPhoneNumberRequired: true,
+      //       isRequired: true,
+      //     },
+      //   },
+      // });
+      // console.log({error2});
+      // if (!error2) {
+      //   setLoading(true);
+      // }
       const {error} = await presentPaymentSheet();
 
       if (error) {
@@ -148,65 +174,8 @@ function ListOfPlansScreen() {
     initializePaymentSheet();
   }, []);
 
-  const closeRow = (rowMap, rowKey) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow();
-    }
-  };
-
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex(item => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
-  };
-
-  const onRowDidOpen = rowKey => {
-    console.log('This row opened', rowKey);
-  };
-
-  const renderHiddenItem = (data, rowMap) => (
-    <HStack flex="1" pl="2">
-      <Pressable
-        w="70"
-        ml="auto"
-        cursor="pointer"
-        bg="coolGray.200"
-        justifyContent="center"
-        onPress={() => closeRow(rowMap, data.item.key)}
-        _pressed={{
-          opacity: 0.5,
-        }}>
-        <VStack alignItems="center" space={2}>
-          <Icon name="more-horiz" />
-          <CustomText fontSize="xs" fontWeight="medium" color="coolGray.800">
-            More
-          </CustomText>
-        </VStack>
-      </Pressable>
-      <Pressable
-        w="70"
-        cursor="pointer"
-        bg="red.500"
-        justifyContent="center"
-        onPress={() => deleteRow(rowMap, data.item.key)}
-        _pressed={{
-          opacity: 0.5,
-        }}>
-        <VStack alignItems="center" space={2}>
-          <Icon name="delete" />
-          <CustomText color="white" fontSize="xs" fontWeight="medium">
-            Delete
-          </CustomText>
-        </VStack>
-      </Pressable>
-    </HStack>
-  );
-
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <RenderItem handlePayPress={openPaymentSheet} />
       <FlatList
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({x}) => (

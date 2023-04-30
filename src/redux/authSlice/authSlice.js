@@ -8,7 +8,7 @@ export const AuthSlice = createSlice({
   initialState,
   reducers: {
     addAuth: (state, {payload}) => {
-      console.log({payload, state});
+      // console.log({payload, state});
       state.user = payload.user || 'hello';
       state.authToken = payload.authToken;
     },

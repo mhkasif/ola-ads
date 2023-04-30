@@ -24,7 +24,7 @@ export const loginAction =
 
       dispatch(addAuth(response));
     } catch (error) {
-      console.log({error});
+      // console.log({error});
       Toast.show({
         type: 'error',
         text1: 'Logout Failed',

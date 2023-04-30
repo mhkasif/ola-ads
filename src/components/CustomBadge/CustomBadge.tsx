@@ -15,7 +15,7 @@ const CustomBadge = ({children, textProps, ...props}: ICustomBadge) => {
       // py={1}
       // px={2}
       {...props}>
-      <CustomText fontSize="xs" color={COLORS.white} {...textProps}>{children}</CustomText>
+      <CustomText fontSize={6} color={COLORS.white} {...textProps}>{children}</CustomText>
     </Badge>
   );
 };

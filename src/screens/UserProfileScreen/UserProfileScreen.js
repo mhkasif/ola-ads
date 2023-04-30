@@ -96,10 +96,10 @@ const UserProfile = ({user, logoutAction}) => {
         />
 
         <Heading color={COLORS.primary} letterSpacing="xl">
-          {user.name}
+          {user?.name}
         </Heading>
         <CustomText color={COLORS.muted} letterSpacing="xl">
-          {user.email}
+          {user?.email}
         </CustomText>
       </Center>
       <Center w="100%" mt={5}>

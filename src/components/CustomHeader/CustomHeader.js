@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   //   backIcon: {marginRight: 10,color:"#fff"},
 });
 const CustomHeader = ({title = 'hello', options = {}, ...props}) => {
-  console.log({header: {props, bi:options.backIcon}});
+  // console.log({header: {props, bi:options.backIcon}});
   const {headerRight, backIcon = backIcon === undefined} = options;
   const {goBack} = useNavigation();
   return (
