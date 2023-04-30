@@ -17,7 +17,6 @@ const config = {
 const AppContainer = props => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
         <NativeBaseProvider theme={theme} config={config}>
           <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
             {/* <StripeProvider
@@ -29,15 +28,16 @@ const AppContainer = props => {
               translucent={true}
               backgroundColor={'transparent'}
               // barStyle={'light-content'}
-            />
+              />
+              <NavigationContainer>
             {/* <LinearGradient colors={['#FF416C', '#FF4B2B']} style={{flex: 1}}> */}
             {/* Your app code here */}
             {props.children}
+      </NavigationContainer>
             {/* </LinearGradient> */}
             {/* </StripeProvider> */}
           </PersistGate>
         </NativeBaseProvider>
-      </NavigationContainer>
     </Provider>
   );
 };

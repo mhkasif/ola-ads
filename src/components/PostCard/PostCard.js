@@ -14,6 +14,7 @@ const PostCard = ({item, index, status}) => {
       status,
     });
   };
+  console.log('PostCard rendered');
   return (
     <Pressable onPress={handleClick}>
       <Box

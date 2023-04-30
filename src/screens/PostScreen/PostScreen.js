@@ -4,6 +4,7 @@ import {COLORS} from '@utils/colors';
 import {Box, Divider, HStack, Heading, Image} from 'native-base';
 import React from 'react';
 import PostImage from '../../assets/postImage.png';
+import { useFocusEffect } from '@react-navigation/native';
 const PostScreen = ({
   route: {
     params: {
@@ -14,6 +15,7 @@ const PostScreen = ({
   },
   ...props
 }) => {
+
   return (
     <Box bg={COLORS.bg} px={4} py={6}>
       <Image source={img || PostImage} w="100%" alt={title} />

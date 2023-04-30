@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Box,
   Center,
@@ -69,12 +70,21 @@ const formValidation = YUP.object().shape({
   // email: YUP.string().email().required(),
   description: YUP.string().required(),
 });
-function CreatePost({user}) {
+function CreatePost({user, navigation}) {
   const initialValues = {
     name: user.name,
     email: user.email,
     description: '',
   };
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <CustomButton buttonProps={{isDisabled: true}} bg="success.600">
+          Post
+        </CustomButton>
+      ),
+    });
+  }, []);
   const [openModal, setOpenModal] = React.useState(false);
   const onClose = () => setOpenModal(false);
   const onOpen = () => setOpenModal(true);
@@ -130,9 +140,7 @@ function CreatePost({user}) {
               },
             ].map((item, index) => (
               <Box flex={1} key={index}>
-                <CustomButton  {...item}>
-                  {item.title}
-                </CustomButton>
+                <CustomButton {...item}>{item.title}</CustomButton>
               </Box>
             ))}
           </HStack>

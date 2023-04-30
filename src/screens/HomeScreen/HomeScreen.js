@@ -2,12 +2,31 @@
 import CustomText from '@components/CustomText/CustomText';
 import PostCard from '@components/PostCard/PostCard';
 import {COLORS} from '@utils/colors';
-import {Avatar, Box, FlatList, HStack, Heading, VStack} from 'native-base';
-import {Dimensions} from 'react-native';
+import {sleep} from '@utils/helpers';
+import {Avatar, Box, HStack, Heading, VStack} from 'native-base';
+import {useEffect, useState, useCallback} from 'react';
+import {Dimensions, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 
 function HomeScreen() {
   const {user} = useSelector(state => state.auth);
+  const [list, setList] = useState([]);
+  const renderItem = useCallback(({item}) => {
+    // console.log(item);
+    return (
+      <PostCard
+        status={item === 1 ? 'approved' : item === 2 ? 'pending' : 'rejected'}
+        key={item}
+      />
+    );
+  }, []);
+  const handleSet = async () => {
+    await sleep(500);
+    setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  };
+  useEffect(() => {
+    handleSet();
+  }, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
       <HStack alignItems="center">
@@ -39,20 +58,7 @@ function HomeScreen() {
       <CustomText fontSize="lg" bold my={3}>
         Recent
       </CustomText>
-      <FlatList
-        data={[1, 2, 3, 4, 5]}
-        renderItem={({item}) => {
-          // console.log(item);
-          return (
-            <PostCard
-              status={
-                item === 1 ? 'approved' : item === 2 ? 'pending' : 'rejected'
-              }
-              key={item}
-            />
-          );
-        }}
-      />
+      <FlatList data={list} renderItem={renderItem} />
     </Box>
   );
 }

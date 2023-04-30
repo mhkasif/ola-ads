@@ -107,8 +107,8 @@ const BottomTabNavigator = ({route, ...props}) => {
           headerShown: false,
           tabBarItemStyle: {
             marginHorizontal: 20,
-            borderTopWidth: (focusedRoute || 'Home') === route.name ? 2 : 0,
-            borderColor: '#0C0F3D',
+            borderTopWidth:  2,
+            borderColor: (focusedRoute || 'Home') === route.name ?'#0C0F3D':'transparent',
           },
           tabBarIcon: props => renderIcon({route, ...props}),
           tabBarActiveTintColor: '#0C0F3D',

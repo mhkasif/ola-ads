@@ -20,9 +20,9 @@ const CustomButton = ({
 }: ICustomButtonProps) => {
   return noGradient ? (
     <Button
-    _disabled={{
-      opacity: 0.4,
-    }}
+      _disabled={{
+        opacity: 0.4,
+      }}
       _loading={{
         _text: {
           fontSize: 'md',
@@ -31,6 +31,7 @@ const CustomButton = ({
       }}
       {...buttonProps}>
       <CustomText
+        px={2}
         color={secondary ? 'gray.900' : '#fff'}
         fontSize="md"
         {...textProps}>
@@ -41,7 +42,6 @@ const CustomButton = ({
     <Box
       overflow="hidden"
       borderRadius={4}
-
       bg={
         secondary
           ? 'white'
@@ -71,6 +71,7 @@ const CustomButton = ({
           ...(buttonProps?._pressed || {}),
         }}>
         <CustomText
+          px={2}
           color={secondary ? 'gray.900' : '#fff'}
           fontSize="md"
           {...textProps}>

@@ -35,7 +35,7 @@ const UserProfile = ({user, logoutAction}) => {
     setModalOpen(name);
   };
   const {navigate, ...navigation} = useNavigation();
-  const resetAction = StackActions.replace(SCREEN_NAMES.LOGIN);
+  const resetAction = StackActions.replace(SCREEN_NAMES.AUTH);
 
   const cards = [
     {

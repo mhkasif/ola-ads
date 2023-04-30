@@ -1,44 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import {
-  AspectRatio,
-  Avatar,
-  Badge,
-  Box,
-  Center,
-  Container,
-  FlatList,
-  Flex,
-  HStack,
-  Heading,
-  Image,
-  Pressable,
-  Spacer,
-  Stack,
-  StatusBar,
-  VStack,
-  useColorModeValue,
-} from 'native-base';
-import {useState} from 'react';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {LIST_OF_GROUPS} from './groups';
-import {TabView, SceneMap} from 'react-native-tab-view';
-import {Animated, Dimensions, useWindowDimensions} from 'react-native';
 import CustomButton from '@components/CustomButton/CustomButton';
-import CustomText from '@components/CustomText/CustomText';
-import {COLORS} from '@utils/colors';
-import CustomBadge from '@components/CustomBadge/CustomBadge';
 import PostCard from '@components/PostCard/PostCard';
-
+import {COLORS} from '@utils/colors';
+import {sleep} from '@utils/helpers';
+import {Box, StatusBar, useColorModeValue} from 'native-base';
+import {useEffect, useState, useCallback} from 'react';
+import {Dimensions, FlatList} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
 function ListOfPostsScreen() {
-  const [listData, setListData] = useState(LIST_OF_GROUPS);
-
+  const [list, setList] = useState([]);
+  const handleSet = async () => {
+    await sleep(500);
+    setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  };
+  useEffect(() => {
+    handleSet();
+  }, []);
+  const renderItem = useCallback(({item}) => <PostCard key={item} />, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <FlatList
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-        renderItem={({item}) => <PostCard key={item} />}
-      />
+      <FlatList data={list} renderItem={renderItem} />
     </Box>
   );
 }

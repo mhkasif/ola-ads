@@ -12,7 +12,7 @@ import {
   VStack,
   useColorModeValue,
 } from 'native-base';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
@@ -20,22 +20,11 @@ import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {
   initStripe,
-  useStripe,
-  usePlatformPay,
+  useStripe
 } from '@stripe/stripe-react-native';
-import {COLORS} from '@utils/colors';
-import {Dimensions, StyleSheet} from 'react-native';
-import {SceneMap, TabView} from 'react-native-tab-view';
-import {LIST_OF_GROUPS} from 'screens/ListOfPostsScreen/groups';
-const Banner = ({message, style}) => {
-  return (
-    <Icon
-      style={[styles.banner, style]}
-      as={<MaterialIcon name={message} />}
-      size="lg"
-    />
-  );
-};
+import { COLORS } from '@utils/colors';
+import { Dimensions, StyleSheet } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   banner: {
@@ -52,21 +41,9 @@ const styles = StyleSheet.create({
 });
 
 function ListOfPlansScreen() {
-  const [listData, setListData] = useState(LIST_OF_GROUPS);
-  const {initPaymentSheet, presentPaymentSheet,presentGooglePay} = useStripe();
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [loading, setLoading] = useState(false);
   const [paymentIntent, setPaymentIntent] = useState(null);
-  const {isPlatformPaySupported, confirmPlatformPayPayment} = usePlatformPay();
-  useEffect(() => {
-    (async function () {
-      if (!(await isPlatformPaySupported({googlePay: {testEnv: true}}))) {
-        console.log.alert('Google Pay is not supported.');
-        return;
-      } else {
-        console.log('Google Pay is supported');
-      }
-    })();
-  }, []);
 
   const createPaymentIntent = async () => {
     try {
@@ -81,7 +58,7 @@ function ListOfPlansScreen() {
               'Bearer ' +
               'sk_test_51N2DsJCnPuYN2rinvJzrPNwVTxISNUVcooTta4GDRNqGJ5Yb0JNibMIKj9vwNZESM2h6UkZbtvNo8vE4PZwPKQ0w00e8OsYX2y',
           },
-          body: 'amount=1000&currency=usd'
+          body: 'amount=1000&currency=usd',
           // &payment_method_types[]=card&payment_method_types[]=platform_pay',
           // &payment_method_types[]=giropay&payment_method_types[]=sofort&payment_method_types[]=bancontact&payment_method_atypes[]=eps&payment_method_types[]=ideal&payment_method_types[]=sepa_debit&payment_method_types[]=afterpay_clearpay&payment_method_types[]=grabpay&payment_method_types[]=alipay&payment_method_types[]=wechat'
         },
@@ -114,11 +91,6 @@ function ListOfPlansScreen() {
       defaultBillingDetails: {
         name: 'John Doe',
       },
-      googlePay: {
-        merchantCountryCode: 'US',
-        testEnv: true, // use test environment
-      },
-      testEnv: true, // enable test mode
     });
 
     console.log({error});
@@ -128,24 +100,6 @@ function ListOfPlansScreen() {
   };
   const openPaymentSheet = async () => {
     try {
-      // const {error2} = await confirmPlatformPayPayment(paymentIntent, {
-      //   client_secret: paymentIntent,
-      //   googlePay: {
-      //     testEnv: true,
-      //     merchantName: 'My merchant name',
-      //     merchantCountryCode: 'US',
-      //     currencyCode: 'USD',
-      //     billingAddressConfig: {
-      //       // format: PlatformPay.BillingAddressFormat.Full,
-      //       isPhoneNumberRequired: true,
-      //       isRequired: true,
-      //     },
-      //   },
-      // });
-      // console.log({error2});
-      // if (!error2) {
-      //   setLoading(true);
-      // }
       const {error} = await presentPaymentSheet();
 
       if (error) {
@@ -164,19 +118,18 @@ function ListOfPlansScreen() {
         publishableKey:
           'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
       });
+      initializePaymentSheet();
     }
     initialize().catch(console.error);
   }, []);
-  useEffect(() => {
-    initializePaymentSheet();
-  }, []);
+
 
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
       <FlatList
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-        renderItem={({x}) => (
-          <RenderItem key={x} handlePayPress={openPaymentSheet} />
+        renderItem={({item}) => (
+          <RenderItem key={item} handlePayPress={openPaymentSheet} />
         )}
       />
     </Box>
