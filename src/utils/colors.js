@@ -18,12 +18,12 @@ export const linearGradient = {
   // start:{ x: 0, y: 0 },
   // end:{ x: 1, y: 0 },
   // locations:[0.01, 0.01, 0.44, 0.96]
-
-  colors: ['rgba(11, 114, 140, 0.83)', '#08576A', '#191E6D', '#543073'],
+// give hex opacity 0.75
+  colors: ['#0B728C', '#08576A', '#191E6D', '#543073'],
   // colors: ['rgba(11, 114, 140, 0.83)', '#08576A', '#191E6D', '#543073'],
   start: [1, 0],
   end: [0, 1],
-  locations: [0.00066, 0.00067, 0.989, 0.911],
+  locations: [0.000066, 0.000067, .78, 1],
   // angle: 20,
 
 };
