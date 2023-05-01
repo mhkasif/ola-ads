@@ -31,7 +31,7 @@ const CustomButton = ({
       }}
       {...buttonProps}>
       <CustomText
-        px={2}
+        // px={2}
         color={secondary ? 'gray.900' : '#fff'}
         fontSize="md"
         {...textProps}>
@@ -71,7 +71,7 @@ const CustomButton = ({
           ...(buttonProps?._pressed || {}),
         }}>
         <CustomText
-          px={2}
+          // px={2}
           color={secondary ? 'gray.900' : '#fff'}
           fontSize="md"
           {...textProps}>

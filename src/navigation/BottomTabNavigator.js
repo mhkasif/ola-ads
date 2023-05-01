@@ -3,18 +3,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import FAB from '@components/CustomFAB/CustomFAB';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
-import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {headerOptions} from '@utils/helpers';
-import {Box} from 'native-base';
-import React, {useCallback} from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { headerOptions } from '@utils/helpers';
+import { Box } from 'native-base';
+import React, { useCallback } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import EditProfile from 'screens/EditProfile/EditProfile';
@@ -22,7 +21,7 @@ import HomeScreen from 'screens/HomeScreen/HomeScreen';
 import ListOfPostsScreen from 'screens/ListOfPostsScreen/ListOfPostsScreen';
 import Plans from 'screens/PlansScreen/PlansScreen';
 import UserProfile from 'screens/UserProfileScreen/UserProfileScreen';
-import {SCREEN_NAMES} from 'screens/screenNames';
+import { SCREEN_NAMES } from 'screens/screenNames';
 const header = ({route: {name}, ...props}) => {
   // console.log(props);
   return <CustomHeader title={name} {...props} />;

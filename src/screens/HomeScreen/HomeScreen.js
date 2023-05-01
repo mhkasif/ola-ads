@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import CustomText from '@components/CustomText/CustomText';
 import PostCard from '@components/PostCard/PostCard';
+import {FlashList} from '@shopify/flash-list';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Avatar, Box, HStack, Heading, VStack} from 'native-base';
-import {useEffect, useState, useCallback} from 'react';
-import {Dimensions, FlatList} from 'react-native';
+import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 function HomeScreen() {
   const {user} = useSelector(state => state.auth);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const renderItem = useCallback(({item}) => {
     // console.log(item);
     return (
@@ -25,7 +25,7 @@ function HomeScreen() {
     setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   };
   useEffect(() => {
-    handleSet();
+    // handleSet();
   }, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
@@ -58,33 +58,9 @@ function HomeScreen() {
       <CustomText fontSize="lg" bold my={3}>
         Recent
       </CustomText>
-      <FlatList data={list} renderItem={renderItem} />
+      <FlashList estimatedItemSize={60} data={list} renderItem={renderItem} />
     </Box>
   );
 }
-// export default ListOfPostsScreen;
-
-const initialLayout = {
-  width: Dimensions.get('window').width,
-};
-
-// function HomeScreen() {
-//   const {width} = useWindowDimensions();
-
-//   const [index, setIndex] = useState(0);
-//   const [routes] = useState([
-//     {key: 'first', title: 'First'},
-//     {key: 'second', title: 'Second'},
-//   ]);
-
-//   return (
-//     <TabView
-//       navigationState={{index, routes}}
-//       renderScene={renderScene}
-//       onIndexChange={setIndex}
-//       initialLayout={{width}}
-//     />
-//   );
-// }
 
 export default HomeScreen;

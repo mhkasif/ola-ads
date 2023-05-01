@@ -27,20 +27,22 @@ const CustomHeader = ({title = 'hello', options = {}, ...props}) => {
   const {headerRight, backIcon = backIcon === undefined} = options;
   const {goBack} = useNavigation();
   return (
-    <Box style={styles.container} h={100} bg={{linearGradient}}>
-      {backIcon && (
-        <Pressable onPress={goBack} style={styles.backIcon}>
-          <Icon
-            size="lg"
-            color={COLORS.white}
-            as={<MaterialIcon name="arrow-back" />}
-          />
-        </Pressable>
-      )}
-      <CustomText style={styles.title}>{title}</CustomText>
-      {headerRight && (
-        <Pressable style={styles.headerRight}>{headerRight}</Pressable>
-      )}
+    <Box safeArea bg={{linearGradient}}>
+      <Box h={100} bg={{linearGradient}} style={styles.container}>
+        {backIcon && (
+          <Pressable onPress={goBack} style={styles.backIcon}>
+            <Icon
+              size="lg"
+              color={COLORS.white}
+              as={<MaterialIcon name="arrow-back" />}
+            />
+          </Pressable>
+        )}
+        <CustomText style={styles.title}>{title}</CustomText>
+        {headerRight && (
+          <Pressable style={styles.headerRight}>{headerRight}</Pressable>
+        )}
+      </Box>
     </Box>
   );
 };

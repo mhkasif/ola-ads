@@ -5,8 +5,10 @@ import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Box, StatusBar, useColorModeValue} from 'native-base';
 import {useEffect, useState, useCallback} from 'react';
-import {Dimensions, FlatList} from 'react-native';
+import {Dimensions} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
+import {FlashList} from '@shopify/flash-list';
+
 function ListOfPostsScreen() {
   const [list, setList] = useState([]);
   const handleSet = async () => {
@@ -14,12 +16,12 @@ function ListOfPostsScreen() {
     setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   };
   useEffect(() => {
-    handleSet();
+    // handleSet();
   }, []);
   const renderItem = useCallback(({item}) => <PostCard key={item} />, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <FlatList data={list} renderItem={renderItem} />
+      <FlashList data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} renderItem={renderItem} estimatedItemSize={120} />
     </Box>
   );
 }

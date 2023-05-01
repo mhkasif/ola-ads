@@ -26,6 +26,7 @@ import CustomButton from '@components/CustomButton/CustomButton';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
+import { FlashList } from '@shopify/flash-list';
 const fields = [
   // {
   //   my: 2,
@@ -215,14 +216,14 @@ const CategoryList = () => {
   //flat list for category item
 
   return (
-    <FlatList
+    <FlashList
       data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
       renderItem={({item}) => {
         return (
           <CategoryItem key={item} checked={item % 2 === 0} title={item} />
         );
       }}
-      keyExtractor={item => item}
+      estimatedItemSize={25}
     />
   );
 };

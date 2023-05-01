@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
-  FlatList,
+
   HStack,
   Heading,
   Icon,
@@ -25,7 +25,7 @@ import {
 import { COLORS } from '@utils/colors';
 import { Dimensions, StyleSheet } from 'react-native';
 import { SceneMap, TabView } from 'react-native-tab-view';
-
+import {FlashList} from '@shopify/flash-list'
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
@@ -126,7 +126,8 @@ function ListOfPlansScreen() {
 
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <FlatList
+      <FlashList
+      estimatedItemSize={120}
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({item}) => (
           <RenderItem key={item} handlePayPress={openPaymentSheet} />
