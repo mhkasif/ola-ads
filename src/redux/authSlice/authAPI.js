@@ -9,3 +9,13 @@ export const LOGIN_META = {
     password: '',
   },
 };
+
+export const SIGNUP_META = {
+  method: POST,
+  endpoint: URLS.SIGN_UP,
+  params: {
+    email: '',
+    password: '',
+    fullName: '',
+  },
+};

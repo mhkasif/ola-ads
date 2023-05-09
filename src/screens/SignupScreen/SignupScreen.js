@@ -3,7 +3,7 @@ import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import FacebookButton from '@components/FacebookButton/FacebookButton';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
-import {useNavigation} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
 import Logo from 'assets/logo.png';
 import {Formik} from 'formik';
@@ -19,21 +19,22 @@ import {
   VStack,
 } from 'native-base';
 import {connect} from 'react-redux';
-import {loginAction} from 'redux/authSlice/authActions';
+import {signupAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from '../screenNames';
 import YUP from '@components/YUP/YUP';
+import {Toast} from 'react-native-toast-message';
 
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
-  name: YUP.string().required('Full name is required.'),
+  fullName: YUP.string().required('Full name is required.'),
   password: YUP.string()
     .required('Password is required')
     .min(8, 'Password must be atleast 8 character long.'),
 });
 const fields = [
   {
-    name: 'name',
-    label: 'Full Name',
+    name: 'fullName',
+    label: 'Name',
     // type: 'text',
     inputProps: {
       placeholder: 'Enter your full name',
@@ -59,22 +60,26 @@ const fields = [
     validate: true,
   },
 ];
-const SignupScreen = ({loginAction}) => {
-  const {navigate} = useNavigation();
+const SignupScreen = ({signupAction}) => {
+  const {navigate, ...navigation} = useNavigation();
+  const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
   const initialValues = fields.reduce((acc, field) => {
     acc[field.name] = 'hse@asas.asa';
     return acc;
   });
-  const handleLogin = async values => {
-    console.log({values});
-    try {
-      await loginAction(values);
-      navigate(SCREEN_NAMES.FORGOT_PASSWORD);
 
-      return;
+  const handleSignup = async values => {
+    try {
+
+      let {error, data} = await signupAction(values);
+      if (!error) {
+        navigation.dispatch(resetAction);
+      }
     } catch (error) {
-      console.error({error});
+      console.log({error})
     }
+    // navigate(SCREEN_NAMES.MAIN);
+    // navigate(SCREEN_NAMES.OTP)
   };
   return (
     // <KeyboardAvoidingInputWrapper >
@@ -87,11 +92,16 @@ const SignupScreen = ({loginAction}) => {
       <Box
         bg={{
           linearGradient: {
-            colors:['rgba(11, 114, 140, 0.83)', '#08576A', '#191E6D', '#543073'],
+            colors: [
+              'rgba(11, 114, 140, 0.83)',
+              '#08576A',
+              '#191E6D',
+              '#543073',
+            ],
             // colors:{['#72439A', '#13C2EE']},
-            start:{x: 0, y: 0},
-            end:{x: 1, y: 0},
-            locations:[0.0066, 0.0067, 0.4389, 0.9611],
+            start: {x: 0, y: 0},
+            end: {x: 1, y: 0},
+            locations: [0.0066, 0.0067, 0.4389, 0.9611],
           },
         }}
         style={{
@@ -137,7 +147,7 @@ const SignupScreen = ({loginAction}) => {
             </Heading>
             <Formik
               initialValues={initialValues}
-              onSubmit={handleLogin}
+              onSubmit={handleSignup}
               validationSchema={formValidation}>
               {({isSubmitting, handleSubmit}) => (
                 <VStack space={3} mt="5">
@@ -174,7 +184,7 @@ const SignupScreen = ({loginAction}) => {
                   underline: false,
                 }}
                 onPress={() => navigate(SCREEN_NAMES.LOGIN)}>
-                Log in
+                Log In
               </Link>
             </HStack>
             <Box
@@ -201,6 +211,6 @@ const SignupScreen = ({loginAction}) => {
   );
 };
 const actions = {
-  loginAction,
+  signupAction,
 };
 export default connect(null, actions)(SignupScreen);

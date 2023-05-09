@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import CreatePost from 'screens/CreatePost/CreatePost';
 import SplashScreen from 'screens/SplashScreen/SplashScreen';

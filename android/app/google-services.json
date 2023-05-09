@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1077115806182",
+    "project_id": "olaads-b730c",
+    "storage_bucket": "olaads-b730c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077115806182:android:29e23a62f66d99407e3627",
+        "android_client_info": {
+          "package_name": "com.ola"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077115806182-p9h1faimjdouf3d2aij2ktnm3ucjlaeh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7eldRIoBygbaofXUG3F6q4F-nvGbU1kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077115806182-as9o9p6vrucgru286f085lo57vg64ha0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

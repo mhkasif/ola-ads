@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import CustomButton from '@components/CustomButton/CustomButton';
 import PostCard from '@components/PostCard/PostCard';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Box, StatusBar, useColorModeValue} from 'native-base';
-import {useEffect, useState, useCallback} from 'react';
+import {useEffect, useState, useCallback, useMemo} from 'react';
 import {Dimensions} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import {FlashList} from '@shopify/flash-list';
@@ -21,27 +22,19 @@ function ListOfPostsScreen() {
   const renderItem = useCallback(({item}) => <PostCard key={item} />, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <FlashList data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} renderItem={renderItem} estimatedItemSize={120} />
+      <FlashList
+        data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+        renderItem={renderItem}
+        estimatedItemSize={120}
+      />
     </Box>
   );
 }
 // export default ListOfPostsScreen;
 
-const FirstRoute = () => <ListOfPostsScreen />;
-
-const SecondRoute = () => <ListOfPostsScreen />;
-
-const ThirdRoute = () => <ListOfPostsScreen />;
-
 const initialLayout = {
   width: Dimensions.get('window').width,
 };
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-  third: ThirdRoute,
-});
-
 // function Example() {
 //   const {width} = useWindowDimensions();
 
@@ -76,6 +69,31 @@ function Example() {
       title: 'Rejected',
     },
   ]);
+
+  const FirstRoute = useMemo(
+    () => (index === 0 ? () => <ListOfPostsScreen /> : () => <></>),
+    [index],
+  );
+
+  const SecondRoute = useMemo(
+    () => (index === 1 ? () => <ListOfPostsScreen /> : () => <></>),
+    [index],
+  );
+
+  const ThirdRoute = useMemo(
+    () => (index === 2 ? () => <ListOfPostsScreen /> : () => <></>),
+    [index],
+  );
+
+  const renderScene = useMemo(
+    () =>
+      SceneMap({
+        first: FirstRoute,
+        second: SecondRoute,
+        third: ThirdRoute,
+      }),
+    [index],
+  );
 
   const renderTabBar = props => {
     // const inputRange = props.navigationState.routes.map((x, i) => i);

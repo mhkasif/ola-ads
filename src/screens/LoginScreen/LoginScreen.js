@@ -48,15 +48,10 @@ const LoginScreen = ({loginAction}) => {
 
   const handleLogin = async values => {
     console.log({values});
-    try {
-      await loginAction(values);
-      // navigate(SCREEN_NAMES.MAIN);
-      navigation.dispatch(resetAction);
-      // navigate(SCREEN_NAMES.OTP)
 
-      return;
-    } catch (error) {
-      console.error({error});
+    let {error, data} = await loginAction(values);
+    if (!error) {
+      navigation.dispatch(resetAction);
     }
   };
   const fields = [
@@ -132,7 +127,7 @@ const LoginScreen = ({loginAction}) => {
               color="coolGray.600"
               fontWeight="medium"
               size="xs">
-              Log in to continue!
+              Log In to continue!
             </Heading>
             <Formik
               initialValues={initialValues}
@@ -162,7 +157,7 @@ const LoginScreen = ({loginAction}) => {
                       isLoading: isSubmitting,
                       isLoadingText: 'Logging In...',
                     }}>
-                    Log in
+                    Log In
                   </CustomButton>
                 </VStack>
               )}

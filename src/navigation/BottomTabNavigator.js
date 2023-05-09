@@ -10,7 +10,7 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {headerOptions} from '@utils/helpers';
 import {Box} from 'native-base';
 import React, {useCallback} from 'react';

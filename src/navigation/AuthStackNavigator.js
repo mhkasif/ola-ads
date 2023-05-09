@@ -1,5 +1,5 @@
 import CustomHeader from '@components/CustomHeader/CustomHeader';
-import {createNativeStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useCallback} from 'react';
 import ForgotPassword from 'screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import LoginScreen from 'screens/LoginScreen/LoginScreen';
