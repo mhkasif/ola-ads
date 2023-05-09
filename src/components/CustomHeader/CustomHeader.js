@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 15,
-    height: 100,
+    height: 70,
 
     // borderBottomWidth: 1,
     // borderBottomColor: '#ccc',

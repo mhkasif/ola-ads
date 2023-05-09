@@ -303,7 +303,7 @@ const ConfirmationModal = ({isOpen = false, onClose = undefined}) => {
                     w: '47%',
                   }}
                   noGradient>
-                  Yes, i'm Sure
+                  Yes, I'm Sure
                 </CustomButton>
               </HStack>
             </Modal.Body>

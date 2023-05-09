@@ -77,7 +77,7 @@ const LoginScreen = ({loginAction}) => {
       validate: true,
       inputProps: {
         placeholder: 'Enter your password',
-        secureTextEntry: true,
+        // secureTextEntry: true,
       },
     },
   ];
@@ -132,7 +132,7 @@ const LoginScreen = ({loginAction}) => {
               color="coolGray.600"
               fontWeight="medium"
               size="xs">
-              Login to continue!
+              Log in to continue!
             </Heading>
             <Formik
               initialValues={initialValues}
@@ -160,9 +160,9 @@ const LoginScreen = ({loginAction}) => {
                       // colorScheme: 'indigo',
                       onPress: handleSubmit,
                       isLoading: isSubmitting,
-                      isLoadingText: 'Logging...',
+                      isLoadingText: 'Logging In...',
                     }}>
-                    Login
+                    Log in
                   </CustomButton>
                 </VStack>
               )}

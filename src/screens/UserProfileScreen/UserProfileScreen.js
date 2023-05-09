@@ -54,7 +54,11 @@ const UserProfile = ({user, logoutAction}) => {
       onPress: () => navigate(SCREEN_NAMES.PLANS),
     },
     {name: 'Contact Us', icon: Phone},
-    {name: 'Terms & Conditions', icon: Terms},
+    {
+      name: 'Terms & Conditions',
+      icon: Terms,
+      onPress: () => navigate(SCREEN_NAMES.Terms),
+    },
     {
       name: 'Logout',
       icon: Logout,
@@ -74,6 +78,7 @@ const UserProfile = ({user, logoutAction}) => {
         isOpen={modalOpen === MODAL_NAMES.LOGOUT}
         onClose={onClose}
         handleAction={handleLogout}
+        actionText="Yes, I'm sure"
       />
       <ConfirmationModal
         title="Deactivate Account"

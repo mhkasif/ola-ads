@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 function HomeScreen() {
   const {user} = useSelector(state => state.auth);
   const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const [loading, setLoading] = useState(true);
   const renderItem = useCallback(({item}) => {
     // console.log(item);
     return (
@@ -21,11 +22,12 @@ function HomeScreen() {
     );
   }, []);
   const handleSet = async () => {
-    await sleep(500);
-    setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    await sleep(1000);
+    // setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    setLoading(false);
   };
   useEffect(() => {
-    // handleSet();
+    handleSet();
   }, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
@@ -50,7 +52,7 @@ function HomeScreen() {
               letterSpacing="lg"
               fontSize="md"
               mt={2}>
-              Welcome back to ola
+              Welcome to ola
             </CustomText>
           </VStack>
         </Box>
@@ -58,7 +60,9 @@ function HomeScreen() {
       <CustomText fontSize="lg" bold my={3}>
         Recent
       </CustomText>
-      <FlashList estimatedItemSize={60} data={list} renderItem={renderItem} />
+      {!loading && (
+        <FlashList estimatedItemSize={60} data={list} renderItem={renderItem} />
+      )}
     </Box>
   );
 }

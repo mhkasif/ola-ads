@@ -4,15 +4,21 @@ import React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
 
 const FAB = ({children, ...props}) => {
+  const handlePress = e => {
+    props.onPress();
+    e?.stopPropagation();
+  };
   return (
-    <Pressable onPress={props.onPress}>
+    <Pressable onPress={handlePress}>
       <LinearGradeientWrapper
         style={styles.container}
         colors={['#72439A', '#13C2EE']}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
         locations={[0.1747, 1.461]}>
-        <CustomText style={styles.title}>{children}</CustomText>
+        <CustomText onPress={handlePress} style={styles.title}>
+          {children}
+        </CustomText>
       </LinearGradeientWrapper>
     </Pressable>
   );

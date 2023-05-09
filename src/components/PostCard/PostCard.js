@@ -1,9 +1,9 @@
 import CustomBadge from '@components/CustomBadge/CustomBadge';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
+import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
 import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
 import {SCREEN_NAMES} from 'screens/screenNames';
 const PostCard = ({item, index, status}) => {
   const {navigate} = useNavigation();
@@ -15,6 +15,7 @@ const PostCard = ({item, index, status}) => {
     });
   };
   console.log('PostCard rendered');
+
   return (
     <Pressable onPress={handleClick}>
       <Box

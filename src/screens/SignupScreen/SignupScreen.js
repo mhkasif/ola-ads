@@ -174,7 +174,7 @@ const SignupScreen = ({loginAction}) => {
                   underline: false,
                 }}
                 onPress={() => navigate(SCREEN_NAMES.LOGIN)}>
-                Login
+                Log in
               </Link>
             </HStack>
             <Box

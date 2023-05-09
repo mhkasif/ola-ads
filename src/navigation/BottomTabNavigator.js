@@ -4,24 +4,25 @@
 import FAB from '@components/CustomFAB/CustomFAB';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { headerOptions } from '@utils/helpers';
-import { Box } from 'native-base';
-import React, { useCallback } from 'react';
+import {createNativeStackNavigator} from '@react-navigation/stack';
+import {headerOptions} from '@utils/helpers';
+import {Box} from 'native-base';
+import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import EditProfile from 'screens/EditProfile/EditProfile';
 import HomeScreen from 'screens/HomeScreen/HomeScreen';
 import ListOfPostsScreen from 'screens/ListOfPostsScreen/ListOfPostsScreen';
 import Plans from 'screens/PlansScreen/PlansScreen';
+import TermsAndCondition from 'screens/TermsAndCondition/TermsAndCondition';
 import UserProfile from 'screens/UserProfileScreen/UserProfileScreen';
-import { SCREEN_NAMES } from 'screens/screenNames';
+import {SCREEN_NAMES} from 'screens/screenNames';
 const header = ({route: {name}, ...props}) => {
   // console.log(props);
   return <CustomHeader title={name} {...props} />;
@@ -95,6 +96,10 @@ const BottomTabNavigator = ({route, ...props}) => {
           component={EditProfile}
         />
         <ProfileStack.Screen name={SCREEN_NAMES.PLANS} component={Plans} />
+        <ProfileStack.Screen
+          name={SCREEN_NAMES.Terms}
+          component={TermsAndCondition}
+        />
       </ProfileStack.Navigator>
     ),
     [],
@@ -106,8 +111,11 @@ const BottomTabNavigator = ({route, ...props}) => {
           headerShown: false,
           tabBarItemStyle: {
             marginHorizontal: 20,
-            borderTopWidth:  2,
-            borderColor: (focusedRoute || 'Home') === route.name ?'#0C0F3D':'transparent',
+            borderTopWidth: 2,
+            borderColor:
+              (focusedRoute || 'Home') === route.name
+                ? '#0C0F3D'
+                : 'transparent',
           },
           tabBarIcon: props => renderIcon({route, ...props}),
           tabBarActiveTintColor: '#0C0F3D',

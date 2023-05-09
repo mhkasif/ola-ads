@@ -2,30 +2,27 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
-
   HStack,
   Heading,
   Icon,
   Pressable,
   Radio,
+  Spinner,
   StatusBar,
   VStack,
   useColorModeValue,
 } from 'native-base';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {
-  initStripe,
-  useStripe
-} from '@stripe/stripe-react-native';
-import { COLORS } from '@utils/colors';
-import { Dimensions, StyleSheet } from 'react-native';
-import { SceneMap, TabView } from 'react-native-tab-view';
-import {FlashList} from '@shopify/flash-list'
+import {initStripe, useStripe} from '@stripe/stripe-react-native';
+import {COLORS} from '@utils/colors';
+import {Dimensions, StyleSheet} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
+import {FlashList} from '@shopify/flash-list';
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
@@ -99,9 +96,10 @@ function ListOfPlansScreen() {
     }
   };
   const openPaymentSheet = async () => {
+    setLoading(true);
     try {
       const {error} = await presentPaymentSheet();
-
+      setLoading(false);
       if (error) {
         console.log(`Error code: ${error.code}`, error.message);
       } else {
@@ -109,6 +107,7 @@ function ListOfPlansScreen() {
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -118,16 +117,30 @@ function ListOfPlansScreen() {
         publishableKey:
           'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
       });
-      initializePaymentSheet();
+      await initializePaymentSheet();
     }
     initialize().catch(console.error);
   }, []);
 
-
   return (
-    <Box bg={COLORS.bg} flex="1" p={3}>
+    <Box bg={COLORS.bg} flex="1" p={3} >
+       {loading && (
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          h="200"
+          w="100%"
+          bg="rgba(255, 255, 255, 0.5)"
+          justifyContent="center"
+          alignItems="center">
+          <Spinner size="large" />
+        </Box>
+      )}
       <FlashList
-      estimatedItemSize={120}
+        estimatedItemSize={120}
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({item}) => (
           <RenderItem key={item} handlePayPress={openPaymentSheet} />

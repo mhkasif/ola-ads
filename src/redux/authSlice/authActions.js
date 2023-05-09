@@ -1,11 +1,14 @@
 import {generateRandomId, sleep} from '@utils/helpers';
 import Toast from 'react-native-toast-message';
 import {addAuth, removeAuth} from './authSlice';
+import apiMethod from '@utils/HTTPServices';
+import {LOGIN_META} from './authAPI';
 export const loginAction =
   ({email, password}) =>
   async dispatch => {
     try {
-      let response = await sleep(1000);
+      const meta = {...LOGIN_META, params: {email, password}};
+      let response = await apiMethod(meta);
       response = {
         authToken: generateRandomId(),
         user: {
@@ -16,7 +19,7 @@ export const loginAction =
       };
       Toast.show({
         type: 'success',
-        text1: 'Login Success',
+        text1: 'Log in Success',
         text2: 'Welcome to the app',
         visibilityTime: 900,
       });
