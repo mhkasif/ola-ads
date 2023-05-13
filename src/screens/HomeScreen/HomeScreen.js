@@ -4,14 +4,19 @@ import PostCard from '@components/PostCard/PostCard';
 import {FlashList} from '@shopify/flash-list';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
-import {Avatar, Box, HStack, Heading, VStack} from 'native-base';
+import {Avatar, Box, HStack, Heading, Pressable, VStack} from 'native-base';
 import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-
+import {SCREEN_NAMES} from 'screens/screenNames';
+import {useNavigation} from '@react-navigation/native';
 function HomeScreen() {
   const {user} = useSelector(state => state.auth);
   const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const [loading, setLoading] = useState(true);
+  const {navigate} = useNavigation();
+  const navigateToProfile = () => {
+    navigate(SCREEN_NAMES.PROFILE);
+  };
   const renderItem = useCallback(({item}) => {
     // console.log(item);
     return (
@@ -33,20 +38,22 @@ function HomeScreen() {
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
       <HStack alignItems="center">
         <Box>
-          <Avatar
-            size="lg"
-            source={{
-              uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-            }}
-            borderColor={COLORS.primary}
-            // borderWidth={2}
-            alt="Profile Picture"
-            // mb={3}
-          />
+          <Pressable onPress={navigateToProfile}>
+            <Avatar
+              size="lg"
+              source={{
+                uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+              }}
+              borderColor={COLORS.primary}
+              // borderWidth={2}
+              alt="Profile Picture"
+              // mb={3}
+            />
+          </Pressable>
         </Box>
         <Box ml={3}>
           <VStack>
-            <Heading>Hey! {user?.name}</Heading>
+            <Heading>Hey! {user?.fullName?.split(" ")?.[0]}</Heading>
             <CustomText
               fontWeight="medium"
               letterSpacing="lg"

@@ -9,15 +9,22 @@ export const AuthSlice = createSlice({
   reducers: {
     addAuth: (state, {payload}) => {
       // console.log({payload, state});
-      state.user = payload.user || 'hello';
+      state.user = payload.user;
       state.authToken = payload.authToken;
     },
     removeAuth: state => {
-      state.auth = null;
+      state.user = null;
+      state.authToken = '';
+    },
+    updateAuth: (state, {payload}) => {
+      state.user = payload.user;
+    },
+    updateToken: (state, {payload}) => {
+      state.authToken = payload.authToken;
     },
   },
 });
 
-export const {addAuth, removeAuth} = AuthSlice.actions;
+export const {addAuth, removeAuth, updateAuth, updateToken} = AuthSlice.actions;
 const AuthReducer = AuthSlice.reducer;
 export default AuthReducer;

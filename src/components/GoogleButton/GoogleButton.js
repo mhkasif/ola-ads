@@ -1,9 +1,73 @@
 import CustomText from '@components/CustomText/CustomText';
 import Google from 'assets/google-btn-logo.png';
 import {Button, Center, HStack, Image} from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+import auth from '@react-native-firebase/auth';
+
 const GoogleButton = props => {
+  const [state, setState] = React.useState({});
+  // 1077115806182-tdc7qof16mpke7ok6qlrqslfnad9p18k.apps.googleusercontent.com
+useEffect(() => {
+  GoogleSignin.configure({
+    webClientId:
+      '804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com',
+  });
+},[])
+  const signIn = async () => {
+    // Check if your device supports Google Play
+    try {
+      console.log(
+        await GoogleSignin.hasPlayServices({
+          showPlayServicesUpdateDialog: true,
+        }),
+      );
+      // Get the users ID token
+      const {idToken} = await GoogleSignin.signIn();
+      console.log({idToken});
+      // Create a Google credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Sign-in the user with the credential
+      console.log(auth().signInWithCredential(googleCredential));
+    } catch (error) {
+      console.log({error});
+    }
+  };
+  // const signIn = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     console.log({userInfo})
+  //     setState({userInfo});
+  //   } catch (error) {
+  //     console.log({error})
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  // };
   return (
+    // <GoogleSigninButton
+    //   style={{width: 192, height: 48}}
+    //   size={GoogleSigninButton.Size.Wide}
+    //   color={GoogleSigninButton.Color.Dark}
+
+    //   onPress={signIn}
+    //   disabled={state.isSigninInProgress}
+    // />
     <Button
       {...props}
       bg="#fff"
@@ -20,7 +84,11 @@ const GoogleButton = props => {
       shadow={2}
       shadowColor="#000"
       shadowOffset={{width: 0, height: 2}}
+
+      onPress={signIn}
+      disabled={state.isSigninInProgress}
       shadowOpacity={0.3}>
+
       <Center>
         <HStack>
           <Image mr={4} source={Google} alt="Google" />

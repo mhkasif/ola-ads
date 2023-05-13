@@ -64,9 +64,14 @@ const SignupScreen = ({signupAction}) => {
   const {navigate, ...navigation} = useNavigation();
   const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
   const initialValues = fields.reduce((acc, field) => {
-    acc[field.name] = 'hse@asas.asa';
+    if(field.name === 'fullName')
+    acc[field.name] = 'Haseeb Khan';
+    if(field.name==="email")
+    acc[field.name] = 'haseeb1@gmail.com';
+    if(field.name==="password")
+    acc[field.name] = '123456789';
     return acc;
-  });
+  },{});
 
   const handleSignup = async values => {
     try {

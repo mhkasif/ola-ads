@@ -1,57 +1,22 @@
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomInput from '@components/CustomInput/CustomInput';
+import ImagePicker from '@components/ImagePicker/ImagePicker';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import YUP from '@components/YUP/YUP';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Formik} from 'formik';
-import {
-  Actionsheet,
-  Avatar,
-  Box,
-  Center,
-  Icon,
-  Pressable,
-  VStack,
-} from 'native-base';
+import {Avatar, Box, Center, Icon, Pressable, VStack} from 'native-base';
 import React, {useState} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
 import {connect} from 'react-redux';
 
-const ImageActionSheet = ({isOpen, onClose}) => {
-  const handleLibraryOpen = async () => {
-    try {
-      const x = await launchImageLibrary();
-      console.log(x);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  return (
-    <Actionsheet isOpen={isOpen} onClose={onClose}>
-      <Actionsheet.Content>
-        {/* <Box w="100%" h={60} px={4} justifyContent="center">
-      <CustomText fontSize="16" color="gray.500" _dark={{
-      color: "gray.300"
-    }}>
-        Albums
-      </CustomText>
-    </Box> */}
-        <Actionsheet.Item onPress={handleLibraryOpen}>
-          Choose From Library
-        </Actionsheet.Item>
-        <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
-      </Actionsheet.Content>
-    </Actionsheet>
-  );
-};
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
 };
 
 const fields = [
   {
-    name: 'name',
+    name: 'fullName',
     label: 'Name',
     validate: true,
     inputProps: {
@@ -69,7 +34,7 @@ const fields = [
   },
 ];
 const formValidation = YUP.object().shape({
-  name: YUP.string().required('Name is required'),
+  fullName: YUP.string().required('Name is required'),
   email: YUP.string()
     .email('Please enter a valid email address')
     .required('Email address is required'),
@@ -77,8 +42,9 @@ const formValidation = YUP.object().shape({
 
 const EditProfile = ({user}) => {
   const [modalOpen, setModalOpen] = useState('');
+  const [image, setImage] = useState(null);
   const initialValues = {
-    name: user?.name,
+    fullName: user?.fullName,
     email: user?.email,
   };
   const onClose = () => {
@@ -91,6 +57,10 @@ const EditProfile = ({user}) => {
     // console.log(values);
     await sleep(1000);
   };
+  const onImageSelect = async image => {
+    setImage(image);
+    onClose();
+  };
   return (
     <>
       <Center>
@@ -98,8 +68,7 @@ const EditProfile = ({user}) => {
           <Center>
             <Pressable
               width={0}
-              onPress={openModal(MODAL_NAMES.IMAGE_ACTION_SHEET)}
-              bg="red.400">
+              onPress={openModal(MODAL_NAMES.IMAGE_ACTION_SHEET)}>
               <Center>
                 <Avatar
                   size="2xl"
@@ -115,11 +84,14 @@ const EditProfile = ({user}) => {
                     justifyContent="center"
                     alignItems="center"
                     bg={COLORS.primary}>
-                    <Icon
-                      size={4}
-                      as={<MaterialIcon name="edit" />}
-                      color={COLORS.white}
-                    />
+                    <Pressable
+                      onPress={openModal(MODAL_NAMES.IMAGE_ACTION_SHEET)}>
+                      <Icon
+                        size={4}
+                        as={<MaterialIcon name="edit" />}
+                        color={COLORS.white}
+                      />
+                    </Pressable>
                   </Avatar.Badge>
                 </Avatar>
               </Center>
@@ -138,14 +110,13 @@ const EditProfile = ({user}) => {
                     ))}
                     <CustomButton
                       buttonProps={{
-                        isDisabled: !(dirty && JSON.stringify(errors) === '{}'),
+                        isDisabled: !(dirty && JSON.stringify(errors) === '{}')&& !image,
 
                         isLoading: isSubmitting,
-                        onPress:handleSubmit,
+                        onPress: handleSubmit,
                         isLoadingText: 'Updating...',
                       }}
-                      mt={4}
-                      >
+                      mt={4}>
                       Update
                     </CustomButton>
                   </Box>
@@ -155,9 +126,10 @@ const EditProfile = ({user}) => {
           }
         </VStack>
       </Center>
-      <ImageActionSheet
+      <ImagePicker
         isOpen={modalOpen === MODAL_NAMES.IMAGE_ACTION_SHEET}
         onClose={onClose}
+        callback={onImageSelect}
       />
     </>
   );

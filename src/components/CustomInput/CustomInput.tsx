@@ -108,4 +108,26 @@ export const SimpleInput = (props: IInputProps) => {
     />
   );
 };
+interface ISimpleTextAreaProps {
+  label?: string;
+  inputProps?: ITextAreaProps;
+}
+export const SimpleTextArea = ({
+  label,
+  inputProps,
+  ...rest
+}: ISimpleTextAreaProps) => {
+  return (
+    <FormControl {...rest}>
+      <FormControl.Label>{label}</FormControl.Label>
+      <TextArea
+      autoCompleteType="off"
+        {...inputProps}
+        _focus={{
+          backgroundColor: 'transparent',
+        }}
+      />
+    </FormControl>
+  );
+};
 export default CustomInput;

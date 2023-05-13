@@ -1,12 +1,12 @@
-import {generateRandomId, sleep} from '@utils/helpers';
-import Toast from 'react-native-toast-message';
-import {addAuth, removeAuth} from './authSlice';
-import apiMethod from '@utils/HTTPServices';
-import {LOGIN_META, SIGNUP_META} from './authAPI';
 import auth from '@react-native-firebase/auth';
+import apiMethod from '@utils/HTTPServices';
+import {sleep} from '@utils/helpers';
+import Toast from 'react-native-toast-message';
+import {LOGIN_META} from './authAPI';
+import {addAuth, removeAuth} from './authSlice';
 
 export const loginAction =
-  ({email, password}) =>
+  ({email = 'haseeb@gmail.com', password}) =>
   async dispatch => {
     try {
       // const meta = {...LOGIN_META, params: {email, password}};
@@ -14,18 +14,27 @@ export const loginAction =
       const {user} = await auth().signInWithEmailAndPassword(email, password);
       console.log({user});
       // if (error) throw new Error(error);
-      const {uid: id, displayName} = user;
+      const {uid: id = '123', displayName = 'hello'} = user;
       // const {user}=await auth().currentUser()
       let authToken = await user.getIdToken();
-      let data = {
-        authToken,
+      const {error, data} = await apiMethod({
+        ...LOGIN_META,
+        params: {
+          accessToken: authToken,
+        },
+      });
+      if (error) {
+        throw new Error(error);
+      }
+      console.log({data});
+      let d = {
+        authToken: data?.user?.token,
         user: {
           id,
-          name: displayName,
+          fullName: displayName,
           email,
         },
       };
-      console.log({data})
       Toast.show({
         type: 'success',
         text1: 'Log In Success',
@@ -34,15 +43,15 @@ export const loginAction =
       });
       // await sleep(1000);
 
-      dispatch(addAuth(data));
-      return {data};
+      dispatch(addAuth(d));
+      return {data: d};
     } catch (error) {
       console.log({error});
 
       Toast.show({
         type: 'error',
         text1: 'Log In Failed',
-        text2: error.userInfo.message,
+        text2: error?.userInfo?.message || error,
       });
       return {
         error,
@@ -67,7 +76,7 @@ export const signupAction =
         authToken,
         user: {
           id,
-          name: fullName,
+          fullName,
           email,
         },
       };
@@ -101,3 +110,12 @@ export const logoutAction = () => async dispatch => {
     console.log({error});
   }
 };
+
+
+export const updateUserAction = (data) => async dispatch => {
+  try {
+
+  } catch (error) {
+
+  }
+}

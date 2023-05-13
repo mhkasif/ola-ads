@@ -3,10 +3,9 @@ import {POST} from '@utils/constants';
 
 export const LOGIN_META = {
   method: POST,
-  endpoint: URLS.LOGIN,
+  endpoint: URLS.AUTH,
   params: {
-    email: '',
-    password: '',
+    accessToken: '',
   },
 };
 
@@ -14,8 +13,16 @@ export const SIGNUP_META = {
   method: POST,
   endpoint: URLS.SIGN_UP,
   params: {
-    email: '',
-    password: '',
+    accessToken: '',
+  },
+};
+
+export const UPDATE_USER = {
+  method: POST,
+  endpoint: URLS.UPDATE_USER,
+  params: {
     fullName: '',
+    email: '',
+    displayPicture: '',
   },
 };
