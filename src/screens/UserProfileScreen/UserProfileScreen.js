@@ -67,8 +67,8 @@ const UserProfile = ({user, logoutAction}) => {
     },
   ];
   const handleLogout = async () => {
-    logoutAction();
-    navigation.dispatch(resetAction);
+    let res = await logoutAction();
+    if (res) navigation.dispatch(resetAction);
   };
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
@@ -78,6 +78,7 @@ const UserProfile = ({user, logoutAction}) => {
         isOpen={modalOpen === MODAL_NAMES.LOGOUT}
         onClose={onClose}
         handleAction={handleLogout}
+
         actionText="Yes, I'm sure"
       />
       <ConfirmationModal

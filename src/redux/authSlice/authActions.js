@@ -104,18 +104,47 @@ export const signupAction =
 
 export const logoutAction = () => async dispatch => {
   try {
-    await sleep(1000);
+    const res = await auth().signOut();
+    console.log({res});
     dispatch(removeAuth());
+    return true;
   } catch (error) {
-    console.log({error});
+    Toast.show({
+      type: 'error',
+      text1: 'Logout Failed',
+      text2: error.userInfo.message,
+    });
+    return false;
   }
 };
-
-
-export const updateUserAction = (data) => async dispatch => {
+export const updatePasswordAction =
+  ({newPassword, currentPassword}) =>
+  async dispatch => {
+    try {
+      let user = auth().currentUser;
+      console.log(user.email);
+      const credential = auth.EmailAuthProvider.credential(
+        user.email,
+        currentPassword,
+      );
+      let authResp = await user.reauthenticateWithCredential(credential);
+      console.log({authResp});
+      const updateResp = await user.updatePassword(newPassword);
+      console.log({updateResp});
+      return {
+        data: true,
+      };
+    } catch (error) {
+      console.log({error});
+      return {
+        error: {
+          message: error?.userInfo?.message || 'Something went wrong',
+          code: error?.code || '500',
+        },
+      };
+    }
+  };
+export const updateUserAction = data => async dispatch => {
   try {
-
-  } catch (error) {
-
-  }
-}
+  } catch (error) {}
+};
