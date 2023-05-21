@@ -35,6 +35,7 @@ export const loginAction =
           email,
         },
       };
+      dispatch(addAuth(d));
       Toast.show({
         type: 'success',
         text1: 'Log In Success',
@@ -43,7 +44,6 @@ export const loginAction =
       });
       // await sleep(1000);
 
-      dispatch(addAuth(d));
       return {data: d};
     } catch (error) {
       console.log({error});
@@ -121,16 +121,48 @@ export const updatePasswordAction =
   ({newPassword, currentPassword}) =>
   async dispatch => {
     try {
-      let user = auth().currentUser;
-      console.log(user.email);
+      let currentUser = auth().currentUser;
+
       const credential = auth.EmailAuthProvider.credential(
-        user.email,
+        currentUser.email,
         currentPassword,
       );
-      let authResp = await user.reauthenticateWithCredential(credential);
-      console.log({authResp});
-      const updateResp = await user.updatePassword(newPassword);
-      console.log({updateResp});
+
+      //check if old password is correct
+      let {user} = await currentUser.reauthenticateWithCredential(credential);
+      console.log({user})
+      const {uid: id = '123', displayName = 'hello',email} = user;
+
+      // if authenticated update password
+       await user.updatePassword(newPassword);
+       //login again for new access_token
+      let authToken = await user.getIdToken();
+      const {error, data} = await apiMethod({
+        ...LOGIN_META,
+        params: {
+          accessToken: authToken,
+        },
+      });
+      let d = {
+        authToken: data?.user?.token,
+        user: {
+          id,
+          fullName: displayName,
+          email:email,
+        },
+      };
+      dispatch(addAuth(d));
+      Toast.show({
+        type: 'success',
+        text1: 'Log In Success',
+        text2: 'Welcome to the app',
+        visibilityTime: 900,
+      });
+      // await sleep(1000);
+
+      if (error) {
+        throw new Error(error);
+      }
       return {
         data: true,
       };
@@ -148,3 +180,10 @@ export const updateUserAction = data => async dispatch => {
   try {
   } catch (error) {}
 };
+export const deactivateUserAction = () => async dispatch => {
+  try {
+      const user=auth().currentUser
+
+  } catch (error) {}
+
+}
