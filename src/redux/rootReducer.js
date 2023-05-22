@@ -3,6 +3,7 @@ import {combineReducers} from 'redux';
 import {persistReducer} from 'redux-persist';
 import thunk from 'redux-thunk';
 import AuthReducer from './authSlice/authSlice';
+import AdsReducer from './adsActions/adsSlice';
 
 const persistConfig = {
   key: 'root',
@@ -12,6 +13,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   // counter: counterReducer,
   auth: AuthReducer,
+  ads: AdsReducer,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);

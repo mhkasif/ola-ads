@@ -27,6 +27,7 @@
     "@stripe/stripe-react-native": "^0.26.0",
     "@types/shortid": "^0.0.29",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "formik": "^2.2.9",
     "moti": "^0.24.2",
     "native-base": "^3.4.28",

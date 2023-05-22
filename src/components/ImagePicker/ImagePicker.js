@@ -2,12 +2,13 @@ import {Actionsheet} from 'native-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 
-const ImagePicker = ({isOpen, onClose, callback}) => {
-  const handleLibraryOpen = async () => {
+const ImagePicker = ({isOpen, onClose, callback,mediaType}) => {
+  const handleLibraryOpen = (mediaType="mixed")=>async () => {
     try {
       const x = await launchImageLibrary({
         selectionLimit: 1,
         presentationStyle: 'fullScreen',
+        mediaType
       });
       console.log(x);
       if (x.didCancel) {
@@ -35,7 +36,7 @@ const ImagePicker = ({isOpen, onClose, callback}) => {
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose}>
       <Actionsheet.Content>
-        <Actionsheet.Item onPress={handleLibraryOpen}>
+        <Actionsheet.Item onPress={handleLibraryOpen(mediaType)}>
           Choose From Library
         </Actionsheet.Item>
         <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>

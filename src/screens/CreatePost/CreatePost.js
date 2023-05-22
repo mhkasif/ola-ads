@@ -9,6 +9,7 @@ import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
+import FormData from 'form-data';
 import {Formik} from 'formik';
 import {
   Avatar,
@@ -26,13 +27,13 @@ import React, {useEffect, useState} from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect, useSelector} from 'react-redux';
 import {createAdAction} from 'redux/adsActions/adsActions';
-import FormData from 'form-data';
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
 };
 function CreatePost({user, authToken, navigation, createAdAction}) {
   const [openModal, setOpenModal] = React.useState(false);
+  const [mediaType, setMediaType] = useState('');
   const [state, setState] = useState({
     categories: [],
     description: '',
@@ -79,12 +80,17 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
   const handleImageSelect = async images => {
     console.log(images[0]);
     setImage(images[0]);
-    console.log({image})
+    console.log({image});
     onClose();
   };
 
   const onClose = () => setOpenModal('');
-  const onOpen = name => () => setOpenModal(name);
+  const onOpen = (name, type) => () => {
+    if (name === MODAL_NAMES.IMAGE_ACTION_SHEET && type) {
+      setMediaType(type);
+    }
+    setOpenModal(name);
+  };
 
   const handleSubmitData = async () => {
     const {description, categories} = state;
@@ -94,33 +100,13 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
     // formData.append('categories', categories);
     formData.append('file', {...image, name: image.fileName});
     setState({...state, isLoading: true});
-    // const formData = {
-    //   description,
-    //   categories,
-    //   media: image,
-    // }
 
     await createAdAction(formData);
-    // fetch(`http://10.0.2.2:3000/api/v1/user/create-ad`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: `Bearer ${authToken}`,
-    //     Accept: 'application/json',
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    //   body: formData,
-    // })
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     // dispatch({type: 'ORDER', payload: response.data});
-    //     console.log('json1', json);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+
     setState({...state, isLoading: false});
   };
   useEffect(() => {
+    console.log(state.description, state.description.trim());
     navigation.setOptions({
       headerRight: () => (
         <CustomButton
@@ -129,12 +115,12 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
           }}
           px={3}
           buttonProps={{
-            isDisabled: !state.description,
+            isDisabled: !state.description.trim(),
             onPress: handleSubmitData,
             isLoading: state.isLoading,
           }}
           bg={
-            state.isLoading || !state.description || !image
+            state.isLoading || !state.description.trim() || !image
               ? COLORS.muted
               : 'success.600'
           }>
@@ -166,9 +152,13 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
               {
                 image: Picture,
                 title: 'Photo',
-                onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET),
+                onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'photo'),
               },
-              {image: Video, title: 'Video'},
+              {
+                image: Video,
+                title: 'Video',
+                onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'video'),
+              },
             ].map((item, index) => (
               <MediaItem key={index} {...item} />
             ))}
@@ -232,7 +222,6 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
         </Box>
       )}
 
-
       <Box bg="white" flex={1} borderTopRadius={30} mt={5} pb={5}>
         <Center>
           <CustomText fontSize="sm" color={COLORS.muted} my={2}>
@@ -251,6 +240,7 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
         callback={handleImageSelect}
         isOpen={openModal === MODAL_NAMES.IMAGE_ACTION_SHEET}
         onClose={onClose}
+        mediaType={mediaType}
       />
     </>
   );
@@ -292,7 +282,8 @@ const MediaItem = ({image, title, onPress}) => {
 };
 const CategoryItem = ({image, title, onPress, checked}) => {
   return (
-    <HStack my={2} alignItems="center" px={6} w="100%">
+    <Pressable onPress={onPress}>
+    <HStack my={2} alignItems="center" px={6} w="100%" >
       <Avatar
         size="sm"
         source={{
@@ -309,6 +300,7 @@ const CategoryItem = ({image, title, onPress, checked}) => {
         />
       </Box>
     </HStack>
+    </Pressable>
   );
 };
 

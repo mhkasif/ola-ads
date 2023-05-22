@@ -6,34 +6,29 @@ import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Avatar, Box, HStack, Heading, Pressable, VStack} from 'native-base';
 import {useCallback, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {SCREEN_NAMES} from 'screens/screenNames';
 import {useNavigation} from '@react-navigation/native';
-function HomeScreen() {
-  const {user} = useSelector(state => state.auth);
-  const [list, setList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [loading, setLoading] = useState(true);
+import {getAdsAction} from 'redux/adsActions/adsActions';
+function HomeScreen({getAdsAction}) {
+  const {
+    auth: {user},
+    ads: {ads},
+  } = useSelector(state => state);
+  // const [loading, setLoading] = useState(true);
   const {navigate} = useNavigation();
+  useEffect(() => {
+    getAdsAction();
+  }, [getAdsAction]);
+
   const navigateToProfile = () => {
     navigate(SCREEN_NAMES.PROFILE);
   };
   const renderItem = useCallback(({item}) => {
-    // console.log(item);
-    return (
-      <PostCard
-        status={item === 1 ? 'approved' : item === 2 ? 'pending' : 'rejected'}
-        key={item}
-      />
-    );
+    console.log({item});
+    return <PostCard {...item} />;
   }, []);
-  const handleSet = async () => {
-    await sleep(1000);
-    // setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    setLoading(false);
-  };
-  useEffect(() => {
-    handleSet();
-  }, []);
+  useEffect(() => {}, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
       <HStack alignItems="center">
@@ -53,7 +48,7 @@ function HomeScreen() {
         </Box>
         <Box ml={3}>
           <VStack>
-            <Heading>Hey! {user?.fullName?.split(" ")?.[0]}</Heading>
+            <Heading>Hey! {user?.fullName?.split(' ')?.[0]}</Heading>
             <CustomText
               fontWeight="medium"
               letterSpacing="lg"
@@ -67,11 +62,17 @@ function HomeScreen() {
       <CustomText fontSize="lg" bold my={3}>
         Recent
       </CustomText>
-      {!loading && (
-        <FlashList estimatedItemSize={60} data={list} renderItem={renderItem} />
-      )}
+
+      <FlashList
+        estimatedItemSize={60}
+        data={ads || []}
+        renderItem={renderItem}
+        keyExtractor={item => item._id}
+      />
     </Box>
   );
 }
-
-export default HomeScreen;
+const actions = {
+  getAdsAction,
+};
+export default connect(null, actions)(HomeScreen);

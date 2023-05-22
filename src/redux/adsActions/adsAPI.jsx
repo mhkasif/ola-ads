@@ -1,5 +1,5 @@
 import {URLS} from '@utils/Urls';
-import {POST} from '@utils/constants';
+import {GET, POST} from '@utils/constants';
 
 export const CREATE_AD_META = {
   method: POST,
@@ -10,3 +10,8 @@ export const CREATE_AD_META = {
     categories: [],
   },
 };
+export const GET_ADS_META = {
+  method: GET,
+  endpoint: URLS.GET_ADS,
+
+}

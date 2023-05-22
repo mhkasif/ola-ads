@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
 import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
 import {SCREEN_NAMES} from 'screens/screenNames';
-const PostCard = ({item, index, status}) => {
+const PostCard = ({description, status, categories, date, _id, media}) => {
   const {navigate} = useNavigation();
   const handleClick = () => {
     navigate(SCREEN_NAMES.POST_DETAILS, {
@@ -14,10 +14,9 @@ const PostCard = ({item, index, status}) => {
       status,
     });
   };
-  console.log('PostCard rendered');
 
   return (
-    <Pressable onPress={handleClick}>
+    <Pressable onPress={handleClick} id={_id}>
       <Box
         p={2}
         // maxW="80"
@@ -65,15 +64,19 @@ const PostCard = ({item, index, status}) => {
           </Box>
         )}
         <Box space={1} flexDirection="row" alignItems="center">
-          <Image
-            rounded="lg"
-            h={135}
-            w={160}
-            source={{
-              uri: 'https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg',
-            }}
-            alt="image"
-          />
+          {media.type === 'video' ? (
+            <></>
+          ) : (
+            <Image
+              rounded="lg"
+              h={135}
+              w={160}
+              source={{
+                uri: 'https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg',
+              }}
+              alt="image"
+            />
+          )}
           <Box paddingLeft={3} paddingRight={1} py={2} flex="1">
             <VStack>
               <Box>
@@ -88,19 +91,20 @@ const PostCard = ({item, index, status}) => {
                   }}
                   // ml="-1"
                 >
-                  We are hiring lets join our team Now
+                  {description}
                 </CustomText>
               </Box>
               <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
-                {Array(6)
-                  .fill('Group')
-                  .map((x, i) => (
-                    // <Box key={x + i}>
-                    <CustomBadge my={1} key={x + i}>{`${x} ${
-                      i + 1
-                    }`}</CustomBadge>
-                    // </Box>
-                  ))}
+                {categories ||
+                  Array(6)
+                    .fill('Group')
+                    .map((x, i) => (
+                      // <Box key={x + i}>
+                      <CustomBadge my={1} key={x + i}>{`${x} ${
+                        i + 1
+                      }`}</CustomBadge>
+                      // </Box>
+                    ))}
               </HStack>
               <CustomText
                 color="coolGray.400"
@@ -112,7 +116,9 @@ const PostCard = ({item, index, status}) => {
                 }}
                 letterSpacing="lg"
                 fontWeight="bold">
-                Posted On: 13/May/2023 12:45 PM
+                Posted On:
+                {new Date(date).toLocaleString() ||
+                  'Posted On: 13/May/2023 12:45 PM'}
               </CustomText>
             </VStack>
           </Box>
