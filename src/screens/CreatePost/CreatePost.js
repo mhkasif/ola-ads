@@ -26,7 +26,9 @@ import {
 import React, {useEffect, useState} from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect, useSelector} from 'react-redux';
-import {createAdAction} from 'redux/adsActions/adsActions';
+import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
+import {useNavigation} from '@react-navigation/native';
+
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
@@ -34,6 +36,8 @@ const MODAL_NAMES = {
 function CreatePost({user, authToken, navigation, createAdAction}) {
   const [openModal, setOpenModal] = React.useState(false);
   const [mediaType, setMediaType] = useState('');
+  const [categories, setCategories] = useState([]);
+  const {goBack} = useNavigation();
   const [state, setState] = useState({
     categories: [],
     description: '',
@@ -99,14 +103,14 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
     formData.append('description', description);
     // formData.append('categories', categories);
     formData.append('file', {...image, name: image.fileName});
-    setState({...state, isLoading: true});
+    setState(p=>({...p, isLoading: true}));
 
-    await createAdAction(formData);
+    const {data, error} = await createAdAction(formData);
+    if (data) goBack();
 
-    setState({...state, isLoading: false});
+    setState(p=>({...p, isLoading: false}));
   };
   useEffect(() => {
-    console.log(state.description, state.description.trim());
     navigation.setOptions({
       headerRight: () => (
         <CustomButton
@@ -115,14 +119,14 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
           }}
           px={3}
           buttonProps={{
-            isDisabled: !state.description.trim(),
+            isDisabled: !state.description.trim()|| !image,
             onPress: handleSubmitData,
             isLoading: state.isLoading,
           }}
           bg={
-            state.isLoading || !state.description.trim() || !image
+            state.isLoading || !state.description.trim()|| !image
               ? COLORS.muted
-              : 'success.600'
+              : 'success.700'
           }>
           Post
         </CustomButton>
@@ -283,29 +287,37 @@ const MediaItem = ({image, title, onPress}) => {
 const CategoryItem = ({image, title, onPress, checked}) => {
   return (
     <Pressable onPress={onPress}>
-    <HStack my={2} alignItems="center" px={6} w="100%" >
-      <Avatar
-        size="sm"
-        source={{
-          uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        }}
-      />
-      <CustomText ml={4}>Category {title}</CustomText>
-      <Box alignItems="flex-end" flex={1}>
-        <Checkbox
-          accessibilityLabel="choose numbers"
-          colorScheme="primarydark"
-          value={title}
-          defaultIsChecked={checked}
+      <HStack my={2} alignItems="center" px={6} w="100%">
+        <Avatar
+          size="sm"
+          source={{
+            uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+          }}
         />
-      </Box>
-    </HStack>
+        <CustomText ml={4}>Category {title}</CustomText>
+        <Box alignItems="flex-end" flex={1}>
+          <Checkbox
+            accessibilityLabel="choose numbers"
+            colorScheme="primarydark"
+            value={title}
+            defaultIsChecked={checked}
+          />
+        </Box>
+      </HStack>
     </Pressable>
   );
 };
 
-const CategoryList = () => {
+const CategoryList = connect(null, {getCategoriesAction})(() => {
   //flat list for category item
+  const [categoriesList, setCategoriesList] = useState([]);
+  const fetchCategories = async () => {
+    const d = getCategoriesAction();
+    if (d) setCategoriesList(d);
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <FlashList
@@ -318,7 +330,7 @@ const CategoryList = () => {
       estimatedItemSize={25}
     />
   );
-};
+});
 const ContactModal = ({isOpen = false, onClose = undefined}) => {
   const user = useSelector(state => state.auth?.user);
   const initialValues = {

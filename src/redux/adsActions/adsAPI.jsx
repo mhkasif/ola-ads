@@ -15,3 +15,11 @@ export const GET_ADS_META = {
   endpoint: URLS.GET_ADS,
 
 }
+
+
+export const GET_CATEGORIES_META = {
+  method: GET,
+  endpoint: URLS.GET_CATEGORIES,
+}
+
+

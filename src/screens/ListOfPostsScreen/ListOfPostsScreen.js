@@ -6,27 +6,17 @@ import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import {Box, StatusBar, useColorModeValue} from 'native-base';
 import {useEffect, useState, useCallback, useMemo} from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, RefreshControl} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import {FlashList} from '@shopify/flash-list';
+import {connect, useSelector} from 'react-redux';
+import {getAdsAction} from 'redux/adsActions/adsActions';
+import AdsList from '@components/AdsList/AdsList';
 
-function ListOfPostsScreen() {
-  const [list, setList] = useState([]);
-  const handleSet = async () => {
-    await sleep(500);
-    setList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  };
-  useEffect(() => {
-    // handleSet();
-  }, []);
-  const renderItem = useCallback(({item}) => <PostCard key={item} />, []);
+function ListOfPostsScreen({status}) {
   return (
     <Box bg={COLORS.bg} flex="1" p={3}>
-      <FlashList
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-        renderItem={renderItem}
-        estimatedItemSize={120}
-      />
+      <AdsList status={status} />
     </Box>
   );
 }
@@ -35,25 +25,7 @@ function ListOfPostsScreen() {
 const initialLayout = {
   width: Dimensions.get('window').width,
 };
-// function Example() {
-//   const {width} = useWindowDimensions();
-
-//   const [index, setIndex] = useState(0);
-//   const [routes] = useState([
-//     {key: 'first', title: 'First'},
-//     {key: 'second', title: 'Second'},
-//   ]);
-
-//   return (
-//     <TabView
-//       navigationState={{index, routes}}
-//       renderScene={renderScene}
-//       onIndexChange={setIndex}
-//       initialLayout={{width}}
-//     />
-//   );
-// }
-function Example() {
+function Example({getAdsAction}) {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {
@@ -71,17 +43,32 @@ function Example() {
   ]);
 
   const FirstRoute = useMemo(
-    () => (index === 0 ? () => <ListOfPostsScreen /> : () => <></>),
+    () =>
+      index === 0
+        ? () => (
+            <ListOfPostsScreen getAdsAction={getAdsAction} status="approved" />
+          )
+        : () => <></>,
     [index],
   );
 
   const SecondRoute = useMemo(
-    () => (index === 1 ? () => <ListOfPostsScreen /> : () => <></>),
+    () =>
+      index === 1
+        ? () => (
+            <ListOfPostsScreen getAdsAction={getAdsAction} status="pending" />
+          )
+        : () => <></>,
     [index],
   );
 
   const ThirdRoute = useMemo(
-    () => (index === 2 ? () => <ListOfPostsScreen /> : () => <></>),
+    () =>
+      index === 2
+        ? () => (
+            <ListOfPostsScreen getAdsAction={getAdsAction} status="rejected" />
+          )
+        : () => <></>,
     [index],
   );
 
@@ -156,6 +143,4 @@ function Example() {
   );
 }
 
-export default () => {
-  return <Example />;
-};
+export default Example;

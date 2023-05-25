@@ -1,9 +1,12 @@
+/* eslint-disable no-undef */
 import Toast from 'react-native-toast-message';
-import {GET_ADS_META, CREATE_AD_META} from './adsAPI';
+import {GET_ADS_META, CREATE_AD_META, GET_CATEGORIES_META} from './adsAPI';
 import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
-import {setAds} from './adsSlice';
+import {appendAds, removeAds, setAds} from './adsSlice';
+import {store} from 'redux/store';
+import {generateQueryString} from '@utils/helpers';
 
-export const createAdAction = formData => async () => {
+export const createAdAction = formData => async dispatch => {
   try {
     const {data, error} = await fileUploadMethod({
       ...CREATE_AD_META,
@@ -12,21 +15,49 @@ export const createAdAction = formData => async () => {
     if (error) {
       throw new Error(error);
     }
+    await dispatch(getAdsAction());
+
     Toast.show({
       type: 'success',
       text1: 'Ad Created',
       text2: 'Your ad has been created successfully',
     });
+    return {
+      data: true,
+    };
   } catch (error) {
     Toast.show({
       type: 'error',
       text1: 'Failed to create ad',
       text2: error,
     });
+    return {
+      error: true,
+    };
   }
 };
+export const getCategoriesAction = () => async () => {
+  try {
+    const {data, error} = await apiMethod({
+      ...GET_CATEGORIES_META,
+    });
+    console.log(data);
+    if (error) {
+      throw new Error(error);
+    }
+    return data;
+  } catch (error) {
+    console.log({error});
+  }
+};
+export const clearAds = () => async dispatch => {
+  dispatch(removeAds());
+};
+
 export const getAdsAction = () => async dispatch => {
   try {
+    const {pagination} = store.getState().ads;
+    pagination.page;
     const {data, error} = await apiMethod({
       ...GET_ADS_META,
     });
@@ -39,6 +70,31 @@ export const getAdsAction = () => async dispatch => {
     Toast.show({
       type: 'error',
       text1: 'Failed to get ad',
+      text2: error,
+    });
+  }
+};
+export const appendAdsAction = () => async dispatch => {
+  try {
+    let pagination = store.getState().ads.pagination;
+    let paginationClone = {...pagination};
+    paginationClone.page = paginationClone.page + 1;
+    const endpoint = generateQueryString(GET_ADS_META.endpoint, paginationClone);
+    console.log({endpoint});
+    const {data, error} = await apiMethod({
+      ...GET_ADS_META,
+      endpoint,
+    });
+    console.log(data);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch(appendAds(data));
+  } catch (error) {
+    console.log({error});
+    Toast.show({
+      type: 'error',
+      text1: 'Failed to fetch more ad',
       text2: error,
     });
   }

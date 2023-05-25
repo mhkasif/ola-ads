@@ -130,12 +130,12 @@ export const updatePasswordAction =
 
       //check if old password is correct
       let {user} = await currentUser.reauthenticateWithCredential(credential);
-      console.log({user})
-      const {uid: id = '123', displayName = 'hello',email} = user;
+      console.log({user});
+      const {uid: id = '123', displayName = 'hello', email} = user;
 
       // if authenticated update password
-       await user.updatePassword(newPassword);
-       //login again for new access_token
+      await user.updatePassword(newPassword);
+      //login again for new access_token
       let authToken = await user.getIdToken();
       const {error, data} = await apiMethod({
         ...LOGIN_META,
@@ -148,7 +148,7 @@ export const updatePasswordAction =
         user: {
           id,
           fullName: displayName,
-          email:email,
+          email: email,
         },
       };
       dispatch(addAuth(d));
@@ -182,8 +182,45 @@ export const updateUserAction = data => async dispatch => {
 };
 export const deactivateUserAction = () => async dispatch => {
   try {
-      const user=auth().currentUser
-
+    const user = auth().currentUser;
   } catch (error) {}
+};
 
-}
+export const passwordResetEmailAction = email => async () => {
+  console.log({email});
+  try {
+    // Send password reset email with the verification code
+    await auth().sendPasswordResetEmail(email);
+    Toast.show({
+      type: 'success',
+      text1: 'Email Sent',
+      text2: 'Please check your email for the reset link',
+      visibilityTime: 900,
+    });
+    return {
+      data: true,
+    };
+  } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      Toast.show({
+        type: 'error',
+        text1: 'Email Not Found',
+        text2: 'No user found with this email',
+        visibilityTime: 900,
+      });
+      return {
+        error: true,
+      };
+    }
+    console.log('Error sending password reset email:', {error});
+
+    Toast.show({
+      type: 'error',
+      text1: 'Email Failed',
+      text2: 'Error sending password reset email',
+    });
+    return {
+      error: true,
+    };
+  }
+};

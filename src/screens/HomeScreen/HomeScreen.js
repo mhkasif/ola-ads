@@ -1,33 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import AdsList from '@components/AdsList/AdsList';
 import CustomText from '@components/CustomText/CustomText';
-import PostCard from '@components/PostCard/PostCard';
-import {FlashList} from '@shopify/flash-list';
-import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
-import {Avatar, Box, HStack, Heading, Pressable, VStack} from 'native-base';
-import {useCallback, useEffect, useState} from 'react';
-import {connect, useSelector} from 'react-redux';
-import {SCREEN_NAMES} from 'screens/screenNames';
-import {useNavigation} from '@react-navigation/native';
-import {getAdsAction} from 'redux/adsActions/adsActions';
-function HomeScreen({getAdsAction}) {
+import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '@utils/colors';
+import { Avatar, Box, HStack, Heading, Pressable, VStack } from 'native-base';
+import { useEffect, useState } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { getAdsAction } from 'redux/adsActions/adsActions';
+import { SCREEN_NAMES } from 'screens/screenNames';
+
+function HomeScreen() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const {
     auth: {user},
-    ads: {ads},
   } = useSelector(state => state);
   // const [loading, setLoading] = useState(true);
   const {navigate} = useNavigation();
-  useEffect(() => {
-    getAdsAction();
-  }, [getAdsAction]);
 
   const navigateToProfile = () => {
     navigate(SCREEN_NAMES.PROFILE);
   };
-  const renderItem = useCallback(({item}) => {
-    console.log({item});
-    return <PostCard {...item} />;
-  }, []);
   useEffect(() => {}, []);
   return (
     <Box bg={COLORS.bg} flex="1" p={3} py={6}>
@@ -62,13 +54,7 @@ function HomeScreen({getAdsAction}) {
       <CustomText fontSize="lg" bold my={3}>
         Recent
       </CustomText>
-
-      <FlashList
-        estimatedItemSize={60}
-        data={ads || []}
-        renderItem={renderItem}
-        keyExtractor={item => item._id}
-      />
+      <AdsList />
     </Box>
   );
 }

@@ -19,6 +19,7 @@ import {
 } from 'native-base';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import { clearAds } from 'redux/adsActions/adsActions';
 import {logoutAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
@@ -26,7 +27,7 @@ const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
 };
-const UserProfile = ({user, logoutAction}) => {
+const UserProfile = ({user, logoutAction,clearAds}) => {
   const [modalOpen, setModalOpen] = useState('');
   const onClose = () => {
     setModalOpen('');
@@ -68,6 +69,7 @@ const UserProfile = ({user, logoutAction}) => {
   ];
   const handleLogout = async () => {
     let res = await logoutAction();
+    clearAds()
     if (res) navigation.dispatch(resetAction);
   };
   return (
@@ -147,5 +149,6 @@ const mapStateToProps = state => ({
 });
 const actions = {
   logoutAction,
+  clearAds
 };
 export default connect(mapStateToProps, actions)(UserProfile);

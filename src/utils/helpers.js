@@ -1,4 +1,4 @@
-import HeaderBackground from "@components/HeaderBackground/HeaderBackground";
+import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 
 export const sleep = time => {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -18,4 +18,13 @@ export const headerOptions = {
   },
   headerBackground: HeaderBackground,
   headerTintColor: '#fff',
+};
+
+export const generateQueryString = (url,params = {}) => {
+  console.log({url,params});
+  const query = Object.keys(params)
+    .map(k => k + '=' + params[k])
+    .join('&');
+    console.log({query})
+  return url + '?' + query;
 };

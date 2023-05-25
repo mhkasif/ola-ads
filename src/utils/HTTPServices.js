@@ -79,7 +79,7 @@ const apiMethod = async meta => {
         });
         return {data: res.data};
       } catch (error) {
-        console.log('httpGET', res);
+        console.log('httpGETError', error);
       }
   }
 };
