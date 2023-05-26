@@ -44,10 +44,11 @@ const ConfirmationModal = ({
           <Button.Group space={2}>
             <CustomButton
               textProps={{color: COLORS.primary}}
+
               noGradient
               buttonProps={{
-                variant: 'ghost',
-                isLoading,
+                  variant: 'ghost',
+                isDisabled: isLoading,
                 // colorScheme: 'blueGray',
                 onPress: onClose,
               }}>
@@ -57,6 +58,8 @@ const ConfirmationModal = ({
               buttonProps={{
                 // bg: COLORS.danger,
                 colorScheme: 'danger',
+                isLoading,
+                isLoadingText: 'logging out...',
                 onPress: handleAction,
               }}
               noGradient>
