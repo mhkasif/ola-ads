@@ -1,7 +1,7 @@
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
 import {useNavigation, StackActions} from '@react-navigation/native';
-import { BASIC_URL } from '@utils/Urls';
+import { IMAGE_DIRECTORY } from '@utils/Urls';
 import {COLORS} from '@utils/colors';
 import Logout from 'assets/profileIcons/logout.png';
 import Password from 'assets/profileIcons/password.png';
@@ -76,6 +76,7 @@ const UserProfile = ({user, logoutAction,clearAds}) => {
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
       <ConfirmationModal
+      isLoading
         title="Logout"
         body="Are you sure you want to logout?"
         isOpen={modalOpen === MODAL_NAMES.LOGOUT}
@@ -96,7 +97,7 @@ const UserProfile = ({user, logoutAction,clearAds}) => {
         <Avatar
           size="2xl"
           source={{
-            uri: (user?.photo&&BASIC_URL+user.photo)||'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            uri: (user?.photo&&IMAGE_DIRECTORY+user.photo)||'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
           }}
           borderColor={COLORS.primary}
           // borderWidth={2}

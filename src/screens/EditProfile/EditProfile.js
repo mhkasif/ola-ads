@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 import {updateProfileAction} from 'redux/authSlice/authActions';
 
 import {useNavigation} from '@react-navigation/native';
-import {BASIC_URL} from '@utils/Urls';
+import {IMAGE_DIRECTORY} from '@utils/Urls';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
@@ -89,7 +89,7 @@ const EditProfile = ({user, updateProfileAction}) => {
                   source={{
                     uri:
                       image?.uri ||
-                      (user?.photo && BASIC_URL + user.photo) ||
+                      (user?.photo && IMAGE_DIRECTORY + user.photo) ||
                       'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
                   }}
                   // borderColor={COLORS.primary}

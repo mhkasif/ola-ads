@@ -7,7 +7,7 @@ import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
 import {SCREEN_NAMES} from 'screens/screenNames';
 import Video from 'react-native-video';
 import {useRef} from 'react';
-import {BASIC_URL} from '@utils/Urls';
+import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import PlayIcon from 'assets/playIcon.png';
 import PlayBG from 'assets/playBG.png';
@@ -47,7 +47,7 @@ const PostCard = ({
   media,
   noStatusIcon,
 }) => {
-  console.log({categories})
+  console.log({categories});
   const {navigate} = useNavigation();
   const ref = useRef(null);
   const handleClick = () => {
@@ -127,7 +127,7 @@ const PostCard = ({
                   console.log({load});
                 }}
                 source={{
-                  uri: BASIC_URL + media?.pathname,
+                  uri: IMAGE_DIRECTORY + media?.pathname,
                   type: 'mp4',
                 }} // Can be a URL or a local file.
                 style={styles.video}
@@ -149,7 +149,9 @@ const PostCard = ({
               h={135}
               w={160}
               source={{
-                uri: BASIC_URL + media?.pathname,
+                uri: media
+                  ? IMAGE_DIRECTORY + media?.pathname
+                  : 'https://placehold.co/600x400/png?text=No+Photo',
               }}
               alt="image"
             />

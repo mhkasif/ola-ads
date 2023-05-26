@@ -122,7 +122,7 @@ function CreatePost({
     setState(p => ({...p, isLoading: true}));
 
     const {data, error} = await createAdAction(formData);
-    // if (data) goBack();
+    if (data) goBack();
 
     setState(p => ({...p, isLoading: false}));
   };

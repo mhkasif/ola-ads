@@ -2,7 +2,7 @@
 import AdsList from '@components/AdsList/AdsList';
 import CustomText from '@components/CustomText/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import {BASIC_URL} from '@utils/Urls';
+import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
 import {Avatar, Box, HStack, Heading, Pressable, VStack} from 'native-base';
 import {useEffect, useState} from 'react';
@@ -31,7 +31,7 @@ function HomeScreen() {
               size="lg"
               source={{
                 uri:
-                  (user?.photo && BASIC_URL + user.photo) ||
+                  (user?.photo && IMAGE_DIRECTORY + user.photo) ||
                   'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
               }}
               borderColor={COLORS.primary}

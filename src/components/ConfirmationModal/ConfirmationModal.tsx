@@ -15,6 +15,7 @@ interface IConfirmationModalProps {
   alertProps?: IModalProps | undefined;
   isOpen?: boolean;
   onClose?: {(): void} | undefined;
+  isLoading?: boolean;
 }
 const ConfirmationModal = ({
   isOpen = false,
@@ -26,6 +27,7 @@ const ConfirmationModal = ({
   handleAction = undefined,
   actionText = 'Yes',
   alertProps,
+  isLoading = false,
 }: IConfirmationModalProps) => {
   // const leastDestructiveRef = useRef(null);
   return (
@@ -45,6 +47,7 @@ const ConfirmationModal = ({
               noGradient
               buttonProps={{
                 variant: 'ghost',
+                isLoading,
                 // colorScheme: 'blueGray',
                 onPress: onClose,
               }}>
