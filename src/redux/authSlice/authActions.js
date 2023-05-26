@@ -1,9 +1,9 @@
 import auth from '@react-native-firebase/auth';
-import apiMethod from '@utils/HTTPServices';
+import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
 import {sleep} from '@utils/helpers';
 import Toast from 'react-native-toast-message';
-import {LOGIN_META} from './authAPI';
-import {addAuth, removeAuth} from './authSlice';
+import {LOGIN_META, UPDATE_USER} from './authAPI';
+import {addAuth, removeAuth, updateAuth} from './authSlice';
 
 export const loginAction =
   ({email = 'haseeb@gmail.com', password}) =>
@@ -222,5 +222,34 @@ export const passwordResetEmailAction = email => async () => {
     return {
       error: true,
     };
+  }
+};
+
+export const updateProfileAction = formData => async dispatch => {
+  try {
+    const {data, error} = await fileUploadMethod({
+      ...UPDATE_USER,
+      params: formData,
+    });
+
+    if (error) {
+      throw new Error(error);
+    }
+    Toast.show({
+      type: 'success',
+      text1: 'Profile Updated',
+      text2: 'Your profile has been updated successfully',
+    });
+
+    dispatch(updateAuth({user: data.updatedUser}));
+    return {data}
+  } catch (error) {
+    console.log({error});
+    Toast.show({
+      type: 'error',
+      text1: 'Profile Update Failed',
+      text2: error?.userInfo?.message || 'Something went wrong',
+    });
+    return {error}
   }
 };

@@ -33,17 +33,24 @@ const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
 };
-function CreatePost({user, authToken, navigation, createAdAction}) {
+function CreatePost({
+  user,
+  authToken,
+  navigation,
+  createAdAction,
+  getCategoriesAction,
+}) {
   const [openModal, setOpenModal] = React.useState(false);
   const [mediaType, setMediaType] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const {goBack} = useNavigation();
   const [state, setState] = useState({
-    categories: [],
     description: '',
     name: user?.fullName,
     phoneNumber: '',
     isLoading: false,
+    schedule_date: '',
   });
   const [image, setImage] = useState(null);
   const fields = [
@@ -63,9 +70,16 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
       },
     },
   ];
-
+  const handleSelectCategory = async id => {
+    console.log({id});
+    if (selectedCategories.includes(id)) {
+      setSelectedCategories(p => p.filter(item => item !== id));
+    } else {
+      setSelectedCategories(p => [...p, id]);
+    }
+  };
   const handleChange = (value, name) => {
-    setState({...state, [name]: value});
+    setState(p => ({...p, [name]: value}));
   };
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -77,10 +91,6 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = date => {
-    console.warn('A date has been picked: ', date);
-    hideDatePicker();
-  };
   const handleImageSelect = async images => {
     console.log(images[0]);
     setImage(images[0]);
@@ -97,18 +107,29 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
   };
 
   const handleSubmitData = async () => {
-    const {description, categories} = state;
-    console.log({image});
+    console.log(state, selectedCategories);
     const formData = new FormData();
-    formData.append('description', description);
-    // formData.append('categories', categories);
+    if (selectedCategories.length) {
+      selectedCategories.forEach((item,i) => {
+      formData.append(`categories[]`,item);
+      });
+    }
+    if (state.schedule_date)
+      formData.append('schedule_date',new Date( state.schedule_date).toISOString());
+
+    formData.append('description', state.description);
     formData.append('file', {...image, name: image.fileName});
-    setState(p=>({...p, isLoading: true}));
+    setState(p => ({...p, isLoading: true}));
 
     const {data, error} = await createAdAction(formData);
-    if (data) goBack();
+    // if (data) goBack();
 
-    setState(p=>({...p, isLoading: false}));
+    setState(p => ({...p, isLoading: false}));
+  };
+  const handleSelectDate = async date => {
+    console.log({date});
+    setState(p => ({...p, schedule_date: date}));
+    hideDatePicker();
   };
   useEffect(() => {
     navigation.setOptions({
@@ -119,12 +140,12 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
           }}
           px={3}
           buttonProps={{
-            isDisabled: !state.description.trim()|| !image,
+            isDisabled: !state.description.trim() || !image,
             onPress: handleSubmitData,
             isLoading: state.isLoading,
           }}
           bg={
-            state.isLoading || !state.description.trim()|| !image
+            state.isLoading || !state.description.trim() || !image
               ? COLORS.muted
               : 'success.700'
           }>
@@ -132,14 +153,33 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
         </CustomButton>
       ),
     });
-  }, [state.description, state.isLoading, image]);
+  }, [
+    state.description,
+    state.isLoading,
+    image,
+    selectedCategories,
+    state.schedule_date,
+  ]);
+
+  const fetchCategories = async () => {
+    const d = await getCategoriesAction();
+    console.log({d});
+    if (d) setCategoriesList(d);
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <Box pt={5} px={4}>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="datetime"
-          onConfirm={handleConfirm}
+          date={
+            state.schedule_date ? new Date(state.schedule_date) : new Date()
+          }
+          onConfirm={handleSelectDate}
           onCancel={hideDatePicker}
           minimumDate={new Date()}
           accentColor="red"
@@ -233,7 +273,10 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
           </CustomText>
         </Center>
         <Box my={4} h="85%">
-          <CategoryList />
+          <CategoryList
+            handleSelectCategory={handleSelectCategory}
+            categories={categoriesList}
+          />
         </Box>
       </Box>
       <ContactModal
@@ -251,6 +294,7 @@ function CreatePost({user, authToken, navigation, createAdAction}) {
 }
 const actions = {
   createAdAction,
+  getCategoriesAction,
 };
 const mapStateToProps = state => {
   return {
@@ -284,9 +328,16 @@ const MediaItem = ({image, title, onPress}) => {
     </Box>
   );
 };
-const CategoryItem = ({image, title, onPress, checked}) => {
+const CategoryItem = item => {
+  const [isChecked, setIsChecked] = useState(false);
+  const onCheck = e => {
+    e?.stopPropagation?.();
+    setIsChecked(p => !p);
+    handleSelectCategory(_id);
+  };
+  const {handleSelectCategory, name, _id} = item || {};
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onCheck}>
       <HStack my={2} alignItems="center" px={6} w="100%">
         <Avatar
           size="sm"
@@ -294,13 +345,14 @@ const CategoryItem = ({image, title, onPress, checked}) => {
             uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
           }}
         />
-        <CustomText ml={4}>Category {title}</CustomText>
+        <CustomText ml={4}>{name}</CustomText>
         <Box alignItems="flex-end" flex={1}>
           <Checkbox
             accessibilityLabel="choose numbers"
             colorScheme="primarydark"
-            value={title}
-            defaultIsChecked={checked}
+            value={_id}
+            isChecked={isChecked}
+            onChange={onCheck}
           />
         </Box>
       </HStack>
@@ -308,29 +360,25 @@ const CategoryItem = ({image, title, onPress, checked}) => {
   );
 };
 
-const CategoryList = connect(null, {getCategoriesAction})(() => {
+const CategoryList = ({handleSelectCategory, categories}) => {
   //flat list for category item
-  const [categoriesList, setCategoriesList] = useState([]);
-  const fetchCategories = async () => {
-    const d = getCategoriesAction();
-    if (d) setCategoriesList(d);
-  };
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   return (
     <FlashList
-      data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+      data={categories || []}
       renderItem={({item}) => {
         return (
-          <CategoryItem key={item} checked={item % 2 === 0} title={item} />
+          <CategoryItem
+            handleSelectCategory={handleSelectCategory}
+            key={item._id}
+            {...item}
+          />
         );
       }}
       estimatedItemSize={25}
     />
   );
-});
+};
 const ContactModal = ({isOpen = false, onClose = undefined}) => {
   const user = useSelector(state => state.auth?.user);
   const initialValues = {

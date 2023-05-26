@@ -58,11 +58,12 @@ const AdsList = ({
   const renderFooter = useCallback(() => {
     return (
       <FooterComponent
+        ads={filterAds}
         hasMorePages={hasMorePages}
         loading={LOADING_TYPE.PAGINATION === loadingType}
       />
     );
-  }, [pagination?.hasNextPage, loadingType]);
+  }, [pagination?.hasNextPage, loadingType, adsState]);
   return (
     <>
       <FlashList
@@ -91,12 +92,12 @@ const EmptyComponent = ({loading}) => {
     <CustomText textAlign="center">No Ads to Display</CustomText>
   );
 };
-const FooterComponent = ({hasMorePages, loading}) => {
+const FooterComponent = ({hasMorePages, loading, ads = []}) => {
   return (
     <Box py={3} my={2}>
       {loading ? (
         <Spinner size="sm" />
-      ) : !hasMorePages ? (
+      ) : !hasMorePages && ads.length > 0 ? (
         <CustomText textAlign="center">No More Ads to Display</CustomText>
       ) : (
         <></>

@@ -21,8 +21,8 @@ export const UPDATE_USER = {
   method: POST,
   endpoint: URLS.UPDATE_USER,
   params: {
-    fullName: '',
     email: '',
-    displayPicture: '',
+    profile_photo: '',
   },
 };
+

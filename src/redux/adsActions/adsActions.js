@@ -85,7 +85,6 @@ export const appendAdsAction = () => async dispatch => {
       ...GET_ADS_META,
       endpoint,
     });
-    console.log(data);
     if (error) {
       throw new Error(error);
     }

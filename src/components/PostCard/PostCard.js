@@ -38,7 +38,16 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
-const PostCard = ({description, status, categories, date, _id, media,noStatusIcon}) => {
+const PostCard = ({
+  description,
+  status,
+  categories,
+  date,
+  _id,
+  media,
+  noStatusIcon,
+}) => {
+  console.log({categories})
   const {navigate} = useNavigation();
   const ref = useRef(null);
   const handleClick = () => {
@@ -107,7 +116,6 @@ const PostCard = ({description, status, categories, date, _id, media,noStatusIco
               // rounded="lg"
             >
               <Video
-
                 onLoad={load => {
                   console.log({load});
                 }}
@@ -166,16 +174,13 @@ const PostCard = ({description, status, categories, date, _id, media,noStatusIco
                 </CustomText>
               </Box>
               <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
-                {categories ||
-                  Array(6)
-                    .fill('Group')
-                    .map((x, i) => (
-                      // <Box key={x + i}>
-                      <CustomBadge my={1} key={x + i}>{`${x} ${
-                        i + 1
-                      }`}</CustomBadge>
-                      // </Box>
-                    ))}
+                {(categories || []).map((x, i) => (
+                  // <Box key={x + i}>
+                  <CustomBadge my={1} key={x}>
+                    {x}
+                  </CustomBadge>
+                  // </Box>
+                ))}
               </HStack>
               <CustomText
                 color="coolGray.400"

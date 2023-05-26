@@ -98,7 +98,7 @@ export const fileUploadMethod = async meta => {
     },
     });
     console.log('FILEUPLOAD', res);
-    return res.data;
+    return {data:res.data};
   } catch (error) {
     console.log('FILEUPLOADError', error);
     return {
