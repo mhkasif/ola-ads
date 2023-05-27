@@ -8,7 +8,7 @@ import AdsReducer from './adsActions/adsSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: [], // persist both auth and counter slices
+  whitelist: ["auth"], // persist both auth and counter slices
 };
 const rootReducer = combineReducers({
   // counter: counterReducer,

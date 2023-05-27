@@ -11,13 +11,14 @@ import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
 import {headerOptions} from '@utils/helpers';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
 import PostScreen from 'screens/PostScreen/PostScreen';
+import {useSelector} from 'react-redux';
 const header = ({route: {name}, ...props}) => (
   <CustomHeader title={name} {...props} />
 );
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator();
-
+  const {user} = useSelector(state => state.auth);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -26,18 +27,20 @@ const RootNavigator = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen
-        name={SCREEN_NAMES.AUTH}
-        component={AuthStackNavigator}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name={SCREEN_NAMES.MAIN}
-        component={BottomTabNavigator}
-        options={{headerShown: false}}
-        // initialParams={{route}}
-      />
+      {!user ? (
+        <Stack.Screen
+          name={SCREEN_NAMES.AUTH}
+          component={AuthStackNavigator}
+          options={{headerShown: false}}
+        />
+      ) : (
+        <Stack.Screen
+          name={SCREEN_NAMES.MAIN}
+          component={BottomTabNavigator}
+          options={{headerShown: false}}
+          // initialParams={{route}}
+        />
+      )}
 
       <Stack.Screen
         name={SCREEN_NAMES.CREATE_AD}
