@@ -77,6 +77,7 @@ const apiMethod = async meta => {
           // refectored: true,
           // cancelToken: cancelSource.source?.token,
         });
+        console.log('httpGET', res)
         return {data: res.data};
       } catch (error) {
         console.log('httpGETError', error);

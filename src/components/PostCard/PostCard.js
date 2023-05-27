@@ -178,8 +178,8 @@ const PostCard = ({
               <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
                 {(categories || []).map((x, i) => (
                   // <Box key={x + i}>
-                  <CustomBadge my={1} key={x}>
-                    {x}
+                  <CustomBadge my={1} key={x.id}>
+                    {x.name}
                   </CustomBadge>
                   // </Box>
                 ))}

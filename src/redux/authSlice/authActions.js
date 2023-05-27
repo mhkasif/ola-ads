@@ -27,12 +27,11 @@ export const loginAction =
         throw new Error(error);
       }
       console.log({data});
+      const {token, ...userData} = data.user;
       let d = {
-        authToken: data?.user?.token,
+        authToken: token,
         user: {
-          id,
-          fullName: displayName,
-          email,
+          ...userData,
         },
       };
       dispatch(addAuth(d));
@@ -72,12 +71,21 @@ export const signupAction =
       const {uid: id} = user;
       // const {user}=await auth().currentUser()
       let authToken = await user.getIdToken();
-      let data = {
-        authToken,
+      console.log({authToken});
+      const {error, data} = await apiMethod({
+        ...LOGIN_META,
+        params: {
+          accessToken: authToken,
+        },
+      });
+      if (error) {
+        throw new Error(error);
+      }
+      const {token, ...userData} = data.user;
+      let d = {
+        authToken: token,
         user: {
-          id,
-          fullName,
-          email,
+          ...userData,
         },
       };
       console.log({data});
@@ -87,8 +95,8 @@ export const signupAction =
         text2: 'Welcome to the app',
         visibilityTime: 900,
       });
-      dispatch(addAuth(data));
-      return {data};
+      dispatch(addAuth(d));
+      return {d};
     } catch (error) {
       console.log({error});
       Toast.show({
@@ -242,7 +250,7 @@ export const updateProfileAction = formData => async dispatch => {
     });
 
     dispatch(updateAuth({user: data.updatedUser}));
-    return {data}
+    return {data};
   } catch (error) {
     console.log({error});
     Toast.show({
@@ -250,6 +258,6 @@ export const updateProfileAction = formData => async dispatch => {
       text1: 'Profile Update Failed',
       text2: error?.userInfo?.message || 'Something went wrong',
     });
-    return {error}
+    return {error};
   }
 };

@@ -28,6 +28,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect, useSelector} from 'react-redux';
 import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
 import {useNavigation} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',

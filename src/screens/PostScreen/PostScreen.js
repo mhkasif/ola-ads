@@ -102,8 +102,8 @@ const PostScreen = ({
               }}
               my={1}
               mr={1}
-              key={x}>
-              {x}
+              key={x.id}>
+              {x.name}
             </CustomBadge>
             // </Box>
           ))}

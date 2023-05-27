@@ -8,9 +8,12 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "android-output": "cd android && gradlew assembleRelease && cd ..",
-    "deploy": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "dev": "rm -rf .native-base && yarn start"
+    "android-output": "cd android && gradlew assembleDebug --warning-mode=all && cd ..",
+    "dev": "rm -rf .native-base && yarn start",
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd ..",
+    "clean:drawable": "rm -rf ./android/app/src/main/res/drawable-*",
+    "generate:bundle": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "android:release": "npx react-native run-android --variant=release"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.1",
