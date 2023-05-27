@@ -64,24 +64,20 @@ const SignupScreen = ({signupAction}) => {
   const {navigate, ...navigation} = useNavigation();
   const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
   const initialValues = fields.reduce((acc, field) => {
-    if(field.name === 'fullName')
-    acc[field.name] = 'Haseeb Khan';
-    if(field.name==="email")
-    acc[field.name] = 'haseeb1@gmail.com';
-    if(field.name==="password")
-    acc[field.name] = '123456789';
+    if (field.name === 'fullName') acc[field.name] = '';
+    if (field.name === 'email') acc[field.name] = '';
+    if (field.name === 'password') acc[field.name] = '';
     return acc;
-  },{});
+  }, {});
 
   const handleSignup = async values => {
     try {
-
       let {error, data} = await signupAction(values);
       if (!error) {
         navigation.dispatch(resetAction);
       }
     } catch (error) {
-      console.log({error})
+      console.log({error});
     }
     // navigate(SCREEN_NAMES.MAIN);
     // navigate(SCREEN_NAMES.OTP)

@@ -139,7 +139,6 @@ export const updatePasswordAction =
       //check if old password is correct
       let {user} = await currentUser.reauthenticateWithCredential(credential);
       console.log({user});
-      const {uid: id = '123', displayName = 'hello', email} = user;
 
       // if authenticated update password
       await user.updatePassword(newPassword);
@@ -151,19 +150,17 @@ export const updatePasswordAction =
           accessToken: authToken,
         },
       });
+      const {token, ...userData} = data.user;
       let d = {
-        authToken: data?.user?.token,
+        authToken: token,
         user: {
-          id,
-          fullName: displayName,
-          email: email,
+          ...userData,
         },
       };
       dispatch(addAuth(d));
       Toast.show({
         type: 'success',
-        text1: 'Log In Success',
-        text2: 'Welcome to the app',
+        text1: 'Password Updated',
         visibilityTime: 900,
       });
       // await sleep(1000);
