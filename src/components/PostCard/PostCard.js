@@ -116,16 +116,7 @@ const PostCard = ({
               // rounded="lg"
             >
               <Video
-                onLoad={load => {
-                  console.log({load});
-                }}
-                onError={err => {
-                  ref?.current?.play?.();
-                  console.log({err});
-                }}
-                onLoadStart={load => {
-                  console.log({load});
-                }}
+                paused
                 source={{
                   uri: IMAGE_DIRECTORY + media?.pathname,
                   type: 'mp4',

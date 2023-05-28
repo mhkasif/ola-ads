@@ -1,6 +1,7 @@
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 import YUP from '@components/YUP/YUP';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '@utils/colors';
@@ -81,6 +82,7 @@ const ChangePasswordScreen = ({updatePasswordAction}) => {
   };
   return (
     <Box w="100%" h="100%" bg={COLORS.bg}>
+      <KeyboardAvoidingInputWrapper>
       <Box mx={6} mt={10}>
         {/* <Center mb={2}> */}
         <CustomText w="75%" fontSize="xs" mb={4} color={COLORS.muted}>
@@ -143,6 +145,7 @@ const ChangePasswordScreen = ({updatePasswordAction}) => {
           )}
         </Formik>
       </Box>
+      </KeyboardAvoidingInputWrapper>
     </Box>
   );
 };

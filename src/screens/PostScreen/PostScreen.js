@@ -14,8 +14,8 @@ const PostScreen = ({
 }) => {
   const ref = useRef(null);
   return (
-    <ScrollView>
-      <Box bg={COLORS.bg} px={4} py={6} h="100%">
+    <Box bg={COLORS.bg} px={4} py={6} h="100%">
+        <ScrollView>
         { media?.type?.includes('video') ? (
           <Video
             ref={ref}
@@ -46,10 +46,11 @@ const PostScreen = ({
                 ? IMAGE_DIRECTORY + media?.pathname
                 : 'https://placehold.co/600x400/png?text=No+Photo',
             }}
-            // w="100%"
+            w="100%"
             h={200}
             resizeMode="cover"
             alt={description}
+
           />
         )}
         <HStack alignItems="center" my={3} justifyContent="space-between">
@@ -108,8 +109,8 @@ const PostScreen = ({
             // </Box>
           ))}
         </HStack>
-      </Box>
     </ScrollView>
+      </Box>
   );
 };
 

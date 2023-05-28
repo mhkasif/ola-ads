@@ -25,6 +25,7 @@ import {SCREEN_NAMES} from '../screenNames';
 import YUP from '@components/YUP/YUP';
 import {linearGradient} from '@utils/colors';
 import {StackActions} from '@react-navigation/native';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 
 // ...
 
@@ -77,7 +78,6 @@ const LoginScreen = ({loginAction}) => {
     },
   ];
   return (
-    // <KeyboardAvoidingInputWrapper >
     <Box
       // bg="pink.500"
       style={{
@@ -108,101 +108,102 @@ const LoginScreen = ({loginAction}) => {
           marginTop: '-6%',
           // height: '100%',
         }}>
-        <Center bg="transparent" w="100%">
-          <Box bg="transparent" p="2" py="8" w="90%">
-            <Heading
-              size="lg"
-              fontWeight="600"
-              color="coolGray.800"
-              _dark={{
-                color: 'warmGray.50',
-              }}>
-              Welcome
-            </Heading>
-            <Heading
-              mt="1"
-              _dark={{
-                color: 'warmGray.200',
-              }}
-              color="coolGray.600"
-              fontWeight="medium"
-              size="xs">
-              Log In to continue!
-            </Heading>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleLogin}
-              validationSchema={formValidation}>
-              {({isSubmitting, handleSubmit}) => (
-                <VStack space={3} mt="5">
-                  {fields.map(field => (
-                    <CustomInput {...field} key={field.name} />
-                  ))}
-                  <Link
-                    onPress={() => navigate(SCREEN_NAMES.FORGOT_PASSWORD)}
-                    _text={{
-                      fontSize: 'xs',
-                      fontWeight: '500',
-                      color: COLORS.primary,
-                      underline: false,
-                    }}
-                    // alignSelf="flex-end"
-                    mt="1">
-                    Forgot your password?
-                  </Link>
-                  <CustomButton
-                    buttonProps={{
-                      // colorScheme: 'indigo',
-                      onPress: handleSubmit,
-                      isLoading: isSubmitting,
-                      isLoadingText: 'Logging In...',
-                    }}>
-                    Log In
-                  </CustomButton>
-                </VStack>
-              )}
-            </Formik>
-            <HStack mt="6" justifyContent="center">
-              <CustomText
-                fontSize="sm"
-                color="coolGray.600"
+        <KeyboardAvoidingInputWrapper>
+          <Center bg="transparent" w="100%">
+            <Box bg="transparent" p="2" py="8" w="90%">
+              <Heading
+                size="lg"
+                fontWeight="600"
+                color="coolGray.800"
+                _dark={{
+                  color: 'warmGray.50',
+                }}>
+                Welcome
+              </Heading>
+              <Heading
+                mt="1"
                 _dark={{
                   color: 'warmGray.200',
-                }}>
-                Don't you have an account?{' '}
-              </CustomText>
-              <Link
-                _text={{
-                  color: COLORS.primary,
-                  fontWeight: 'medium',
-                  fontSize: 'sm',
-                  underline: false,
                 }}
-                onPress={() => navigate(SCREEN_NAMES.SIGNUP)}>
-                Sign Up
-              </Link>
-            </HStack>
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              my={4}>
-              <Divider w="45%" borderColor="gray.300" />
-              <CustomText mx={3} color="gray.300">
-                OR
-              </CustomText>
-              <Divider w="45%" borderColor="gray.300" />
-            </Box>
+                color="coolGray.600"
+                fontWeight="medium"
+                size="xs">
+                Log In to continue!
+              </Heading>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleLogin}
+                validationSchema={formValidation}>
+                {({isSubmitting, handleSubmit}) => (
+                  <VStack space={3} mt="5">
+                    {fields.map(field => (
+                      <CustomInput {...field} key={field.name} />
+                    ))}
+                    <Link
+                      onPress={() => navigate(SCREEN_NAMES.FORGOT_PASSWORD)}
+                      _text={{
+                        fontSize: 'xs',
+                        fontWeight: '500',
+                        color: COLORS.primary,
+                        underline: false,
+                      }}
+                      // alignSelf="flex-end"
+                      mt="1">
+                      Forgot your password?
+                    </Link>
+                    <CustomButton
+                      buttonProps={{
+                        // colorScheme: 'indigo',
+                        onPress: handleSubmit,
+                        isLoading: isSubmitting,
+                        isLoadingText: 'Logging In...',
+                      }}>
+                      Log In
+                    </CustomButton>
+                  </VStack>
+                )}
+              </Formik>
+              <HStack mt="6" justifyContent="center">
+                <CustomText
+                  fontSize="sm"
+                  color="coolGray.600"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}>
+                  Don't you have an account?{' '}
+                </CustomText>
+                <Link
+                  _text={{
+                    color: COLORS.primary,
+                    fontWeight: 'medium',
+                    fontSize: 'sm',
+                    underline: false,
+                  }}
+                  onPress={() => navigate(SCREEN_NAMES.SIGNUP)}>
+                  Sign Up
+                </Link>
+              </HStack>
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                my={4}>
+                <Divider w="45%" borderColor="gray.300" />
+                <CustomText mx={3} color="gray.300">
+                  OR
+                </CustomText>
+                <Divider w="45%" borderColor="gray.300" />
+              </Box>
 
-            <HStack space={3} justifyContent="center">
-              <FacebookButton w="45%" />
-              <GoogleButton w="45%" />
-            </HStack>
-          </Box>
-        </Center>
+              <HStack space={3} justifyContent="center">
+                <FacebookButton w="45%" />
+                <GoogleButton w="45%" />
+              </HStack>
+            </Box>
+          </Center>
+        </KeyboardAvoidingInputWrapper>
       </Box>
     </Box>
-    // {/* </KeyboardAvoidingInputWrapper> */}
   );
 };
 const actions = {

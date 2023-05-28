@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import CustomButton from '@components/CustomButton/CustomButton';
-import CustomInput, {SimpleTextArea} from '@components/CustomInput/CustomInput';
+import CustomInput, { SimpleTextArea } from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import ImagePicker from '@components/ImagePicker/ImagePicker';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {FlashList} from '@shopify/flash-list';
-import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
+import { FlashList } from '@shopify/flash-list';
+import { COLORS } from '@utils/colors';
+import { sleep } from '@utils/helpers';
 import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
 import FormData from 'form-data';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
+import ImageView from "react-native-image-viewing";
+
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
+import { useNavigation } from '@react-navigation/native';
 import {
   Avatar,
   Box,
@@ -23,17 +27,15 @@ import {
   Pressable,
   VStack,
 } from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {connect, useSelector} from 'react-redux';
-import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
-import {useNavigation} from '@react-navigation/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
+import { connect, useSelector } from 'react-redux';
+import { createAdAction, getCategoriesAction } from 'redux/adsActions/adsActions';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
+  VIEW_IMAGE: 'VIEW_IMAGE',
 };
 function CreatePost({
   user,
@@ -42,11 +44,12 @@ function CreatePost({
   createAdAction,
   getCategoriesAction,
 }) {
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState('');
   const [mediaType, setMediaType] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const {goBack} = useNavigation();
+
   const [state, setState] = useState({
     description: '',
     name: user?.fullName,
@@ -112,12 +115,15 @@ function CreatePost({
     console.log(state, selectedCategories);
     const formData = new FormData();
     if (selectedCategories.length) {
-      selectedCategories.forEach((item,i) => {
-      formData.append(`categories[]`,item);
+      selectedCategories.forEach((item, i) => {
+        formData.append(`categories[]`, item);
       });
     }
     if (state.schedule_date)
-      formData.append('schedule_date',new Date( state.schedule_date).toISOString());
+      formData.append(
+        'schedule_date',
+        new Date(state.schedule_date).toISOString(),
+      );
 
     formData.append('description', state.description);
     formData.append('file', {...image, name: image.fileName});
@@ -174,112 +180,121 @@ function CreatePost({
 
   return (
     <>
-      <Box pt={5} px={4}>
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="datetime"
-          date={
-            state.schedule_date ? new Date(state.schedule_date) : new Date()
-          }
-          onConfirm={handleSelectDate}
-          onCancel={hideDatePicker}
-          minimumDate={new Date()}
-          accentColor="red"
-        />
-        <Box h="45%">
-          <VStack>
-            {fields.map((field, index) => (
-              <SimpleTextArea key={index} {...field} />
-            ))}
-          </VStack>
-
-          <HStack space={3}>
-            {[
-              {
-                image: Picture,
-                title: 'Photo',
-                onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'photo'),
-              },
-              {
-                image: Video,
-                title: 'Video',
-                onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'video'),
-              },
-            ].map((item, index) => (
-              <MediaItem key={index} {...item} />
-            ))}
-          </HStack>
-          <HStack space="4" mt={4}>
-            {[
-              {
-                title: 'Contact',
-                buttonProps: {
-                  onPress: onOpen(MODAL_NAMES.CONTACT_MODAL),
-                  leftIcon: (
-                    <Icon
-                      as={MaterialIcon}
-                      size="md"
-                      name="call"
-                      color={COLORS.white}
-                    />
-                  ),
-                },
-              },
-              {
-                title: 'Schedule Post',
-                buttonProps: {
-                  onPress: showDatePicker,
-                  leftIcon: (
-                    <Icon
-                      as={MaterialIcon}
-                      name="event"
-                      size="md"
-                      color={COLORS.white}
-                    />
-                  ),
-                },
-              },
-            ].map((item, index) => (
-              <Box flex={1} key={index}>
-                <CustomButton {...item}>{item.title}</CustomButton>
-              </Box>
-            ))}
-          </HStack>
-        </Box>
-      </Box>
-      {image && (
-        <Box px={4} mt={4}>
-          <HStack
-            borderStyle="dashed"
-            p={1}
-            borderWidth={1}
-            borderColor={COLORS.muted}
-            orderColor>
-            <Image
-              source={{
-                uri: image?.uri,
-              }}
-              alt="selected Image"
-              style={{resizeMode: 'contain'}}
-              w={10}
-              h={60}
+      <KeyboardAvoidingInputWrapper>
+        <>
+          <Box pt={5} px={4}>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="datetime"
+              date={
+                state.schedule_date ? new Date(state.schedule_date) : new Date()
+              }
+              onConfirm={handleSelectDate}
+              onCancel={hideDatePicker}
+              minimumDate={new Date()}
+              accentColor="red"
             />
-          </HStack>
-        </Box>
-      )}
 
+            <Box h="65%">
+              <VStack>
+                {fields.map((field, index) => (
+                  <SimpleTextArea key={index} {...field} />
+                ))}
+              </VStack>
+
+              <HStack space={3}>
+                {[
+                  {
+                    image: Picture,
+                    title: 'Photo',
+                    onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'photo'),
+                  },
+                  {
+                    image: Video,
+                    title: 'Video',
+                    onPress: onOpen(MODAL_NAMES.IMAGE_ACTION_SHEET, 'video'),
+                  },
+                ].map((item, index) => (
+                  <MediaItem key={index} {...item} />
+                ))}
+              </HStack>
+              <HStack space="4" mt={4}>
+                {[
+                  {
+                    title: 'Contact',
+                    buttonProps: {
+                      onPress: onOpen(MODAL_NAMES.CONTACT_MODAL),
+                      leftIcon: (
+                        <Icon
+                          as={MaterialIcon}
+                          size="md"
+                          name="call"
+                          color={COLORS.white}
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    title: 'Schedule Post',
+                    buttonProps: {
+                      onPress: showDatePicker,
+                      leftIcon: (
+                        <Icon
+                          as={MaterialIcon}
+                          name="event"
+                          size="md"
+                          color={COLORS.white}
+                        />
+                      ),
+                    },
+                  },
+                ].map((item, index) => (
+                  <Box flex={1} key={index}>
+                    <CustomButton {...item}>{item.title}</CustomButton>
+                  </Box>
+                ))}
+              </HStack>
+            </Box>
+          </Box>
+        </>
+      </KeyboardAvoidingInputWrapper>
+      {image && (
+        <CustomText textAlign="center" underline color="blue.500" mt={3} onPress={onOpen(MODAL_NAMES.VIEW_IMAGE)}>
+          View File
+        </CustomText>
+        // <Box px={4} mt={4}>
+        //   <HStack
+        //     borderStyle="dashed"
+        //     p={1}
+        //     borderWidth={1}
+        //     borderColor={COLORS.muted}
+        //     orderColor>
+        //     <Image
+        //       source={{
+        //         uri: image?.uri,
+        //       }}
+        //       alt="selected Image"
+        //       style={{resizeMode: 'contain'}}
+        //       w={10}
+        //       h={60}
+        //     />
+        //   </HStack>
+        // </Box>
+      )}
       <Box bg="white" flex={1} borderTopRadius={30} mt={5} pb={5}>
-        <Center>
-          <CustomText fontSize="sm" color={COLORS.muted} my={2}>
-            Select Category
-          </CustomText>
-        </Center>
-        <Box my={4} h="85%">
-          <CategoryList
-            handleSelectCategory={handleSelectCategory}
-            categories={categoriesList}
-          />
-        </Box>
+        <>
+          <Center>
+            <CustomText fontSize="sm" color={COLORS.muted} my={2}>
+              Select Category
+            </CustomText>
+          </Center>
+          <Box my={4} h="85%">
+            <CategoryList
+              handleSelectCategory={handleSelectCategory}
+              categories={categoriesList}
+            />
+          </Box>
+        </>
       </Box>
       <ContactModal
         isOpen={openModal === MODAL_NAMES.CONTACT_MODAL}
@@ -290,6 +305,12 @@ function CreatePost({
         isOpen={openModal === MODAL_NAMES.IMAGE_ACTION_SHEET}
         onClose={onClose}
         mediaType={mediaType}
+      />
+      <ImageView
+        images={[{uri: image?.uri}]}
+        imageIndex={0}
+        visible={openModal === MODAL_NAMES.VIEW_IMAGE}
+        onRequestClose={onClose}
       />
     </>
   );

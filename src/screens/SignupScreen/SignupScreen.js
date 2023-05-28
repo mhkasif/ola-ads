@@ -23,6 +23,7 @@ import {signupAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from '../screenNames';
 import YUP from '@components/YUP/YUP';
 import {Toast} from 'react-native-toast-message';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
@@ -83,7 +84,6 @@ const SignupScreen = ({signupAction}) => {
     // navigate(SCREEN_NAMES.OTP)
   };
   return (
-    // <KeyboardAvoidingInputWrapper >
     <Box
       // bg="pink.500"
       style={{
@@ -125,90 +125,91 @@ const SignupScreen = ({signupAction}) => {
           marginTop: '-6%',
           // height: '100%',
         }}>
-        <Center bg="transparent" w="100%">
-          <Box bg="transparent" p="2" py="8" w="90%">
-            <Heading
-              size="lg"
-              fontWeight="600"
-              color="coolGray.800"
-              _dark={{
-                color: 'warmGray.50',
-              }}>
-              Welcome
-            </Heading>
-            <Heading
-              mt="1"
-              _dark={{
-                color: 'warmGray.200',
-              }}
-              color="coolGray.600"
-              fontWeight="medium"
-              size="xs">
-              Sign Up to continue!
-            </Heading>
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleSignup}
-              validationSchema={formValidation}>
-              {({isSubmitting, handleSubmit}) => (
-                <VStack space={3} mt="5">
-                  {fields.map(field => (
-                    <CustomInput {...field} key={field.name} />
-                  ))}
-
-                  <CustomButton
-                    buttonProps={{
-                      // colorScheme: 'indigo',
-                      onPress: handleSubmit,
-                      isLoading: isSubmitting,
-                      isLoadingText: 'Creating...',
-                    }}>
-                    Create Account
-                  </CustomButton>
-                </VStack>
-              )}
-            </Formik>
-            <HStack mt="6" justifyContent="center">
-              <CustomText
-                fontSize="sm"
-                color="coolGray.600"
+        <KeyboardAvoidingInputWrapper>
+          <Center bg="transparent" w="100%">
+            <Box bg="transparent" p="2" py="8" w="90%">
+              <Heading
+                size="lg"
+                fontWeight="600"
+                color="coolGray.800"
+                _dark={{
+                  color: 'warmGray.50',
+                }}>
+                Welcome
+              </Heading>
+              <Heading
+                mt="1"
                 _dark={{
                   color: 'warmGray.200',
-                }}>
-                Already have an account?{' '}
-              </CustomText>
-              <Link
-                _text={{
-                  color: COLORS.primary,
-                  fontWeight: 'medium',
-                  fontSize: 'sm',
-                  underline: false,
                 }}
-                onPress={() => navigate(SCREEN_NAMES.LOGIN)}>
-                Log In
-              </Link>
-            </HStack>
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="center"
-              my={4}>
-              <Divider w="45%" borderColor="gray.300" />
-              <CustomText mx={3} color="gray.300">
-                OR
-              </CustomText>
-              <Divider w="45%" borderColor="gray.300" />
-            </Box>
+                color="coolGray.600"
+                fontWeight="medium"
+                size="xs">
+                Sign Up to continue!
+              </Heading>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleSignup}
+                validationSchema={formValidation}>
+                {({isSubmitting, handleSubmit}) => (
+                  <VStack space={3} mt="5">
+                    {fields.map(field => (
+                      <CustomInput {...field} key={field.name} />
+                    ))}
 
-            <HStack space={3} justifyContent="center">
-              <FacebookButton w="45%" />
-              <GoogleButton w="45%" />
-            </HStack>
-          </Box>
-        </Center>
+                    <CustomButton
+                      buttonProps={{
+                        // colorScheme: 'indigo',
+                        onPress: handleSubmit,
+                        isLoading: isSubmitting,
+                        isLoadingText: 'Creating...',
+                      }}>
+                      Create Account
+                    </CustomButton>
+                  </VStack>
+                )}
+              </Formik>
+              <HStack mt="6" justifyContent="center">
+                <CustomText
+                  fontSize="sm"
+                  color="coolGray.600"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}>
+                  Already have an account?{' '}
+                </CustomText>
+                <Link
+                  _text={{
+                    color: COLORS.primary,
+                    fontWeight: 'medium',
+                    fontSize: 'sm',
+                    underline: false,
+                  }}
+                  onPress={() => navigate(SCREEN_NAMES.LOGIN)}>
+                  Log In
+                </Link>
+              </HStack>
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+                my={4}>
+                <Divider w="45%" borderColor="gray.300" />
+                <CustomText mx={3} color="gray.300">
+                  OR
+                </CustomText>
+                <Divider w="45%" borderColor="gray.300" />
+              </Box>
+
+              <HStack space={3} justifyContent="center">
+                <FacebookButton w="45%" />
+                <GoogleButton w="45%" />
+              </HStack>
+            </Box>
+          </Center>
+        </KeyboardAvoidingInputWrapper>
       </Box>
     </Box>
-    // {/* </KeyboardAvoidingInputWrapper> */}
   );
 };
 const actions = {

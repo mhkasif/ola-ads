@@ -5,8 +5,8 @@ import {Pressable, StyleSheet} from 'react-native';
 
 const FAB = ({children, ...props}) => {
   const handlePress = e => {
-    props.onPress();
     e?.stopPropagation();
+    props.onPress();
   };
   return (
     <Pressable onPress={handlePress}>
