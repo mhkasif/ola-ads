@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import CustomButton from '@components/CustomButton/CustomButton';
-import CustomInput, { SimpleTextArea } from '@components/CustomInput/CustomInput';
+import CustomInput, {SimpleTextArea} from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import ImagePicker from '@components/ImagePicker/ImagePicker';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { FlashList } from '@shopify/flash-list';
-import { COLORS } from '@utils/colors';
-import { sleep } from '@utils/helpers';
+// import { FlashList } from '@shopify/flash-list';
+import {COLORS} from '@utils/colors';
+import {sleep} from '@utils/helpers';
 import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
 import FormData from 'form-data';
-import { Formik } from 'formik';
-import ImageView from "react-native-image-viewing";
-
+import {Formik} from 'formik';
+import ImageView from 'react-native-image-viewing';
+import {FlatList} from 'react-native';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   Avatar,
   Box,
@@ -27,10 +27,10 @@ import {
   Pressable,
   VStack,
 } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { connect, useSelector } from 'react-redux';
-import { createAdAction, getCategoriesAction } from 'redux/adsActions/adsActions';
+import {connect, useSelector} from 'react-redux';
+import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
@@ -259,7 +259,12 @@ function CreatePost({
         </>
       </KeyboardAvoidingInputWrapper>
       {image && (
-        <CustomText textAlign="center" underline color="blue.500" mt={3} onPress={onOpen(MODAL_NAMES.VIEW_IMAGE)}>
+        <CustomText
+          textAlign="center"
+          underline
+          color="blue.500"
+          mt={3}
+          onPress={onOpen(MODAL_NAMES.VIEW_IMAGE)}>
           View File
         </CustomText>
         // <Box px={4} mt={4}>
@@ -358,14 +363,14 @@ const CategoryItem = item => {
     setIsChecked(p => !p);
     handleSelectCategory(_id);
   };
-  const {handleSelectCategory, name, _id,image} = item || {};
+  const {handleSelectCategory, name, _id, image} = item || {};
   return (
     <Pressable onPress={onCheck}>
       <HStack my={2} alignItems="center" px={6} w="100%">
         <Avatar
           size="sm"
           source={{
-            uri: image
+            uri: image,
           }}
         />
         <CustomText ml={4}>{name}</CustomText>
@@ -387,7 +392,7 @@ const CategoryList = ({handleSelectCategory, categories}) => {
   //flat list for category item
 
   return (
-    <FlashList
+    <FlatList
       data={categories || []}
       renderItem={({item}) => {
         return (

@@ -12,17 +12,16 @@ import {
   VStack,
   useColorModeValue,
 } from 'native-base';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {initStripe, useStripe} from '@stripe/stripe-react-native';
-import {COLORS} from '@utils/colors';
-import {Dimensions, StyleSheet} from 'react-native';
-import {SceneMap, TabView} from 'react-native-tab-view';
-import {FlashList} from '@shopify/flash-list';
+import { initStripe, useStripe } from '@stripe/stripe-react-native';
+import { COLORS } from '@utils/colors';
+import { Dimensions, FlatList, StyleSheet } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
@@ -123,8 +122,8 @@ function ListOfPlansScreen() {
   }, []);
 
   return (
-    <Box bg={COLORS.bg} flex="1" p={3} >
-       {loading && (
+    <Box bg={COLORS.bg} flex="1" p={3}>
+      {loading && (
         <Box
           position="absolute"
           top={0}
@@ -139,7 +138,7 @@ function ListOfPlansScreen() {
           <Spinner size="large" />
         </Box>
       )}
-      <FlashList
+      <FlatList
         estimatedItemSize={120}
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={({item}) => (

@@ -1,17 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import CustomButton from '@components/CustomButton/CustomButton';
-import PostCard from '@components/PostCard/PostCard';
-import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
-import {Box, StatusBar, useColorModeValue} from 'native-base';
-import {useEffect, useState, useCallback, useMemo} from 'react';
-import {Dimensions, RefreshControl} from 'react-native';
-import {SceneMap, TabView} from 'react-native-tab-view';
-import {FlashList} from '@shopify/flash-list';
-import {connect, useSelector} from 'react-redux';
-import {getAdsAction} from 'redux/adsActions/adsActions';
 import AdsList from '@components/AdsList/AdsList';
+import CustomButton from '@components/CustomButton/CustomButton';
+import { COLORS } from '@utils/colors';
+import { Box, StatusBar, useColorModeValue } from 'native-base';
+import { useMemo, useState } from 'react';
+import { Dimensions } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 
 function ListOfPostsScreen({status}) {
   return (

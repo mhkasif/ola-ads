@@ -11,7 +11,6 @@ import {getAdsAction} from 'redux/adsActions/adsActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
 function HomeScreen() {
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const {
     auth: {user},
   } = useSelector(state => state);
@@ -19,7 +18,7 @@ function HomeScreen() {
   const {navigate} = useNavigation();
 
   const navigateToProfile = () => {
-    navigate(SCREEN_NAMES.PROFILE);
+    navigate('_' + SCREEN_NAMES.PROFILE);
   };
   useEffect(() => {}, []);
   return (
@@ -44,11 +43,7 @@ function HomeScreen() {
         <Box ml={3}>
           <VStack>
             <Heading>Hey! {user?.fullName?.split(' ')?.[0]}</Heading>
-            <CustomText
-              fontWeight="medium"
-              letterSpacing="lg"
-              fontSize="md"
-              mt={2}>
+            <CustomText fontWeight="medium" letterSpacing="lg" fontSize="md">
               Welcome to ola
             </CustomText>
           </VStack>

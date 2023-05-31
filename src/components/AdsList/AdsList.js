@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {FlashList} from '@shopify/flash-list';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {appendAdsAction, getAdsAction} from 'redux/adsActions/adsActions';
-import {connect} from 'react-redux';
-import {RefreshControl} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FlatList, RefreshControl } from 'react-native';
+import { connect } from 'react-redux';
+import { appendAdsAction, getAdsAction } from 'redux/adsActions/adsActions';
 
-import PostCard from '@components/PostCard/PostCard';
-import {Box, Spinner} from 'native-base';
 import CustomText from '@components/CustomText/CustomText';
+import PostCard from '@components/PostCard/PostCard';
+import { Box, Spinner } from 'native-base';
 const LOADING_TYPE = {
   REFRESH: 'REFRESH',
   PAGINATION: 'PAGINATION',
@@ -66,7 +65,7 @@ const AdsList = ({
   }, [pagination?.hasNextPage, loadingType, adsState]);
   return (
     <>
-      <FlashList
+      <FlatList
         refreshControl={
           <RefreshControl
             refreshing={loadingType === LOADING_TYPE.REFRESH}
