@@ -358,14 +358,14 @@ const CategoryItem = item => {
     setIsChecked(p => !p);
     handleSelectCategory(_id);
   };
-  const {handleSelectCategory, name, _id} = item || {};
+  const {handleSelectCategory, name, _id,image} = item || {};
   return (
     <Pressable onPress={onCheck}>
       <HStack my={2} alignItems="center" px={6} w="100%">
         <Avatar
           size="sm"
           source={{
-            uri: 'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            uri: image
           }}
         />
         <CustomText ml={4}>{name}</CustomText>
