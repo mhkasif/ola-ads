@@ -56,8 +56,7 @@ export const clearAds = () => async dispatch => {
 
 export const getAdsAction = () => async dispatch => {
   try {
-    const {pagination} = store.getState().ads;
-    pagination.page;
+
     const {data, error} = await apiMethod({
       ...GET_ADS_META,
     });

@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
-import { connect } from 'react-redux';
-import { appendAdsAction, getAdsAction } from 'redux/adsActions/adsActions';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {FlatList, RefreshControl} from 'react-native';
+import {connect} from 'react-redux';
+import {appendAdsAction, getAdsAction} from 'redux/adsActions/adsActions';
 
 import CustomText from '@components/CustomText/CustomText';
 import PostCard from '@components/PostCard/PostCard';
-import { Box, Spinner } from 'native-base';
+import {Box, Spinner} from 'native-base';
 const LOADING_TYPE = {
   REFRESH: 'REFRESH',
   PAGINATION: 'PAGINATION',
@@ -25,6 +25,7 @@ const AdsList = ({
   const hasMorePages = pagination?.hasNextPage || false;
   const fetchingAdsRef = useRef(false);
   const fetchAds = useCallback(async () => {
+    fetchingAdsRef.current = true;
     setLoadingType(LOADING_TYPE.REFRESH);
     await getAdsAction();
     fetchingAdsRef.current = false;
@@ -33,7 +34,7 @@ const AdsList = ({
 
   const fetchMoreData = async () => {
     console.log('loading fetch More data', loadingType);
-    if (!hasMorePages || loadingType || fetchingAdsRef.current) {
+    if (loadingType || fetchingAdsRef.current || !hasMorePages) {
       return;
     }
     setLoadingType(LOADING_TYPE.PAGINATION);
@@ -42,13 +43,11 @@ const AdsList = ({
   };
 
   useEffect(() => {
-    fetchingAdsRef.current = true;
     fetchAds();
   }, [fetchAds]);
 
   const renderItem = useCallback(({item}) => {
-    console.log({item});
-    return <PostCard {...item} />;
+    return <PostCard key={item._id} {...item} />;
   }, []);
 
   const renderEmpty = useCallback(() => {

@@ -2,16 +2,14 @@ import CustomBadge from '@components/CustomBadge/CustomBadge';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {useNavigation} from '@react-navigation/native';
-import {COLORS} from '@utils/colors';
-import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
-import {SCREEN_NAMES} from 'screens/screenNames';
-import Video from 'react-native-video';
-import {useRef} from 'react';
 import {IMAGE_DIRECTORY} from '@utils/Urls';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {COLORS} from '@utils/colors';
 import PlayIcon from 'assets/playIcon.png';
-import PlayBG from 'assets/playBG.png';
-import {StyleSheet, View} from 'react-native';
+import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
+import {memo, useMemo, useRef} from 'react';
+import {StyleSheet} from 'react-native';
+import Video from 'react-native-video';
+import {SCREEN_NAMES} from 'screens/screenNames';
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
@@ -197,4 +195,4 @@ const PostCard = ({
   );
 };
 
-export default PostCard;
+export default memo(PostCard);
