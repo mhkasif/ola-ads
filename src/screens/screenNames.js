@@ -21,4 +21,5 @@ export const SCREEN_NAMES = {
   EDIT_PROFILE: 'Edit Profile',
   PAYMENT: 'Payment',
   Terms: 'Terms & Conditions',
+  ONBOARDING: 'Onboarding',
 };

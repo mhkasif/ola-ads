@@ -12,6 +12,7 @@ import {headerOptions} from '@utils/helpers';
 import CustomHeader from '@components/CustomHeader/CustomHeader';
 import PostScreen from 'screens/PostScreen/PostScreen';
 import {useSelector} from 'react-redux';
+import OnBoardingScreen from 'screens/OnBoardingScreen/OnBoardingScreen';
 const header = ({route: {name}, ...props}) => (
   <CustomHeader title={name} {...props} />
 );
@@ -27,12 +28,37 @@ const RootNavigator = () => {
         options={{headerShown: false}}
       />
 
-      {!user ? (
+      {user && (
         <Stack.Screen
-          name={SCREEN_NAMES.AUTH}
-          component={AuthStackNavigator}
+          name={SCREEN_NAMES.ONBOARDING}
+          component={OnBoardingScreen}
           options={{headerShown: false}}
         />
+      )}
+
+      {!user ? (
+        <>
+          <Stack.Screen
+            name={SCREEN_NAMES.AUTH}
+            component={AuthStackNavigator}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={SCREEN_NAMES.CREATE_AD}
+            component={CreatePost}
+            options={{
+              header,
+            }}
+          />
+
+          <Stack.Screen
+            name={SCREEN_NAMES.POST_DETAILS}
+            component={PostScreen}
+            options={{
+              header,
+            }}
+          />
+        </>
       ) : (
         <Stack.Screen
           name={SCREEN_NAMES.MAIN}
@@ -41,22 +67,6 @@ const RootNavigator = () => {
           // initialParams={{route}}
         />
       )}
-
-      <Stack.Screen
-        name={SCREEN_NAMES.CREATE_AD}
-        component={CreatePost}
-        options={{
-          header,
-        }}
-      />
-
-      <Stack.Screen
-        name={SCREEN_NAMES.POST_DETAILS}
-        component={PostScreen}
-        options={{
-          header,
-        }}
-      />
     </Stack.Navigator>
   );
 };

@@ -3,10 +3,10 @@ import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import FacebookButton from '@components/FacebookButton/FacebookButton';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
-import {useNavigation} from '@react-navigation/native';
-import {COLORS} from '@utils/colors';
+import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '@utils/colors';
 import Logo from 'assets/logo.png';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import {
   Box,
   Center,
@@ -18,14 +18,14 @@ import {
   StatusBar,
   VStack,
 } from 'native-base';
-import {connect} from 'react-redux';
-import {loginAction} from 'redux/authSlice/authActions';
+import { connect } from 'react-redux';
+import { loginAction } from 'redux/authSlice/authActions';
 
-import {SCREEN_NAMES} from '../screenNames';
-import YUP from '@components/YUP/YUP';
-import {linearGradient} from '@utils/colors';
-import {StackActions} from '@react-navigation/native';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
+import YUP from '@components/YUP/YUP';
+import { StackActions } from '@react-navigation/native';
+import { linearGradient } from '@utils/colors';
+import { SCREEN_NAMES } from '../screenNames';
 
 // ...
 

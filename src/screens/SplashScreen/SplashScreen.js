@@ -3,12 +3,13 @@ import {StackActions, useNavigation} from '@react-navigation/native';
 import Splash from 'assets/splash.png';
 import {Box, Image} from 'native-base';
 import React, {useEffect} from 'react';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import {SCREEN_NAMES} from 'screens/screenNames';
 const SplashScreen = () => {
-  const {user}=useSelector(state=>state.auth)
+  const {user} = useSelector(state => state.auth);
   const navigate = useNavigation();
   const resetAction = StackActions.replace(user?SCREEN_NAMES.MAIN:SCREEN_NAMES.AUTH);
+  // const resetAction = StackActions.replace(SCREEN_NAMES.ONBOARDING);
 
   useEffect(() => {
     let x = setTimeout(() => {

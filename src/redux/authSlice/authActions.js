@@ -1,9 +1,8 @@
 import auth from '@react-native-firebase/auth';
-import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
-import {sleep} from '@utils/helpers';
+import apiMethod, { fileUploadMethod } from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
-import {LOGIN_META, UPDATE_USER} from './authAPI';
-import {addAuth, removeAuth, updateAuth} from './authSlice';
+import { LOGIN_META, UPDATE_USER } from './authAPI';
+import { addAuth, removeAuth, updateAuth } from './authSlice';
 
 export const loginAction =
   ({email = 'haseeb@gmail.com', password}) =>
@@ -68,7 +67,6 @@ export const signupAction =
       });
       user = auth().currentUser;
       console.log({user});
-      const {uid: id} = user;
       // const {user}=await auth().currentUser()
       let authToken = await user.getIdToken();
       console.log({authToken});
@@ -86,6 +84,7 @@ export const signupAction =
         authToken: token,
         user: {
           ...userData,
+          isNew: true,
         },
       };
       console.log({data});
@@ -96,7 +95,7 @@ export const signupAction =
         visibilityTime: 900,
       });
       dispatch(addAuth(d));
-      return {d};
+      return {data: d};
     } catch (error) {
       console.log({error});
       Toast.show({

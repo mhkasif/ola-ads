@@ -3,8 +3,10 @@ import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import FacebookButton from '@components/FacebookButton/FacebookButton';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
+import YUP from '@components/YUP/YUP';
 import {StackActions, useNavigation} from '@react-navigation/native';
-import {COLORS} from '@utils/colors';
+import {COLORS, linearGradient} from '@utils/colors';
 import Logo from 'assets/logo.png';
 import {Formik} from 'formik';
 import {
@@ -21,10 +23,6 @@ import {
 import {connect} from 'react-redux';
 import {signupAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from '../screenNames';
-import YUP from '@components/YUP/YUP';
-import {Toast} from 'react-native-toast-message';
-import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
-
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
   fullName: YUP.string().required('Full name is required.'),
@@ -63,7 +61,6 @@ const fields = [
 ];
 const SignupScreen = ({signupAction}) => {
   const {navigate, ...navigation} = useNavigation();
-  const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
   const initialValues = fields.reduce((acc, field) => {
     if (field.name === 'fullName') acc[field.name] = '';
     if (field.name === 'email') acc[field.name] = '';
@@ -74,7 +71,12 @@ const SignupScreen = ({signupAction}) => {
   const handleSignup = async values => {
     try {
       let {error, data} = await signupAction(values);
+      console.log({error, data});
       if (!error) {
+        const resetAction = StackActions.replace(
+          data.user.isNew ? SCREEN_NAMES.ONBOARDING : SCREEN_NAMES.MAIN,
+        );
+
         navigation.dispatch(resetAction);
       }
     } catch (error) {
@@ -92,18 +94,7 @@ const SignupScreen = ({signupAction}) => {
       <StatusBar />
       <Box
         bg={{
-          linearGradient: {
-            colors: [
-              'rgba(11, 114, 140, 0.83)',
-              '#08576A',
-              '#191E6D',
-              '#543073',
-            ],
-            // colors:{['#72439A', '#13C2EE']},
-            start: {x: 0, y: 0},
-            end: {x: 1, y: 0},
-            locations: [0.0066, 0.0067, 0.4389, 0.9611],
-          },
+          linearGradient,
         }}
         style={{
           height: '28%',
