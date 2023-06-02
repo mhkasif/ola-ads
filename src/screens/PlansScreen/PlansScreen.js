@@ -12,16 +12,16 @@ import {
   VStack,
   useColorModeValue,
 } from 'native-base';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { initStripe, useStripe } from '@stripe/stripe-react-native';
-import { COLORS } from '@utils/colors';
-import { Dimensions, FlatList, StyleSheet } from 'react-native';
-import { SceneMap, TabView } from 'react-native-tab-view';
+import {initStripe, useStripe} from '@stripe/stripe-react-native';
+import {COLORS} from '@utils/colors';
+import {Dimensions, FlatList, StyleSheet} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
 const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
@@ -114,7 +114,8 @@ function ListOfPlansScreen() {
     async function initialize() {
       await initStripe({
         publishableKey:
-          'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
+          'pk_test_51NDCRPINlBctypvqneWKS9nmWJVqcfRkW0IySEDnOJcuSHpxtKOJ61lNARhMzxOv0Ut8Zn5kqHczsZoNoF5j1m0n00VDU92ir4',
+        // 'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
       });
       await initializePaymentSheet();
     }

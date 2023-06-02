@@ -43,6 +43,15 @@ const RootNavigator = () => {
             component={AuthStackNavigator}
             options={{headerShown: false}}
           />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name={SCREEN_NAMES.MAIN}
+            component={BottomTabNavigator}
+            options={{headerShown: false}}
+            // initialParams={{route}}
+          />
           <Stack.Screen
             name={SCREEN_NAMES.CREATE_AD}
             component={CreatePost}
@@ -59,13 +68,6 @@ const RootNavigator = () => {
             }}
           />
         </>
-      ) : (
-        <Stack.Screen
-          name={SCREEN_NAMES.MAIN}
-          component={BottomTabNavigator}
-          options={{headerShown: false}}
-          // initialParams={{route}}
-        />
       )}
     </Stack.Navigator>
   );
