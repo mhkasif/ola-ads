@@ -14,4 +14,6 @@ export const URLS = {
   GET_ADS: '/user/view-ads',
   GET_CATEGORIES: '/user/view-categories',
   UPDATE_USER: '/user/edit-profile',
+  GET_PLANS: '/user/view-plans',
+  CREATE_SUBSCRIPTION: '/user/create-subscription',
 };

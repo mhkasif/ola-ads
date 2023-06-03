@@ -1,6 +1,6 @@
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
-import {useNavigation, StackActions} from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
 import Logout from 'assets/profileIcons/logout.png';
@@ -105,6 +105,7 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
           }}
           borderColor={COLORS.primary}
           // borderWidth={2}
+
           alt="Profile Picture"
           mb={3}
         />

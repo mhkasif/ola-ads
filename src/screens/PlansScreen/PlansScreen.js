@@ -22,55 +22,39 @@ import {initStripe, useStripe} from '@stripe/stripe-react-native';
 import {COLORS} from '@utils/colors';
 import {Dimensions, FlatList, StyleSheet} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
-const styles = StyleSheet.create({
-  banner: {
-    position: 'absolute',
-    right: -65,
-    top: 0,
-    width: 120,
-    transform: [{rotate: '45deg'}],
-    backgroundColor: 'black',
-    color: 'white',
-    // padding: 4,
-    textAlign: 'center',
-  },
-});
-
-function ListOfPlansScreen() {
+import {connect} from 'react-redux';
+import {
+  createSubscriptionAction,
+  getPlansAction,
+} from 'redux/adsActions/adsActions';
+import Toast from 'react-native-toast-message';
+import {useNavigation} from '@react-navigation/native';
+import {sleep} from '@utils/helpers';
+const actions = {
+  getPlansAction,
+  createSubscriptionAction,
+};
+const ListOfPlansScreen = connect(
+  null,
+  actions,
+)(({getPlansAction, createSubscriptionAction}) => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [loading, setLoading] = useState(false);
   const [paymentIntent, setPaymentIntent] = useState(null);
-
-  const createPaymentIntent = async () => {
+  const [plansList, setPlansList] = useState([]);
+  const {goBack} = useNavigation();
+  const createPaymentIntent = async id => {
     try {
-      const response = await fetch(
-        'https://api.stripe.com/v1/payment_intents',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization:
-              'Bearer ' +
-              'sk_test_51N2DsJCnPuYN2rinvJzrPNwVTxISNUVcooTta4GDRNqGJ5Yb0JNibMIKj9vwNZESM2h6UkZbtvNo8vE4PZwPKQ0w00e8OsYX2y',
-          },
-          body: 'amount=1000&currency=usd',
-          // &payment_method_types[]=card&payment_method_types[]=platform_pay',
-          // &payment_method_types[]=giropay&payment_method_types[]=sofort&payment_method_types[]=bancontact&payment_method_atypes[]=eps&payment_method_types[]=ideal&payment_method_types[]=sepa_debit&payment_method_types[]=afterpay_clearpay&payment_method_types[]=grabpay&payment_method_types[]=alipay&payment_method_types[]=wechat'
-        },
-      );
-
-      const {client_secret, ...x} = await response.json();
-      console.log({client_secret, x});
-      setPaymentIntent(client_secret);
-      return client_secret;
+      const {data} = await createSubscriptionAction(id);
+      setPaymentIntent(data.client_secret);
+      return data.client_secret;
     } catch (error) {
       console.log('Error creating Payment Intent:', error.message);
     }
   };
 
-  const initializePaymentSheet = async () => {
-    const ck = await createPaymentIntent();
+  const initializePaymentSheet = async id => {
+    const ck = await createPaymentIntent(id);
     console.log({paymentIntent, ck});
     if (!paymentIntent && !ck) {
       console.log('Payment Intent not found');
@@ -79,14 +63,11 @@ function ListOfPlansScreen() {
 
     const {error, paymentOption} = await initPaymentSheet({
       paymentIntentClientSecret: paymentIntent || ck,
-      merchantDisplayName: 'Example, Inc.',
+      merchantDisplayName: 'Ola Ads',
       customerEphemeralKeySecret: null,
-      customerId: null,
-      customFlow: true,
+      // customerId: null,
+      // customFlow: true,
       // allowsDelayedPaymentMethods: true,
-      defaultBillingDetails: {
-        name: 'John Doe',
-      },
     });
 
     console.log({error});
@@ -94,65 +75,83 @@ function ListOfPlansScreen() {
       setLoading(true);
     }
   };
-  const openPaymentSheet = async () => {
+  const openPaymentSheet = async id => {
     setLoading(true);
     try {
+      const ck = await initializePaymentSheet(id);
       const {error} = await presentPaymentSheet();
       setLoading(false);
       if (error) {
         console.log(`Error code: ${error.code}`, error.message);
       } else {
-        console.log('Success', 'Your order is confirmed!');
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Your order is confirmed!',
+        });
+        await sleep(500);
+        goBack();
       }
     } catch (error) {
       console.error(error);
       setLoading(false);
     }
   };
+  const fetchPlans = async () => {
+    const {data} = await getPlansAction();
 
+    data && setPlansList(data);
+  };
   useEffect(() => {
+    fetchPlans();
     async function initialize() {
       await initStripe({
         publishableKey:
           'pk_test_51NDCRPINlBctypvqneWKS9nmWJVqcfRkW0IySEDnOJcuSHpxtKOJ61lNARhMzxOv0Ut8Zn5kqHczsZoNoF5j1m0n00VDU92ir4',
         // 'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
       });
-      await initializePaymentSheet();
+      // await initializePaymentSheet();
     }
     initialize().catch(console.error);
   }, []);
 
   return (
-    <Box bg={COLORS.bg} flex="1" p={3}>
+    <>
       {loading && (
         <Box
           position="absolute"
           top={0}
           left={0}
-          right={0}
-          bottom={0}
-          h="200"
+          // flex={1}
+          zIndex={100}
+          h="100%"
           w="100%"
-          bg="rgba(255, 255, 255, 0.5)"
+          bg="rgba(255, 255, 255, 0.9)"
           justifyContent="center"
           alignItems="center">
           <Spinner size="large" />
         </Box>
       )}
-      <FlatList
-        estimatedItemSize={120}
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-        renderItem={({item}) => (
-          <RenderItem key={item} handlePayPress={openPaymentSheet} />
-        )}
-      />
-    </Box>
+      <Box bg={COLORS.bg} flex="1" p={3}>
+        <FlatList
+          estimatedItemSize={120}
+          data={plansList}
+          renderItem={({item}) => (
+            <RenderItem
+              key={item.title}
+              {...item}
+              handlePayPress={openPaymentSheet}
+            />
+          )}
+        />
+      </Box>
+    </>
   );
-}
+});
 // export default ListOfPlansScreen;
 
-const RenderItem = ({item, index, handlePayPress}) => (
-  <Pressable onPress={handlePayPress}>
+const RenderItem = ({index, handlePayPress, ...item}) => (
+  <Pressable onPress={() => handlePayPress(item._id)}>
     <Box>
       <Box
         // flex="1"
@@ -182,17 +181,14 @@ const RenderItem = ({item, index, handlePayPress}) => (
           <Box w="50%">
             <VStack space={1} alignItems="center">
               <CustomText bold fontSize="lg">
-                Welcome Free Plans
+                {item.title}
               </CustomText>
               <HStack alignItems="center">
-                <Heading size="2xl">$ 25</Heading>
+                <Heading size="2xl">{item.price}</Heading>
                 <CustomText color={COLORS.muted} ml={2}>
-                  / Month
+                  / {item.period}
                 </CustomText>
               </HStack>
-              <CustomText letterSpacing="lg" color={COLORS.muted} fontSize={16}>
-                Description of Plan
-              </CustomText>
             </VStack>
           </Box>
           <Box
@@ -202,17 +198,13 @@ const RenderItem = ({item, index, handlePayPress}) => (
             flex="1"
             style={{transform: [{scale: 0.8}]}}>
             <VStack space={1}>
-              <Radio.Group name="r-1" isReadOnly value="one">
-                <Radio value="one" my={1} size="sm" colorScheme="primarydark">
-                  <CustomText>Two ads free of cost.</CustomText>
-                </Radio>
-              </Radio.Group>
-
-              <Radio.Group name="r-2" isReadonly value="two">
-                <Radio value="two" size="sm" my={1} colorScheme="primarydark">
-                  <CustomText>No Expiration date</CustomText>
-                </Radio>
-              </Radio.Group>
+              {item.features?.map(x => (
+                <Radio.Group key={x} name={x} isReadOnly value={x}>
+                  <Radio value={x} my={1} size="sm" colorScheme="primarydark">
+                    <CustomText>{x}</CustomText>
+                  </Radio>
+                </Radio.Group>
+              ))}
             </VStack>
           </Box>
           {/* <Banner message="star"/>
