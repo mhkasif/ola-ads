@@ -25,6 +25,8 @@ import {
   Image,
   Modal,
   Pressable,
+  Skeleton,
+  Spinner,
   VStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
@@ -48,6 +50,7 @@ function CreatePost({
   const [mediaType, setMediaType] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const {goBack} = useNavigation();
 
   const [state, setState] = useState({
@@ -170,8 +173,10 @@ function CreatePost({
   ]);
 
   const fetchCategories = async () => {
+    setLoadingCategories(true);
     const d = await getCategoriesAction();
     console.log({d});
+    setLoadingCategories(false);
     if (d) setCategoriesList(d);
   };
   useEffect(() => {
@@ -293,12 +298,18 @@ function CreatePost({
               Select Category
             </CustomText>
           </Center>
-          <Box my={4} h="85%">
-            <CategoryList
-              handleSelectCategory={handleSelectCategory}
-              categories={categoriesList}
-            />
-          </Box>
+          {loadingCategories ? (
+            [1, 2, 3, 4, 5, 6].map(x => {
+              return <CategoriesSkeleton key={x} />;
+            })
+          ) : (
+            <Box my={4} h="85%">
+              <CategoryList
+                handleSelectCategory={handleSelectCategory}
+                categories={categoriesList}
+              />
+            </Box>
+          )}
         </>
       </Box>
       <ContactModal
@@ -493,5 +504,15 @@ const ContactModal = ({isOpen = false, onClose = undefined}) => {
         )}
       </Formik>
     </Modal>
+  );
+};
+
+const CategoriesSkeleton = () => {
+  return (
+    <HStack px={6} py={3} space={4} alignItems="center">
+      <Skeleton size="8" rounded="full" />
+      <Skeleton.Text lines={1} h="3" flex="1" rounded="full" />
+      <Skeleton size="5" rounded="sm" startColor="indigo.300" />
+    </HStack>
   );
 };
