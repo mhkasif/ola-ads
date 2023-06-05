@@ -18,28 +18,33 @@ import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
+import {PlanSkeleton} from '@components/Skeletons/Skeleton';
+import {useNavigation} from '@react-navigation/native';
 import {initStripe, useStripe} from '@stripe/stripe-react-native';
 import {COLORS} from '@utils/colors';
+import {sleep} from '@utils/helpers';
 import {Dimensions, FlatList, StyleSheet} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
+import Toast from 'react-native-toast-message';
 import {connect} from 'react-redux';
 import {
   createSubscriptionAction,
   getPlansAction,
 } from 'redux/adsActions/adsActions';
-import Toast from 'react-native-toast-message';
-import {useNavigation} from '@react-navigation/native';
-import {sleep} from '@utils/helpers';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
+};
+const LOADING_TYPE = {
+  FETCHING_PLANS: 'FETCHING_PLANS',
+  LOADING_PLAN: 'LOADING_PLAN',
 };
 const ListOfPlansScreen = connect(
   null,
   actions,
 )(({getPlansAction, createSubscriptionAction}) => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState('');
   const [paymentIntent, setPaymentIntent] = useState(null);
   const [plansList, setPlansList] = useState([]);
   const {goBack} = useNavigation();
@@ -72,15 +77,15 @@ const ListOfPlansScreen = connect(
 
     console.log({error});
     if (!error) {
-      setLoading(true);
+      setLoading(LOADING_TYPE.LOADING_PLAN);
     }
   };
   const openPaymentSheet = async id => {
-    setLoading(true);
+    setLoading(LOADING_TYPE.LOADING_PLAN);
     try {
       const ck = await initializePaymentSheet(id);
       const {error} = await presentPaymentSheet();
-      setLoading(false);
+      setLoading('');
       if (error) {
         console.log(`Error code: ${error.code}`, error.message);
       } else {
@@ -94,13 +99,15 @@ const ListOfPlansScreen = connect(
       }
     } catch (error) {
       console.error(error);
-      setLoading(false);
+      setLoading('');
     }
   };
   const fetchPlans = async () => {
+    setLoading(LOADING_TYPE.FETCHING_PLANS);
     const {data} = await getPlansAction();
 
     data && setPlansList(data);
+    setLoading('');
   };
   useEffect(() => {
     fetchPlans();
@@ -117,12 +124,13 @@ const ListOfPlansScreen = connect(
 
   return (
     <>
-      {loading && (
+      {loading === LOADING_TYPE.LOADING_PLAN && (
         <Box
           position="absolute"
           top={0}
           left={0}
           // flex={1}
+
           zIndex={100}
           h="100%"
           w="100%"
@@ -132,19 +140,23 @@ const ListOfPlansScreen = connect(
           <Spinner size="large" />
         </Box>
       )}
-      <Box bg={COLORS.bg} flex="1" p={3}>
-        <FlatList
-          estimatedItemSize={120}
-          data={plansList}
-          renderItem={({item}) => (
-            <RenderItem
-              key={item.title}
-              {...item}
-              handlePayPress={openPaymentSheet}
-            />
-          )}
-        />
-      </Box>
+      <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
+        {loading === LOADING_TYPE.FETCHING_PLANS ? (
+          [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)
+        ) : (
+          <FlatList
+            estimatedItemSize={120}
+            data={plansList}
+            renderItem={({item}) => (
+              <RenderItem
+                key={item.title}
+                {...item}
+                handlePayPress={openPaymentSheet}
+              />
+            )}
+          />
+        )}
+      </VStack>
     </>
   );
 });
@@ -152,75 +164,71 @@ const ListOfPlansScreen = connect(
 
 const RenderItem = ({index, handlePayPress, ...item}) => (
   <Pressable onPress={() => handlePayPress(item._id)}>
-    <Box>
+    <Box
+      // flex="1"
+      // alignItems="center"
+      p={2}
+      // maxW="80"
+      h={150}
+      // bg={COLORS.white}
+      mt={3}
+      rounded="lg"
+      overflow="hidden"
+      borderColor={COLORS.primaryDark}
+      borderWidth="1"
+      _dark={{
+        borderColor: 'coolGray.600',
+        backgroundColor: 'gray.700',
+      }}
+      _light={{
+        backgroundColor: '#fff',
+      }}>
       <Box
-        // flex="1"
-        // alignItems="center"
-        p={2}
-        // maxW="80"
-        h={150}
-        // bg={COLORS.white}
-        mt={3}
-        rounded="lg"
-        overflow="hidden"
-        borderColor={COLORS.primaryDark}
-        borderWidth="1"
-        _dark={{
-          borderColor: 'coolGray.600',
-          backgroundColor: 'gray.700',
-        }}
-        _light={{
-          backgroundColor: '#fff',
-        }}>
-        <Box
-          flex="1"
-          space={1}
-          flexDirection="row"
-          alignItems="center"
-          onPress={{}}>
-          <Box w="50%">
-            <VStack space={1} alignItems="center">
-              <CustomText bold fontSize="lg">
-                {item.title}
+        flex="1"
+        space={1}
+        flexDirection="row"
+        alignItems="center"
+        onPress={{}}>
+        <Box w="50%">
+          <VStack space={1} alignItems="center">
+            <CustomText bold fontSize="lg">
+              {item.title}
+            </CustomText>
+            <HStack alignItems="center">
+              <Heading size="2xl">{item.price}</Heading>
+              <CustomText color={COLORS.muted} ml={2}>
+                / {item.period}
               </CustomText>
-              <HStack alignItems="center">
-                <Heading size="2xl">{item.price}</Heading>
-                <CustomText color={COLORS.muted} ml={2}>
-                  / {item.period}
-                </CustomText>
-              </HStack>
-            </VStack>
-          </Box>
-          <Box
-            paddingLeft={3}
-            paddingRight={1}
-            py={1}
-            flex="1"
-            style={{transform: [{scale: 0.8}]}}>
-            <VStack space={1}>
-              {item.features?.map(x => (
-                <Radio.Group key={x} name={x} isReadOnly value={x}>
-                  <Radio value={x} my={1} size="sm" colorScheme="primarydark">
-                    <CustomText>{x}</CustomText>
-                  </Radio>
-                </Radio.Group>
-              ))}
-            </VStack>
-          </Box>
-          {/* <Banner message="star"/>
-           */}
+            </HStack>
+          </VStack>
         </Box>
-        <CornerLabel
-          cornerRadius={45}
-          style={{backgroundColor: COLORS.primary}}>
-          <Icon
-            // p={1}
-            as={<MaterialIcon name="star" />}
-            style={st.startIcon}
-            color={COLORS.white}
-          />
-        </CornerLabel>
+        <Box
+          paddingLeft={3}
+          paddingRight={1}
+          py={1}
+          flex="1"
+          style={{transform: [{scale: 0.8}]}}>
+          <VStack space={1}>
+            {item.features?.map(x => (
+              <Radio.Group key={x} name={x} isReadOnly value={x}>
+                <Radio value={x} my={1} size="sm" colorScheme="primarydark">
+                  <CustomText>{x}</CustomText>
+                </Radio>
+              </Radio.Group>
+            ))}
+          </VStack>
+        </Box>
+        {/* <Banner message="star"/>
+         */}
       </Box>
+      <CornerLabel cornerRadius={45} style={{backgroundColor: COLORS.primary}}>
+        <Icon
+          // p={1}
+          as={<MaterialIcon name="star" />}
+          style={st.startIcon}
+          color={COLORS.white}
+        />
+      </CornerLabel>
     </Box>
   </Pressable>
 );
