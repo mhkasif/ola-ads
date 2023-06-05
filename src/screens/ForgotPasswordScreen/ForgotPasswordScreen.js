@@ -13,7 +13,7 @@ const initialState = {
   email: '',
 };
 const formValidationSchema = YUP.object().shape({
-  email: YUP.string().email('Invalid email').required('Required'),
+  email: YUP.string().email('Invalid email').required('Email is required'),
 });
 const ForgotPasswordScreen = ({passwordResetEmailAction}) => {
   // const [inputValue, setInputValue] = React.useState('');

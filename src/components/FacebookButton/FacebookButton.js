@@ -10,7 +10,7 @@ const FacebookButton = props => {
   const onFacebookButtonPress = async () => {
     try {
       // Attempt login with permissions
-      const result = await LoginManager.logInWithPermissions(["email"]);
+      const result = await LoginManager.logInWithPermissions(["public_profile"]);
 
       if (result.isCancelled) {
         throw 'User cancelled the login process';
