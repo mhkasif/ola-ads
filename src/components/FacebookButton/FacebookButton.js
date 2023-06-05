@@ -1,12 +1,47 @@
 import CustomText from '@components/CustomText/CustomText';
 import {Button, Center, HStack, Icon, Image} from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Facebook from 'assets/facebook-btn-logo.png';
+import auth from '@react-native-firebase/auth';
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import {Settings} from 'react-native-fbsdk-next';
 
 const FacebookButton = props => {
+  const onFacebookButtonPress = async () => {
+    try {
+      // Attempt login with permissions
+      const result = await LoginManager.logInWithPermissions(["email"]);
+
+      if (result.isCancelled) {
+        throw 'User cancelled the login process';
+      }
+
+      // Once signed in, get the users AccesToken
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        throw 'Something went wrong obtaining access token';
+      }
+
+      // Create a Firebase credential with the AccessToken
+      const facebookCredential = auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+
+      // Sign-in the user with the credential
+      const user = await auth().signInWithCredential(facebookCredential);
+      console.log({user});
+    } catch (error) {
+      console.log({error});
+    }
+  };
+  useEffect(() => {
+    Settings.setAdvertiserTrackingEnabled(true);
+  }, []);
   return (
     <Button
       {...props}
+      onPress={onFacebookButtonPress}
       bg="#fff"
       _hover={{bg: '#fff'}}
       _active={{bg: '#fff'}}
