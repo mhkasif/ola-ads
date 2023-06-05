@@ -23,6 +23,7 @@ const PostScreen = ({
             //   console.log({load});
             // }}
             controls
+            paused
             onError={err => {
               console.log({err});
             }}

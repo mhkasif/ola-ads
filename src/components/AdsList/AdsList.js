@@ -7,6 +7,7 @@ import {appendAdsAction, getAdsAction} from 'redux/adsActions/adsActions';
 import CustomText from '@components/CustomText/CustomText';
 import PostCard from '@components/PostCard/PostCard';
 import {Box, Spinner} from 'native-base';
+import {AdsSkeleton} from '@components/Skeletons/Skeleton';
 const LOADING_TYPE = {
   REFRESH: 'REFRESH',
   PAGINATION: 'PAGINATION',
@@ -64,6 +65,8 @@ const AdsList = ({
   }, [pagination?.hasNextPage, loadingType, adsState]);
   return (
     <>
+      {loadingType === LOADING_TYPE.REFRESH &&
+        [1, 2, 3, 4].map(x => <AdsSkeleton key={x} />)}
       <FlatList
         refreshControl={
           <RefreshControl
@@ -72,7 +75,7 @@ const AdsList = ({
           />
         }
         estimatedItemSize={60}
-        data={filterAds || []}
+        data={loadingType === LOADING_TYPE.REFRESH ? [] : filterAds || []}
         renderItem={renderItem}
         onEndReached={fetchMoreData}
         onEndReachedThreshold={0.5}

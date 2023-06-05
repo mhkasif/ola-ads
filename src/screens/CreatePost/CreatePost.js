@@ -5,16 +5,15 @@ import CustomText from '@components/CustomText/CustomText';
 import ImagePicker from '@components/ImagePicker/ImagePicker';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 // import { FlashList } from '@shopify/flash-list';
+import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
+import {CategoriesSkeleton} from '@components/Skeletons/Skeleton';
+import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
 import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
 import FormData from 'form-data';
 import {Formik} from 'formik';
-import ImageView from 'react-native-image-viewing';
-import {FlatList} from 'react-native';
-import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
-import {useNavigation} from '@react-navigation/native';
 import {
   Avatar,
   Box,
@@ -25,11 +24,11 @@ import {
   Image,
   Modal,
   Pressable,
-  Skeleton,
-  Spinner,
   VStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
+import ImageView from 'react-native-image-viewing';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect, useSelector} from 'react-redux';
 import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
@@ -504,15 +503,5 @@ const ContactModal = ({isOpen = false, onClose = undefined}) => {
         )}
       </Formik>
     </Modal>
-  );
-};
-
-const CategoriesSkeleton = () => {
-  return (
-    <HStack px={6} py={3} space={4} alignItems="center">
-      <Skeleton size="8" rounded="full" />
-      <Skeleton.Text lines={1} h="3" flex="1" rounded="full" />
-      <Skeleton size="5" rounded="sm" startColor="indigo.300" />
-    </HStack>
   );
 };
