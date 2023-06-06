@@ -1,22 +1,37 @@
 import CustomBadge from '@components/CustomBadge/CustomBadge';
 import CustomText from '@components/CustomText/CustomText';
+import Timer from '@components/Timer/Timer';
 import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
-import {Box, Divider, HStack, Image, ScrollView} from 'native-base';
+import {UTCToLocal} from '@utils/helpers';
+import {isBefore} from 'date-fns';
+import {Box, Divider, HStack, Image, ScrollView, VStack} from 'native-base';
 import React, {useRef} from 'react';
 import Video from 'react-native-video';
 
 const PostScreen = ({
   route: {
-    params: {description, media, status, date, categories, _id},
+    params: {
+      description,
+      media,
+      status,
+      date,
+      categories,
+      _id,
+      schedule_date,
+      published,
+    },
   },
   ...props
 }) => {
   const ref = useRef(null);
   return (
     <Box bg={COLORS.bg} px={4} py={6} h="100%">
-        <ScrollView>
-        { media?.type?.includes('video') ? (
+      {schedule_date && !published && (
+        <Timer mb={3} published={published} futureDate={schedule_date} />
+      )}
+      <ScrollView>
+        {media?.type?.includes('video') ? (
           <Video
             ref={ref}
             // onLoad={load => {
@@ -51,22 +66,43 @@ const PostScreen = ({
             h={200}
             resizeMode="cover"
             alt={description}
-
           />
         )}
         <HStack alignItems="center" my={3} justifyContent="space-between">
-          <CustomText
-            color="coolGray.400"
-            _dark={{
-              color: 'warmGray.200',
-            }}
-            style={{
-              fontSize: 10,
-            }}
-            letterSpacing="lg"
-            fontWeight="bold">
-            Posted On: {new Date(date)?.toLocaleString()}
-          </CustomText>
+          <VStack>
+            <CustomText
+              color="coolGray.400"
+              _dark={{
+                color: 'warmGray.200',
+              }}
+              style={{
+                fontSize: 10,
+              }}
+              letterSpacing="lg"
+              fontWeight="bold">
+              Posted On: {UTCToLocal(date)}
+            </CustomText>
+            {schedule_date && (
+              <CustomText
+                // mt={2}
+                color="coolGray.400"
+                _dark={{
+                  color: 'warmGray.200',
+                }}
+                style={{
+                  fontSize: 10,
+                }}
+                letterSpacing="lg"
+                fontWeight="bold">
+                {isBefore(UTCToLocal(schedule_date, true), new Date()) &&
+                published
+                  ? 'published At: '
+                  : 'Scheduled At: '}
+
+                {UTCToLocal(schedule_date)}
+              </CustomText>
+            )}
+          </VStack>
           <CustomBadge
             // size="lg"
             textProps={{
@@ -110,8 +146,8 @@ const PostScreen = ({
             // </Box>
           ))}
         </HStack>
-    </ScrollView>
-      </Box>
+      </ScrollView>
+    </Box>
   );
 };
 

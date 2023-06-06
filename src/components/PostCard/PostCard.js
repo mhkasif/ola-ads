@@ -1,10 +1,13 @@
 import CustomBadge from '@components/CustomBadge/CustomBadge';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
+import Timer from '@components/Timer/Timer';
 import {useNavigation} from '@react-navigation/native';
 import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
+import {UTCToLocal} from '@utils/helpers';
 import PlayIcon from 'assets/playIcon.png';
+import {isBefore} from 'date-fns';
 import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
 import {memo, useMemo, useRef} from 'react';
 import {StyleSheet} from 'react-native';
@@ -40,12 +43,16 @@ const PostCard = ({
   description,
   status,
   categories,
+  published = false,
+  schedule_date,
   date,
   _id,
   media,
   noStatusIcon,
 }) => {
-  console.log({categories});
+  const isPublished =
+    published ||
+    (schedule_date && isBefore(UTCToLocal(schedule_date, true), new Date()));
   const {navigate} = useNavigation();
   const ref = useRef(null);
   const handleClick = () => {
@@ -56,6 +63,8 @@ const PostCard = ({
       categories,
       date,
       media,
+      schedule_date,
+      published,
     });
   };
 
@@ -165,13 +174,17 @@ const PostCard = ({
                 </CustomText>
               </Box>
               <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
-                {(categories || []).map((x, i) => (
+                {(categories || []).slice(0, 6).map((x, i) => (
                   // <Box key={x + i}>
                   <CustomBadge my={1} key={x.id}>
                     {x.name}
                   </CustomBadge>
+
                   // </Box>
                 ))}
+                {(categories || []).length > 6 && (
+                  <CustomBadge my={1}>...</CustomBadge>
+                )}
               </HStack>
               <CustomText
                 color="coolGray.400"
@@ -184,9 +197,48 @@ const PostCard = ({
                 letterSpacing="lg"
                 fontWeight="bold">
                 Posted On:
-                {new Date(date).toLocaleString() ||
-                  'Posted On: 13/May/2023 12:45 PM'}
+                {UTCToLocal(date)}
               </CustomText>
+              {isPublished && (
+                <CustomText
+                  // mt={2}
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}
+                  style={{
+                    fontSize: 8,
+                  }}
+                  letterSpacing="lg"
+                  fontWeight="bold">
+                  {isPublished && `published At: ${UTCToLocal(schedule_date)}`}
+                </CustomText>
+              )}
+              {!isPublished && schedule_date && (
+                <CustomText
+                  // mt={2}
+                  color="warning.400"
+                  style={{
+                    fontSize: 10,
+                  }}
+                  letterSpacing="lg"
+                  fontWeight="bold">
+                  <HStack alignItems="center">
+                    <Icon
+                      as={MaterialIcon}
+                      name="timer"
+                      size="lg"
+                      color="warning.500"
+                    />
+                    <Timer
+                      color="warning.500"
+                      futureDate={schedule_date}
+                      published={published}
+                      justTime
+                    />
+                  </HStack>
+                </CustomText>
+              )}
             </VStack>
           </Box>
         </Box>

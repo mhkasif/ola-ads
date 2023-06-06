@@ -1,4 +1,5 @@
 import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
+import {parseISO, format} from 'date-fns';
 
 export const sleep = time => {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -20,11 +21,17 @@ export const headerOptions = {
   headerTintColor: '#fff',
 };
 
-export const generateQueryString = (url,params = {}) => {
-  console.log({url,params});
+export const generateQueryString = (url, params = {}) => {
+  console.log({url, params});
   const query = Object.keys(params)
     .map(k => k + '=' + params[k])
     .join('&');
-    console.log({query})
+  console.log({query});
   return url + '?' + query;
+};
+
+export const UTCToLocal = (date, noFormat) => {
+  const zonedDate = parseISO(date);
+  const formattedDate = format(zonedDate, 'yyyy-MMM-dd HH:mm:ss');
+  return noFormat ? zonedDate : formattedDate;
 };
