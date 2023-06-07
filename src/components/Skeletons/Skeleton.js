@@ -14,7 +14,7 @@ export const CategoriesSkeleton = () => {
 
 export const AdsSkeleton = () => {
   return (
-    <Center w="100%" bg="#fff">
+    <Center w="100%" bg="#fff" my={2}>
       <HStack
         w="100%"
         maxW="400"

@@ -31,9 +31,14 @@ import {
   createSubscriptionAction,
   getPlansAction,
 } from 'redux/adsActions/adsActions';
+import {fetchMySubscription} from 'redux/PaymentActions/PaymentActions';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
+};
+const PLANS_TYPE = {
+  SUBSCRIPTION: 'SUBSCRIPTION',
+  PLANS: 'PLANS',
 };
 const LOADING_TYPE = {
   FETCHING_PLANS: 'FETCHING_PLANS',
@@ -42,7 +47,7 @@ const LOADING_TYPE = {
 const ListOfPlansScreen = connect(
   null,
   actions,
-)(({getPlansAction, createSubscriptionAction}) => {
+)(({getPlansAction, createSubscriptionAction, type}) => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [loading, setLoading] = useState('');
   const [paymentIntent, setPaymentIntent] = useState(null);
@@ -109,13 +114,22 @@ const ListOfPlansScreen = connect(
     data && setPlansList(data);
     setLoading('');
   };
+  const fetchSubscription = async () => {
+    setLoading(LOADING_TYPE.FETCHING_PLANS);
+    const {data} = await fetchMySubscription();
+    console.log({data});
+    data && setPlansList([data]);
+    setLoading('');
+  };
   useEffect(() => {
+    // if (PLANS_TYPE.SUBSCRIPTION === type) {
+    //   fetchSubscription();
+    // } else
     fetchPlans();
     async function initialize() {
       await initStripe({
         publishableKey:
           'pk_test_51NDCRPINlBctypvqneWKS9nmWJVqcfRkW0IySEDnOJcuSHpxtKOJ61lNARhMzxOv0Ut8Zn5kqHczsZoNoF5j1m0n00VDU92ir4',
-        // 'pk_test_51N2DsJCnPuYN2rinLMHNM7SnzPHMrhgZOdtKb7xUBUntzatdw8utlZpCNTwZyhIL9ShQBddovI4lQA2TWEZBDRgR009G3YVIMz',
       });
       // await initializePaymentSheet();
     }
@@ -237,7 +251,7 @@ const st = StyleSheet.create({
     transform: [{rotate: '-45deg'}],
   },
 });
-const FirstRoute = () => <ListOfPlansScreen />;
+const FirstRoute = () => <ListOfPlansScreen type={PLANS_TYPE.SUBSCRIPTION} />;
 
 const SecondRoute = () => <ListOfPlansScreen />;
 

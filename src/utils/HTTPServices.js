@@ -2,6 +2,7 @@ import axios from 'axios';
 import {DEL, POST, PUT} from './constants';
 import {BASE_URL} from './Urls';
 import {store} from 'redux/store';
+import {logoutAction} from 'redux/authSlice/authActions';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -22,10 +23,21 @@ axiosInstance.interceptors.request.use(async config => {
   }
   return config;
 });
+axiosInstance.interceptors.response.use(
+  async response => {
+    // If the response status is 480, perform logout action
+    if (response.status === 480) {
+      // Call your logout function here
+      store.dispatch(logoutAction());
+    }
+    return response;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 const defaultError = 'Something went wrong!!';
 const apiMethod = async meta => {
-  console.log({meta});
-
   let res;
   switch (meta.method) {
     case POST:
@@ -77,10 +89,13 @@ const apiMethod = async meta => {
           // refectored: true,
           // cancelToken: cancelSource.source?.token,
         });
-        console.log('httpGET', res)
+        console.log('httpGET', res);
         return {data: res.data};
       } catch (error) {
         console.log('httpGETError', error);
+        return {
+          error,
+        };
       }
   }
 };
@@ -96,10 +111,10 @@ export const fileUploadMethod = async meta => {
         // !!! override data to return formData
         // since axios converts that to string
         return data;
-    },
+      },
     });
     console.log('FILEUPLOAD', res);
-    return {data:res.data};
+    return {data: res.data};
   } catch (error) {
     console.log('FILEUPLOADError', error);
     return {

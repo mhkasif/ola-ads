@@ -16,4 +16,5 @@ export const URLS = {
   UPDATE_USER: '/user/edit-profile',
   GET_PLANS: '/user/view-plans',
   CREATE_SUBSCRIPTION: '/user/create-subscription',
+  MY_SUBSCRIPTION: '/user/my-subscription',
 };
