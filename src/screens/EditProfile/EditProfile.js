@@ -6,7 +6,7 @@ import YUP from '@components/YUP/YUP';
 import {COLORS} from '@utils/colors';
 import FormData from 'form-data';
 import {Formik} from 'formik';
-import {Avatar, Box, Center, Icon, Pressable, VStack} from 'native-base';
+import {Avatar, Box, Center, Icon, Pressable, ScrollView, VStack} from 'native-base';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {updateProfileAction} from 'redux/authSlice/authActions';
@@ -76,7 +76,7 @@ const EditProfile = ({user, updateProfileAction}) => {
     onClose();
   };
   return (
-    <>
+    <ScrollView>
       <Center>
         <VStack mt={5} w="90%">
           <Center>
@@ -150,7 +150,7 @@ const EditProfile = ({user, updateProfileAction}) => {
         callback={onImageSelect}
         mediaType="photo"
       />
-    </>
+    </ScrollView>
   );
 };
 const actions = {

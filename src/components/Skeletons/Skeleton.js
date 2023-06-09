@@ -17,7 +17,7 @@ export const AdsSkeleton = () => {
     <Center w="100%" bg="#fff" my={2}>
       <HStack
         w="100%"
-        maxW="400"
+        // maxW="400"
         borderWidth="1"
         space={8}
         rounded="md"

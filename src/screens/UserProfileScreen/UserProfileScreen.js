@@ -17,6 +17,7 @@ import {
   Heading,
   Image,
   Pressable,
+  ScrollView,
 } from 'native-base';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
@@ -77,59 +78,61 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
     if (res) navigation.dispatch(resetAction);
   };
   return (
-    <Box w="100%" h="100%" bg={COLORS.bg}>
-      <ConfirmationModal
-        isLoading={isLoading}
-        title="Logout"
-        body="Are you sure you want to logout?"
-        isOpen={modalOpen === MODAL_NAMES.LOGOUT}
-        onClose={onClose}
-        handleAction={handleLogout}
-        actionText="Yes, I'm sure"
-      />
-      <ConfirmationModal
-        title="Deactivate Account"
-        body="Are you sure you want to deactivate your account?"
-        isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
-        onClose={onClose}
-        handleAction={handleLogout}
-      />
-
-      <Center mt={10}>
-        <Avatar
-          size="2xl"
-          source={{
-            uri:
-              (user?.photo && IMAGE_DIRECTORY + user.photo) ||
-              'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-          }}
-          borderColor={COLORS.primary}
-          // borderWidth={2}
-
-          alt="Profile Picture"
-          mb={3}
+    <ScrollView>
+      <Box w="100%" h="100%" bg={COLORS.bg}>
+        <ConfirmationModal
+          isLoading={isLoading}
+          title="Logout"
+          body="Are you sure you want to logout?"
+          isOpen={modalOpen === MODAL_NAMES.LOGOUT}
+          onClose={onClose}
+          handleAction={handleLogout}
+          actionText="Yes, I'm sure"
+        />
+        <ConfirmationModal
+          title="Deactivate Account"
+          body="Are you sure you want to deactivate your account?"
+          isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
+          onClose={onClose}
+          handleAction={handleLogout}
         />
 
-        <Heading color={COLORS.primary} letterSpacing="xl">
-          {user?.fullName}
-        </Heading>
-        <CustomText color={COLORS.muted} letterSpacing="xl">
-          {user?.email}
-        </CustomText>
-      </Center>
-      <Center w="100%" mt={5}>
-        <Flex
-          justifyContent="space-between"
-          flexDirection="row"
-          flexWrap="wrap"
-          width="95%"
-          my={4}>
-          {cards.map(card => (
-            <Card key={card.name} {...card} />
-          ))}
-        </Flex>
-      </Center>
-    </Box>
+        <Center mt={10}>
+          <Avatar
+            size="2xl"
+            source={{
+              uri:
+                (user?.photo && IMAGE_DIRECTORY + user.photo) ||
+                'https://images.unsplash.com/photo-1614289371518-722f2615943d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            }}
+            borderColor={COLORS.primary}
+            // borderWidth={2}
+
+            alt="Profile Picture"
+            mb={3}
+          />
+
+          <Heading color={COLORS.primary} letterSpacing="xl">
+            {user?.fullName}
+          </Heading>
+          <CustomText color={COLORS.muted} letterSpacing="xl">
+            {user?.email}
+          </CustomText>
+        </Center>
+        <Center w="100%" mt={5}>
+          <Flex
+            justifyContent="space-between"
+            flexDirection="row"
+            flexWrap="wrap"
+            width="95%"
+            my={4}>
+            {cards.map(card => (
+              <Card key={card.name} {...card} />
+            ))}
+          </Flex>
+        </Center>
+      </Box>
+    </ScrollView>
   );
 };
 
