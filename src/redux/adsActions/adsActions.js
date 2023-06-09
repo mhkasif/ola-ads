@@ -136,5 +136,6 @@ export const createSubscriptionAction = plan_id => async () => {
     return {data};
   } catch (error) {
     console.log({error});
+    return {error};
   }
 };

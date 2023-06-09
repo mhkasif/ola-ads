@@ -12,26 +12,26 @@ import {
   VStack,
   useColorModeValue,
 } from 'native-base';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {PlanSkeleton} from '@components/Skeletons/Skeleton';
-import {useNavigation} from '@react-navigation/native';
-import {initStripe, useStripe} from '@stripe/stripe-react-native';
-import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
-import {Dimensions, FlatList, StyleSheet} from 'react-native';
-import {SceneMap, TabView} from 'react-native-tab-view';
+import { PlanSkeleton } from '@components/Skeletons/Skeleton';
+import { useNavigation } from '@react-navigation/native';
+import { initStripe, useStripe } from '@stripe/stripe-react-native';
+import { COLORS } from '@utils/colors';
+import { sleep } from '@utils/helpers';
+import { Dimensions, FlatList, StyleSheet } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { fetchMySubscription } from 'redux/PaymentActions/paymentActions';
 import {
   createSubscriptionAction,
   getPlansAction,
 } from 'redux/adsActions/adsActions';
-import {fetchMySubscription} from 'redux/PaymentActions/PaymentActions';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
@@ -55,11 +55,18 @@ const ListOfPlansScreen = connect(
   const {goBack} = useNavigation();
   const createPaymentIntent = async id => {
     try {
-      const {data} = await createSubscriptionAction(id);
+      console.log({id});
+      const {data, error} = await createSubscriptionAction(id)||{};
+      if (error) throw new Error(error);
       setPaymentIntent(data.client_secret);
       return data.client_secret;
     } catch (error) {
       console.log('Error creating Payment Intent:', error.message);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+      });
     }
   };
 
@@ -80,7 +87,7 @@ const ListOfPlansScreen = connect(
       // allowsDelayedPaymentMethods: true,
     });
 
-    console.log({error});
+    console.log({error}, 'hello');
     if (!error) {
       setLoading(LOADING_TYPE.LOADING_PLAN);
     }
@@ -122,10 +129,9 @@ const ListOfPlansScreen = connect(
     setLoading('');
   };
   useEffect(() => {
-    // if (PLANS_TYPE.SUBSCRIPTION === type) {
-    //   fetchSubscription();
-    // } else
-    fetchPlans();
+    if (PLANS_TYPE.SUBSCRIPTION === type) {
+      fetchSubscription();
+    } else fetchPlans();
     async function initialize() {
       await initStripe({
         publishableKey:
@@ -163,6 +169,7 @@ const ListOfPlansScreen = connect(
             data={plansList}
             renderItem={({item}) => (
               <RenderItem
+                type={type}
                 key={item.title}
                 {...item}
                 handlePayPress={openPaymentSheet}
@@ -176,8 +183,13 @@ const ListOfPlansScreen = connect(
 });
 // export default ListOfPlansScreen;
 
-const RenderItem = ({index, handlePayPress, ...item}) => (
-  <Pressable onPress={() => handlePayPress(item._id)}>
+const RenderItem = ({index, handlePayPress, type, ...item}) => (
+  <Pressable
+    onPress={
+      type === PLANS_TYPE.SUBSCRIPTION
+        ? () => {}
+        : () => handlePayPress(item._id)
+    }>
     <Box
       // flex="1"
       // alignItems="center"
@@ -238,7 +250,14 @@ const RenderItem = ({index, handlePayPress, ...item}) => (
       <CornerLabel cornerRadius={45} style={{backgroundColor: COLORS.primary}}>
         <Icon
           // p={1}
-          as={<MaterialIcon name="star" />}
+          as={MaterialIcon}
+          name={
+            item.title.toLowerCase().includes('basic')
+              ? 'lightbulb'
+              : item.title.toLowerCase().includes('premium')
+              ? 'star'
+              : 'star'
+          }
           style={st.startIcon}
           color={COLORS.white}
         />

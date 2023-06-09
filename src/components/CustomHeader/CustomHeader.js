@@ -1,11 +1,10 @@
-import {View, Text} from 'react-native';
-import React from 'react';
-import {Box, Icon, Pressable} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
-import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {StyleSheet} from 'react-native';
-import {COLORS, linearGradient} from '@utils/colors';
 import CustomText from '@components/CustomText/CustomText';
+import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
+import { useNavigation } from '@react-navigation/native';
+import { COLORS, linearGradient } from '@utils/colors';
+import { Box, Icon, Pressable } from 'native-base';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
