@@ -116,7 +116,7 @@ export const fileUploadMethod = async meta => {
     console.log('FILEUPLOAD', res);
     return {data: res.data};
   } catch (error) {
-    console.log('FILEUPLOADError', error);
+    console.log('FILEUPLOADError', error.response);
     return {
       error: error?.response?.data?.message || defaultError,
     };

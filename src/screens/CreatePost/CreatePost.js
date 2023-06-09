@@ -9,7 +9,6 @@ import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapp
 import {CategoriesSkeleton} from '@components/Skeletons/Skeleton';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
 import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
 import FormData from 'form-data';
@@ -26,12 +25,13 @@ import {
   Pressable,
   VStack,
 } from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {connect, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
 import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
+import {sleep} from '@utils/helpers';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
@@ -51,13 +51,16 @@ function CreatePost({
   const [categoriesList, setCategoriesList] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const {goBack} = useNavigation();
-
+  const initialValues = {
+    email: user?.email,
+    phone: '',
+  };
   const [state, setState] = useState({
     description: '',
-    name: user?.fullName,
-    phoneNumber: '',
     isLoading: false,
     schedule_date: '',
+    email: user?.email,
+    phone: user?.phone || '',
   });
   const [image, setImage] = useState(null);
   const fields = [
@@ -77,17 +80,23 @@ function CreatePost({
       },
     },
   ];
-  const handleSelectCategory = async id => {
+  const handleSelectCategory = useCallback(async id => {
     console.log({id});
-    if (selectedCategories.includes(id)) {
-      setSelectedCategories(p => p.filter(item => item !== id));
-    } else {
-      setSelectedCategories(p => [...p, id]);
-    }
-  };
-  const handleChange = (value, name) => {
+    setSelectedCategories(p => {
+      if (p.includes(id)) {
+        return p.filter(item => item !== id);
+      }
+      return [...p, id];
+    });
+    // if (selectedCategories.includes(id)) {
+    //   setSelectedCategories(p => p.filter(item => item !== id));
+    // } else {
+    //   setSelectedCategories(p => [...p, id]);
+    // }
+  }, []);
+  const handleChange = useCallback((value, name) => {
     setState(p => ({...p, [name]: value}));
-  };
+  }, []);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -128,6 +137,8 @@ function CreatePost({
       );
 
     formData.append('description', state.description);
+    formData.append('email', state.email);
+    formData.append('phone', state.phone);
     formData.append('file', {...image, name: image.fileName});
     setState(p => ({...p, isLoading: true}));
 
@@ -312,6 +323,8 @@ function CreatePost({
         </>
       </Box>
       <ContactModal
+        handleChange={handleChange}
+        initialValues={{email: state.email, phone: state.phone}}
         isOpen={openModal === MODAL_NAMES.CONTACT_MODAL}
         onClose={onClose}
       />
@@ -366,14 +379,14 @@ const MediaItem = ({image, title, onPress}) => {
     </Box>
   );
 };
-const CategoryItem = item => {
+const CategoryItem = memo(({handleSelectCategory, name, _id, image}) => {
   const [isChecked, setIsChecked] = useState(false);
-  const onCheck = e => {
-    e?.stopPropagation?.();
+  console.log('item');
+  const onCheck = useCallback(() => {
+    // e?.stopPropagation?.();
     setIsChecked(p => !p);
     handleSelectCategory(_id);
-  };
-  const {handleSelectCategory, name, _id, image} = item || {};
+  }, []);
   return (
     <Pressable onPress={onCheck}>
       <HStack my={2} alignItems="center" px={6} w="100%">
@@ -396,11 +409,11 @@ const CategoryItem = item => {
       </HStack>
     </Pressable>
   );
-};
+});
 
-const CategoryList = ({handleSelectCategory, categories}) => {
+const CategoryList = memo(({handleSelectCategory, categories}) => {
   //flat list for category item
-
+  console.log('list');
   return (
     <FlatList
       data={categories || []}
@@ -416,50 +429,56 @@ const CategoryList = ({handleSelectCategory, categories}) => {
       estimatedItemSize={25}
     />
   );
-};
-const ContactModal = ({isOpen = false, onClose = undefined}) => {
-  const user = useSelector(state => state.auth?.user);
-  const initialValues = {
-    name: user?.fullName,
-    email: user?.email,
-    phone: '',
-  };
+});
+const ContactModal = ({
+  initialValues,
+  isOpen = false,
+  onClose = undefined,
+  handleChange,
+}) => {
   // const leastDestructiveRef = useRef(null);
   const updateContact = async values => {
-    await sleep(1000);
-    console.log(values);
+    handleChange(values.email, 'email');
+    await sleep(500);
+    handleChange(values.phone, 'phone');
+    await sleep(500);
+    onClose?.();
   };
+  const fields = [
+    {
+      name: 'email',
+      // label: 'Email',
+      type: 'email',
+      inputProps: {
+        placeholder: 'Enter your email',
+      },
+    },
+    {
+      name: 'phone',
+      // label: 'Phone Number',
+      type: 'tel',
+      inputProps: {
+        placeholder: 'Enter your phone number',
+      },
+    },
+  ];
   return (
     <Modal
       size="lg"
       isOpen={isOpen}
       // leastDestructiveRef={leastDestructiveRef}
       onClose={onClose}>
-      <Formik onSubmit={updateContact} initialValues={{...initialValues}}>
+      <Formik
+        enableReinitialize
+        onSubmit={updateContact}
+        initialValues={{...initialValues}}>
         {({handleSubmit, isSubmitting}) => (
           <Modal.Content>
             <Modal.CloseButton />
             <Modal.Header>Contact</Modal.Header>
 
             <Modal.Body px={6}>
-              {[
-                {
-                  name: 'email',
-                  // label: 'Email',
-                  type: 'email',
-                  inputProps: {
-                    placeholder: 'Enter your email',
-                  },
-                },
-                {
-                  name: 'phone',
-                  // label: 'Phone Number',
-                  type: 'tel',
-                  inputProps: {
-                    placeholder: 'Enter your phone number',
-                  },
-                },
-              ].map((field, index) => (
+              {fields.map((field, index) => (
                 <CustomInput key={index} {...field} />
               ))}
               <HStack justifyContent="space-between" mt={5}>
@@ -467,7 +486,6 @@ const ContactModal = ({isOpen = false, onClose = undefined}) => {
                   textProps={{color: COLORS.primaryDark, bold: true}}
                   noGradient
                   buttonProps={{
-                    disabled: isSubmitting,
                     w: '47%',
                     bg: COLORS.lightColor,
                     _pressed: {

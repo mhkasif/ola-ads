@@ -35,7 +35,7 @@ export const createAdAction = formData => async dispatch => {
     Toast.show({
       type: 'error',
       text1: 'Failed to create ad',
-      text2: error,
+      text2: error.message,
     });
     return {
       error: true,
