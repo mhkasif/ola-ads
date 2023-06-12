@@ -382,14 +382,14 @@ const MediaItem = ({image, title, onPress}) => {
 const CategoryItem = memo(({handleSelectCategory, name, _id, image}) => {
   const [isChecked, setIsChecked] = useState(false);
   console.log('item');
-  const onCheck = useCallback(() => {
-    // e?.stopPropagation?.();
+  const onCheck = useCallback((e) => {
+    e?.stopPropagation?.();
     setIsChecked(p => !p);
     handleSelectCategory(_id);
   }, []);
   return (
     <Pressable onPress={onCheck}>
-      <HStack my={2} alignItems="center" px={6} w="100%">
+      <HStack h={35} my={2} alignItems="center" px={6} w="100%">
         <Avatar
           size="sm"
           source={{
@@ -426,7 +426,7 @@ const CategoryList = memo(({handleSelectCategory, categories}) => {
           />
         );
       }}
-      estimatedItemSize={25}
+      estimatedItemSize={35}
     />
   );
 });
