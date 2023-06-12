@@ -174,7 +174,7 @@ const PostCard = ({
                 </CustomText>
               </Box>
               <HStack my={1} space={1} flexWrap="wrap" flexDirection="row">
-                {(categories || []).slice(0, 6).map((x, i) => (
+                {(categories || []).slice(0, 5).map((x, i) => (
                   // <Box key={x + i}>
                   <CustomBadge my={1} key={x.id}>
                     {x.name}
@@ -182,7 +182,7 @@ const PostCard = ({
 
                   // </Box>
                 ))}
-                {(categories || []).length > 6 && (
+                {(categories || []).length > 5 && (
                   <CustomBadge my={1}>...</CustomBadge>
                 )}
               </HStack>
@@ -196,7 +196,7 @@ const PostCard = ({
                 }}
                 letterSpacing="lg"
                 fontWeight="bold">
-                Posted On:
+                Created At:
                 {UTCToLocal(date)}
               </CustomText>
               {isPublished && (
@@ -211,7 +211,7 @@ const PostCard = ({
                   }}
                   letterSpacing="lg"
                   fontWeight="bold">
-                  {isPublished && `published At: ${UTCToLocal(schedule_date)}`}
+                  {isPublished && `Published At: ${UTCToLocal(schedule_date)}`}
                 </CustomText>
               )}
               {!isPublished && schedule_date && (

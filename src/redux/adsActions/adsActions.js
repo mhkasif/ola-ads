@@ -26,7 +26,7 @@ export const createAdAction = formData => async dispatch => {
     Toast.show({
       type: 'success',
       text1: 'Ad Created',
-      text2: 'Your ad has been created successfully',
+      text2: 'Your ad created successfully',
     });
     return {
       data: true,
