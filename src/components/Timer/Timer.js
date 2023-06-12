@@ -4,7 +4,7 @@ import {Alert, Box, HStack, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 
 const publishedText = 'Published';
-const Timer = ({futureDate, published=true, justTime = false, ...props}) => {
+const Timer = ({futureDate, published = true, justTime = false, ...props}) => {
   const [timeLeft, setTimeLeft] = useState('');
   const isPublished = published || timeLeft === publishedText;
   useEffect(() => {
@@ -42,7 +42,7 @@ const Timer = ({futureDate, published=true, justTime = false, ...props}) => {
 
   return justTime ? (
     <CustomText {...props}>{timeLeft}</CustomText>
-  ) : (
+  ) : timeLeft ? (
     <Alert
       {...props}
       w="100%"
@@ -58,13 +58,13 @@ const Timer = ({futureDate, published=true, justTime = false, ...props}) => {
           {!isPublished && (
             <CustomText color="warning.800">Will be posted in</CustomText>
           )}
-          <CustomText bold color={isPublished?"coolGray.800":"warning.800"}>
+          <CustomText bold color={isPublished ? 'coolGray.800' : 'warning.800'}>
             {isPublished ? `Published at: ${UTCToLocal(futureDate)}` : timeLeft}
           </CustomText>
         </HStack>
       </VStack>
     </Alert>
-  );
+  ) : null;
 };
 
 export default Timer;

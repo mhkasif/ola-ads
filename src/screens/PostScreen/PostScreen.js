@@ -8,7 +8,11 @@ import {isBefore} from 'date-fns';
 import {Box, Divider, HStack, Image, ScrollView, VStack} from 'native-base';
 import React, {useRef} from 'react';
 import Video from 'react-native-video';
-
+import ImageView from 'react-native-image-viewing';
+import {Pressable} from 'react-native';
+const MODAL_NAMES = {
+  VIEW_IMAGE: 'VIEW_IMAGE',
+};
 const PostScreen = ({
   route: {
     params: {
@@ -25,10 +29,21 @@ const PostScreen = ({
   ...props
 }) => {
   const ref = useRef(null);
+  const [openModal, setOpenModal] = React.useState(false);
+  const onClose = () => setOpenModal("");
+  const onOpen = () => setOpenModal(MODAL_NAMES.VIEW_IMAGE);
   return (
     <Box bg={COLORS.bg} px={4} py={6} h="100%">
       {schedule_date && !published && (
         <Timer mb={3} published={published} futureDate={schedule_date} />
+      )}
+      {media?.pathname && (
+        <ImageView
+          images={[{uri: IMAGE_DIRECTORY + media?.pathname}]}
+          imageIndex={0}
+          visible={openModal === MODAL_NAMES.VIEW_IMAGE}
+          onRequestClose={onClose}
+        />
       )}
       <ScrollView>
         {media?.type?.includes('video') ? (
@@ -56,17 +71,19 @@ const PostScreen = ({
             resizeMode="stretch"
           />
         ) : (
-          <Image
-            source={{
-              uri: media
-                ? IMAGE_DIRECTORY + media?.pathname
-                : 'https://placehold.co/600x400/png?text=No+Photo',
-            }}
-            w="100%"
-            h={200}
-            resizeMode="cover"
-            alt={description}
-          />
+          <Pressable onPress={onOpen}>
+            <Image
+              source={{
+                uri: media
+                  ? IMAGE_DIRECTORY + media?.pathname
+                  : 'https://placehold.co/600x400/png?text=No+Photo',
+              }}
+              w="100%"
+              h={200}
+              resizeMode="cover"
+              alt={description}
+            />
+          </Pressable>
         )}
         <HStack alignItems="center" my={3} justifyContent="space-between">
           <VStack>
