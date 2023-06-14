@@ -5,6 +5,7 @@ import {
   HStack,
   Heading,
   Icon,
+  Image,
   Pressable,
   Radio,
   Spinner,
@@ -32,6 +33,7 @@ import {
   createSubscriptionAction,
   getPlansAction,
 } from 'redux/adsActions/adsActions';
+import Loader from 'assets/loader.gif';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
@@ -144,7 +146,7 @@ const ListOfPlansScreen = connect(
 
   return (
     <>
-      {loading === LOADING_TYPE.LOADING_PLAN && (
+      {loading === LOADING_TYPE.LOADING_PLAN||true && (
         <Box
           position="absolute"
           top={0}
@@ -157,7 +159,7 @@ const ListOfPlansScreen = connect(
           bg="rgba(255, 255, 255, 0.9)"
           justifyContent="center"
           alignItems="center">
-          <Spinner size="large" />
+          <Image source={Loader} alt="loader" />
         </Box>
       )}
       <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
