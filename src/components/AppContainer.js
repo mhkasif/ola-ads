@@ -6,7 +6,7 @@ import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from 'redux/store';
-import SplashScreen from 'screens/SplashScreen/SplashScreen';
+// import SplashScreen from 'screens/SplashScreen/SplashScreen';
 import theme from '../../theme';
 
 const config = {
@@ -15,6 +15,7 @@ const config = {
   },
 };
 const AppContainer = props => {
+
   return (
     <>
       <StatusBar
@@ -25,7 +26,7 @@ const AppContainer = props => {
       <NativeBaseProvider theme={theme} config={config}>
         <NavigationContainer>
           <Provider store={store}>
-            <PersistGate loading={<SplashScreen />} persistor={persistor}>
+            <PersistGate loading={null} persistor={persistor}>
               {/* <LinearGradient colors={['#FF416C', '#FF4B2B']} style={{flex: 1}}> */}
               {props.children}
             </PersistGate>

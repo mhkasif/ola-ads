@@ -1,9 +1,8 @@
 import React from 'react';
 
+import {addPlugin} from 'react-native-flipper';
 import AppContainer from './src/components/AppContainer';
 import MainScreen from './src/screens/MainScreen';
-import { connectToDevTools } from "react-devtools-core";
-import {addPlugin} from 'react-native-flipper';
 
 addPlugin({
   getId() {

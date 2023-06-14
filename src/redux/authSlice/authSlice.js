@@ -17,7 +17,8 @@ export const AuthSlice = createSlice({
       state.authToken = '';
     },
     updateAuth: (state, {payload}) => {
-      state.user = payload.user;
+      console.log({payload})
+      state.user = {...state.user,...payload};
     },
     updateToken: (state, {payload}) => {
       state.authToken = payload.authToken;

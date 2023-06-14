@@ -1,4 +1,5 @@
 package com.ola;
+// import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           packages.add(new ReactVideoPackage());
+          // packages.add(new SplashScreenReactPackage());
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           return packages;
@@ -55,6 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+
       FacebookSdk.sdkInitialize(getApplicationContext());
     AppEventsLogger.activateApp(this);
     SoLoader.init(this, /* native exopackage */ false);

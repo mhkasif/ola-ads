@@ -5,9 +5,12 @@
         <item name="android:datePickerDialogTheme">@style/Dialog.Theme</item>
         <item name="android:timePickerDialogTheme">@style/Dialog.Theme</item>
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
     <style name="Dialog.Theme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#0D103D</item>
         <item name="android:textColorPrimary">#0D103D</item>
     </style>
+
 </resources>

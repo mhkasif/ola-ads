@@ -22,19 +22,13 @@ const RootNavigator = () => {
   const {user} = useSelector(state => state.auth);
   return (
     <Stack.Navigator>
-      <Stack.Screen
+      {/* <Stack.Screen
         name={SCREEN_NAMES.SPLASH}
         component={SplashScreen}
         options={{headerShown: false}}
-      />
+      /> */}
 
-      {user && (
-        <Stack.Screen
-          name={SCREEN_NAMES.ONBOARDING}
-          component={OnBoardingScreen}
-          options={{headerShown: false}}
-        />
-      )}
+
 
       {!user ? (
         <>
@@ -52,6 +46,11 @@ const RootNavigator = () => {
             options={{headerShown: false}}
             // initialParams={{route}}
           />
+           <Stack.Screen
+        name={SCREEN_NAMES.ONBOARDING}
+        component={OnBoardingScreen}
+        options={{headerShown: false}}
+      />
           <Stack.Screen
             name={SCREEN_NAMES.CREATE_AD}
             component={CreatePost}

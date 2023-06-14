@@ -1,8 +1,8 @@
 import auth from '@react-native-firebase/auth';
-import apiMethod, { fileUploadMethod } from '@utils/HTTPServices';
+import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
-import { LOGIN_META, UPDATE_USER } from './authAPI';
-import { addAuth, removeAuth, updateAuth } from './authSlice';
+import {LOGIN_META, UPDATE_USER} from './authAPI';
+import {addAuth, removeAuth, updateAuth} from './authSlice';
 
 export const loginAction =
   ({email = 'haseeb@gmail.com', password}) =>
@@ -182,6 +182,7 @@ export const updatePasswordAction =
   };
 export const updateUserAction = data => async dispatch => {
   try {
+    dispatch(updateAuth(data));
   } catch (error) {}
 };
 export const deactivateUserAction = () => async dispatch => {

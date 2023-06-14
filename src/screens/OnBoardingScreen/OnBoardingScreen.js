@@ -5,14 +5,17 @@ import Image1 from 'assets/onboarding/step1.png';
 import {Box, Image} from 'native-base';
 import React, {useCallback} from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
+import { connect } from 'react-redux';
+import { updateUserAction } from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
 const resetAction = StackActions.replace(SCREEN_NAMES.MAIN);
-const OnBoardingScreen = () => {
+const OnBoardingScreen = ({updateUserAction}) => {
   const navigate = useNavigation();
   // const resetAction = StackActions.replace(user?SCREEN_NAMES.MAIN:SCREEN_NAMES.AUTH);
 
   const onDone = useCallback(() => {
+    updateUserAction({isNew: false});
     navigate.dispatch(resetAction);
   }, []);
 
@@ -89,4 +92,8 @@ const OnBoardingScreen = () => {
   );
 };
 
-export default OnBoardingScreen;
+const actions={
+  updateUserAction
+}
+
+export default connect(null,actions)( OnBoardingScreen);
