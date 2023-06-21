@@ -1,8 +1,8 @@
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {IMAGE_DIRECTORY} from '@utils/Urls';
-import {COLORS} from '@utils/colors';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { IMAGE_DIRECTORY } from '@utils/Urls';
+import { COLORS } from '@utils/colors';
 import Logout from 'assets/profileIcons/logout.png';
 import Password from 'assets/profileIcons/password.png';
 import Phone from 'assets/profileIcons/phone.png';
@@ -19,11 +19,11 @@ import {
   Pressable,
   ScrollView,
 } from 'native-base';
-import React, {useState} from 'react';
-import {connect} from 'react-redux';
-import {clearAds} from 'redux/adsActions/adsActions';
-import {logoutAction} from 'redux/authSlice/authActions';
-import {SCREEN_NAMES} from 'screens/screenNames';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { clearAds } from 'redux/adsActions/adsActions';
+import { logoutAction } from 'redux/authSlice/authActions';
+import { SCREEN_NAMES } from 'screens/screenNames';
 
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
@@ -78,8 +78,8 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
     if (res) navigation.dispatch(resetAction);
   };
   return (
-    <ScrollView>
-      <Box w="100%" h="100%" bg={COLORS.bg}>
+    <Box flex={1} bg={COLORS.bg}>
+      <ScrollView>
         <ConfirmationModal
           isLoading={isLoading}
           title="Logout"
@@ -129,10 +129,12 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
             {cards.map(card => (
               <Card key={card.name} {...card} />
             ))}
+
           </Flex>
         </Center>
-      </Box>
-    </ScrollView>
+        <CustomText my={2} textAlign="center">V_1.0.0</CustomText>
+      </ScrollView>
+    </Box>
   );
 };
 

@@ -14,21 +14,8 @@ export const GET_ADS_META = {
   method: GET,
   endpoint: URLS.GET_ADS,
 };
-export const GET_PLANS_META = {
-  method: GET,
-  endpoint: URLS.GET_PLANS,
-};
-
 export const GET_CATEGORIES_META = {
   method: GET,
   endpoint: URLS.GET_CATEGORIES,
 };
 
-
-export const CREATE_SUBSCRIPTION_META = {
-  method: POST,
-  endpoint: URLS.CREATE_SUBSCRIPTION,
-  params:{
-    plan_id: '',
-  }
-}

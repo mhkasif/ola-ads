@@ -25,14 +25,17 @@ axiosInstance.interceptors.request.use(async config => {
 });
 axiosInstance.interceptors.response.use(
   async response => {
+    console.log({response});
     // If the response status is 480, perform logout action
-    if (response.status === 480) {
-      // Call your logout function here
-      store.dispatch(logoutAction());
-    }
+
     return response;
   },
   error => {
+    if (error?.response?.status === 480) {
+      // Call your logout function here
+      store.dispatch(logoutAction());
+    }
+    console.log('error', error.response?.status);
     return Promise.reject(error);
   },
 );

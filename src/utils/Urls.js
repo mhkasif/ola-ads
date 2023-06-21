@@ -17,4 +17,5 @@ export const URLS = {
   GET_PLANS: '/user/view-plans',
   CREATE_SUBSCRIPTION: '/user/create-subscription',
   MY_SUBSCRIPTION: '/user/my-subscription',
+  CONFIRM_PAYMENT: '/user/retrive-subscription',
 };

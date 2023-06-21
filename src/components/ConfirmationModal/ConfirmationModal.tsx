@@ -16,6 +16,8 @@ interface IConfirmationModalProps {
   isOpen?: boolean;
   onClose?: {(): void} | undefined;
   isLoading?: boolean;
+  actionColor?: string;
+  isLoadingText?: string;
 }
 const ConfirmationModal = ({
   isOpen = false,
@@ -23,11 +25,13 @@ const ConfirmationModal = ({
   title = 'Modal',
   body = 'Are you sure?',
   cancelText = 'Cancel',
+  isLoadingText = 'logging out...',
   success = false,
   handleAction = undefined,
   actionText = 'Yes',
   alertProps,
   isLoading = false,
+  actionColor = 'danger',
 }: IConfirmationModalProps) => {
   // const leastDestructiveRef = useRef(null);
   return (
@@ -57,9 +61,9 @@ const ConfirmationModal = ({
             <CustomButton
               buttonProps={{
                 // bg: COLORS.danger,
-                colorScheme: 'danger',
+                colorScheme: actionColor,
                 isLoading,
-                isLoadingText: 'logging out...',
+                isLoadingText,
                 onPress: handleAction,
               }}
               noGradient>

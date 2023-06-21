@@ -105,37 +105,3 @@ export const appendAdsAction = () => async dispatch => {
     });
   }
 };
-
-export const getPlansAction = () => async () => {
-  try {
-    const {data, error} = await apiMethod({
-      ...GET_PLANS_META,
-    });
-    if (error) {
-      throw new Error(error);
-    }
-    console.log({data});
-    return {data};
-  } catch (error) {
-    console.log({error});
-  }
-};
-
-export const createSubscriptionAction = plan_id => async () => {
-  try {
-    const {data, error} = await apiMethod({
-      ...CREATE_SUBSCRIPTION_META,
-      params: {
-        plan_id,
-      },
-    });
-    if (error) {
-      throw new Error(error);
-    }
-    console.log({data});
-    return {data};
-  } catch (error) {
-    console.log({error});
-    return {error};
-  }
-};
