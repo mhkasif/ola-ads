@@ -21,6 +21,7 @@ const AppContainer = props => {
       <StatusBar
         translucent={true}
         backgroundColor={'transparent'}
+
         // barStyle={'light-content'}
       />
       <NativeBaseProvider theme={theme} config={config}>

@@ -1,18 +1,13 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import CustomHeader from '@components/CustomHeader/CustomHeader';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CreatePost from 'screens/CreatePost/CreatePost';
-import SplashScreen from 'screens/SplashScreen/SplashScreen';
-import {SCREEN_NAMES} from 'screens/screenNames';
+import OnBoardingScreen from 'screens/OnBoardingScreen/OnBoardingScreen';
+import PostScreen from 'screens/PostScreen/PostScreen';
+import { SCREEN_NAMES } from 'screens/screenNames';
 import AuthStackNavigator from './AuthStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
-import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
-import LinearGradient from 'react-native-linear-gradient';
-import HeaderBackground from '@components/HeaderBackground/HeaderBackground';
-import {headerOptions} from '@utils/helpers';
-import CustomHeader from '@components/CustomHeader/CustomHeader';
-import PostScreen from 'screens/PostScreen/PostScreen';
-import {useSelector} from 'react-redux';
-import OnBoardingScreen from 'screens/OnBoardingScreen/OnBoardingScreen';
 const header = ({route: {name}, ...props}) => (
   <CustomHeader title={name} {...props} />
 );

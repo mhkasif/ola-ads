@@ -1,17 +1,19 @@
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS, linearGradient } from '@utils/colors';
-import { Box, Icon, Pressable } from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {COLORS, linearGradient} from '@utils/colors';
+import {Box, Icon, Pressable} from 'native-base';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
+import {Platform} from 'react-native';
+const isIOS = Platform.OS === 'ios';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 15,
-    height: 70,
+    height: isIOS ? 50 : 70,
 
     // borderBottomWidth: 1,
     // borderBottomColor: '#ccc',
@@ -27,7 +29,7 @@ const CustomHeader = ({title = 'hello', options = {}, ...props}) => {
   const {goBack} = useNavigation();
   return (
     <Box safeArea bg={{linearGradient}}>
-      <Box h={100} bg={{linearGradient}} style={styles.container}>
+      <Box style={styles.container}>
         {backIcon && (
           <Pressable onPress={goBack} style={styles.backIcon}>
             <Icon

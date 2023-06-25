@@ -50,7 +50,7 @@ const CustomButton = ({
                 colors: ['#72439A', '#13C2EE'],
                 start: [0, 0],
                 end: [1, 1],
-                locations: [0.1747, 1.461],
+                // locations: [0.1747, 1.461],
               },
             }
       }
