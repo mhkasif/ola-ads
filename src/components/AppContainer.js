@@ -21,6 +21,8 @@ const AppContainer = props => {
       <StatusBar
         translucent={true}
         backgroundColor={'transparent'}
+        barStyle={'light-content'}
+
 
         // barStyle={'light-content'}
       />
