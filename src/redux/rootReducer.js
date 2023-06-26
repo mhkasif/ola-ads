@@ -4,7 +4,7 @@ import {persistReducer} from 'redux-persist';
 import thunk from 'redux-thunk';
 import AuthReducer from './authSlice/authSlice';
 import AdsReducer from './adsActions/adsSlice';
-import {initializeMMKVFlipper} from 'react-native-mmkv-flipper-plugin';
+// import {initializeMMKVFlipper} from 'react-native-mmkv-flipper-plugin';
 import {MMKV} from 'react-native-mmkv';
 export const storage = new MMKV();
 export const reduxStorage = {
@@ -36,9 +36,9 @@ export const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const mw = [thunk];
 if (__DEV__) {
-  const createDebugger = require('redux-flipper').default;
-  mw.push(createDebugger());
-  initializeMMKVFlipper({default: storage});
+  // const createDebugger = require('redux-flipper').default;
+  // mw.push(createDebugger());
+  // initializeMMKVFlipper({default: storage});
 }
 
 const middleware = mw;

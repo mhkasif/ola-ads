@@ -15,7 +15,8 @@ const FAB = ({children, ...props}) => {
         colors={['#72439A', '#13C2EE']}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}
-        locations={[0.1747, 1.461]}>
+        // locations={[0.1747, 1.461]}
+        >
         <CustomText onPress={handlePress} style={styles.title}>
           {children}
         </CustomText>

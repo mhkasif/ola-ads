@@ -1,6 +1,9 @@
 #import "AppDelegate.h"
+#import <Firebase.h>
 
 #import <React/RCTBundleURLProvider.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
+#import "RNSplashScreen.h"  // here
 
 @implementation AppDelegate
 
@@ -8,9 +11,13 @@
 {
   self.moduleName = @"Ola";
   // You can add your custom initial props in the dictionary below.
+  [FIRApp configure];
+  // [RNSplashScreen show];  // here
+
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                       didFinishLaunchingWithOptions:launchOptions];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
@@ -32,5 +39,12 @@
 {
   return true;
 }
-
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [[FBSDKApplicationDelegate sharedInstance]application:app
+                                                      openURL:url
+                                                      options:options];
+}
 @end
