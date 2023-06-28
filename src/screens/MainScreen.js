@@ -16,14 +16,15 @@ const MainScreen = () => {
     let resetAction = '';
     if (user?.isNew) {
       resetAction = StackActions.replace(SCREEN_NAMES.ONBOARDING);
-    } else {
-      resetAction = StackActions.replace(
-        user ? SCREEN_NAMES.MAIN : SCREEN_NAMES.AUTH,
-      );
     }
+    // else {
+    //   resetAction = StackActions.replace(
+    //     user ? SCREEN_NAMES.MAIN : SCREEN_NAMES.AUTH,
+    //   );
+    // }
     let x = setTimeout(() => {
       SplashScreen.hide();
-      navigate.dispatch(resetAction);
+      // navigate.dispatch(resetAction);
     }, 2000);
 
     return () => {

@@ -3,7 +3,40 @@ import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
 import {LOGIN_META, UPDATE_USER} from './authAPI';
 import {addAuth, removeAuth, updateAuth} from './authSlice';
+export const loginWithToken =  authToken =>async dispatch=> {
+  try {
+    const {error, data} = await apiMethod({
+      ...LOGIN_META,
+      params: {
+        accessToken: authToken,
+      },
+    });
+    let d;
+    if (error) {
+      throw new Error(error);
+    }
+    console.log({data});
+    const {token, ...userData} = data.user;
+     d = {
+      authToken: token,
+      user: {
+        ...userData,
+      },
+    };
+    dispatch(addAuth(d));
+    Toast.show({
+      type: 'success',
+      text1: 'Log In Success',
+      text2: 'Welcome to the app',
+      visibilityTime: 900,
+    });
+    // await sleep(1000);
 
+    return {error, data:d};
+  } catch (error) {
+    return {error};
+  }
+};
 export const loginAction =
   ({email = 'haseeb@gmail.com', password}) =>
   async dispatch => {
@@ -12,37 +45,13 @@ export const loginAction =
       // let {error, data} = await apiMethod(meta);
       const {user} = await auth().signInWithEmailAndPassword(email, password);
       console.log({user});
-      // if (error) throw new Error(error);
-      const {uid: id = '123', displayName = 'hello'} = user;
       // const {user}=await auth().currentUser()
       let authToken = await user.getIdToken();
-      const {error, data} = await apiMethod({
-        ...LOGIN_META,
-        params: {
-          accessToken: authToken,
-        },
-      });
-      if (error) {
+      const {error, data} = await dispatch(loginWithToken(authToken));
+      if (error){
         throw new Error(error);
       }
-      console.log({data});
-      const {token, ...userData} = data.user;
-      let d = {
-        authToken: token,
-        user: {
-          ...userData,
-        },
-      };
-      dispatch(addAuth(d));
-      Toast.show({
-        type: 'success',
-        text1: 'Log In Success',
-        text2: 'Welcome to the app',
-        visibilityTime: 900,
-      });
-      // await sleep(1000);
-
-      return {data: d};
+      return {data};
     } catch (error) {
       console.log({error});
 

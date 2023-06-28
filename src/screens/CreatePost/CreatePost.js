@@ -481,12 +481,13 @@ const ContactModal = ({
               {fields.map((field, index) => (
                 <CustomInput key={index} {...field} />
               ))}
-              <HStack justifyContent="space-between" mt={5}>
+              <HStack justifyContent="space-between" mt={5} style={{gap:5}}>
                 <CustomButton
                   textProps={{color: COLORS.primaryDark, bold: true}}
                   noGradient
                   buttonProps={{
-                    w: '47%',
+                    // w: '47%',
+                    flex:1,
                     bg: COLORS.lightColor,
                     _pressed: {
                       bg: COLORS.lightColor,
@@ -500,6 +501,7 @@ const ContactModal = ({
                 <CustomButton
                   textProps={{color: COLORS.white, bold: true}}
                   buttonProps={{
+                    flex:1,
                     // _loading: {
                     //   bg: COLORS.primary,
                     // },
@@ -508,7 +510,7 @@ const ContactModal = ({
                     // bg: COLORS.danger,
                     colorScheme: 'primarydark',
                     onPress: handleSubmit,
-                    w: '47%',
+                    // w: '47%',
                   }}
                   noGradient>
                   Yes, I'm Sure

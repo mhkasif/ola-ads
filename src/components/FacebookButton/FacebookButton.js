@@ -1,36 +1,45 @@
 import CustomText from '@components/CustomText/CustomText';
 import {Button, Center, HStack, Icon, Image} from 'native-base';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Facebook from 'assets/facebook-btn-logo.png';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {Settings} from 'react-native-fbsdk-next';
+import {connect} from 'react-redux';
+import {loginWithToken} from 'redux/authSlice/authActions';
 
 const FacebookButton = props => {
   const onFacebookButtonPress = async () => {
     try {
       // Attempt login with permissions
-      const result = await LoginManager.logInWithPermissions(["public_profile"]);
-
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      console.log({result});
       if (result.isCancelled) {
         throw 'User cancelled the login process';
       }
 
       // Once signed in, get the users AccesToken
-      const data = await AccessToken.getCurrentAccessToken();
+      const d = await AccessToken.getCurrentAccessToken();
 
-      if (!data) {
+      if (!d) {
         throw 'Something went wrong obtaining access token';
       }
 
       // Create a Firebase credential with the AccessToken
       const facebookCredential = auth.FacebookAuthProvider.credential(
-        data.accessToken,
+        d.accessToken,
       );
+      console.log({facebookCredential});
 
       // Sign-in the user with the credential
       const user = await auth().signInWithCredential(facebookCredential);
-      console.log({user});
+      const authToken = await user.user.getIdToken();
+      console.log(authToken)
+      const {error, data} = await props.loginWithToken(authToken);
+      throw new Error(error);
     } catch (error) {
       console.log({error});
     }
@@ -67,5 +76,8 @@ const FacebookButton = props => {
     </Button>
   );
 };
+const actions = {
+  loginWithToken,
+};
 
-export default FacebookButton;
+export default connect(null, actions)(FacebookButton);

@@ -1,24 +1,24 @@
 import CustomText from '@components/CustomText/CustomText';
-import Google from 'assets/google-btn-logo.png';
-import {Button, Center, HStack, Image} from 'native-base';
-import React, { useEffect } from 'react';
 import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
+  GoogleSignin
 } from '@react-native-google-signin/google-signin';
+import Google from 'assets/google-btn-logo.png';
+import { Button, Center, HStack, Image } from 'native-base';
+import React, { useEffect } from 'react';
 
 import auth from '@react-native-firebase/auth';
+import { connect } from 'react-redux';
+import { loginWithToken } from 'redux/authSlice/authActions';
 
 const GoogleButton = props => {
   const [state, setState] = React.useState({});
   // 1077115806182-tdc7qof16mpke7ok6qlrqslfnad9p18k.apps.googleusercontent.com
-useEffect(() => {
-  GoogleSignin.configure({
-    webClientId:
-      '804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com',
-  });
-},[])
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com',
+    });
+  }, []);
   const signIn = async () => {
     // Check if your device supports Google Play
     try {
@@ -33,8 +33,12 @@ useEffect(() => {
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-      // Sign-in the user with the credential
-      console.log(auth().signInWithCredential(googleCredential));
+      // // Sign-in the user with the credential
+      const user = await auth().signInWithCredential(googleCredential);
+      console.log(await user.user.getIdToken());
+      const authToken = await user.user.getIdToken();
+      const {error, data} = await props.loginWithToken(authToken);
+      console.log({error, data});
     } catch (error) {
       console.log({error});
     }
@@ -84,11 +88,9 @@ useEffect(() => {
       shadow={2}
       shadowColor="#000"
       shadowOffset={{width: 0, height: 2}}
-
       onPress={signIn}
       disabled={state.isSigninInProgress}
       shadowOpacity={0.3}>
-
       <Center>
         <HStack>
           <Image mr={4} source={Google} alt="Google" />
@@ -100,5 +102,7 @@ useEffect(() => {
     </Button>
   );
 };
-
-export default GoogleButton;
+const actions = {
+  loginWithToken,
+};
+export default connect(null, actions)(GoogleButton);

@@ -23,6 +23,7 @@ end
 
 target 'Ola' do
   config = use_native_modules!
+  pod 'FirebaseAuth', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
   pod 'FirebaseInstallations', :modular_headers => true
