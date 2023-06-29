@@ -7,6 +7,7 @@ import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {Settings} from 'react-native-fbsdk-next';
 import {connect} from 'react-redux';
 import {loginWithToken} from 'redux/authSlice/authActions';
+import Toast from 'react-native-toast-message';
 
 const FacebookButton = props => {
   const onFacebookButtonPress = async () => {
@@ -32,15 +33,17 @@ const FacebookButton = props => {
       const facebookCredential = auth.FacebookAuthProvider.credential(
         d.accessToken,
       );
-      console.log({facebookCredential});
-
       // Sign-in the user with the credential
       const user = await auth().signInWithCredential(facebookCredential);
       const authToken = await user.user.getIdToken();
-      console.log(authToken)
       const {error, data} = await props.loginWithToken(authToken);
-      throw new Error(error);
+      if (error) throw new Error(error);
     } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+      });
       console.log({error});
     }
   };

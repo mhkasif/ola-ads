@@ -1,10 +1,14 @@
 // export const BASIC_URL="http://10.0.2.2:3000"
 
 import {ENV} from 'config';
+import {Platform} from 'react-native';
 export const BASIC_URL =
-  ENV === 'dev'
-    ? 'http://10.0.2.2:3000'
-    : 'https://test.markcoders.com/ola_ads_api';
+  // ENV === 'dev'
+    // ? Platform.OS === 'ios'
+    //   ?
+       'http://localhost:3000'
+      // : 'http://10.0.2.2:3000'
+    // : 'https://test.markcoders.com/ola_ads_api';
 
 export const IMAGE_DIRECTORY = ENV === 'dev' ? BASIC_URL : '';
 export const BASE_URL = BASIC_URL + '/api/v1';

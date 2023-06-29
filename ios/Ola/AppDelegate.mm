@@ -12,13 +12,14 @@
   self.moduleName = @"Ola";
   // You can add your custom initial props in the dictionary below.
   [FIRApp configure];
-  // [RNSplashScreen show];  // here
 
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
   [[FBSDKApplicationDelegate sharedInstance] application:application
                        didFinishLaunchingWithOptions:launchOptions];
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [RNSplashScreen show];
+  return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

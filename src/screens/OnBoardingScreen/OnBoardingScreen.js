@@ -20,14 +20,14 @@ const OnBoardingScreen = ({updateUserAction}) => {
   }, []);
 
   return (
-    <Box h="100%">
+    <Box h="100%" bg="white">
       <Box
         bg={{
           linearGradient,
         }}
         style={{
           height: '20%',
-        }}></Box>
+        }}/>
       <Box
         // flex={1}
         bg="transparent"
@@ -38,8 +38,10 @@ const OnBoardingScreen = ({updateUserAction}) => {
           marginTop: '-6%',
         }}>
         <Onboarding
+
           onDone={onDone}
           onSkip={onDone}
+
           controlStatusBar={false}
           titleStyles={{
             color: COLORS.primary,

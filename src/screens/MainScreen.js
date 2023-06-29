@@ -6,6 +6,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {useSelector} from 'react-redux';
 import {SCREEN_NAMES} from './screenNames';
+import {SafeAreaView} from 'react-native';
 const MainScreen = () => {
   const {user} = useSelector(state => state.auth);
   const navigate = useNavigation();
@@ -25,7 +26,7 @@ const MainScreen = () => {
     let x = setTimeout(() => {
       SplashScreen.hide();
       // navigate.dispatch(resetAction);
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(x);
@@ -34,7 +35,9 @@ const MainScreen = () => {
   return (
     <>
       <RootNavigator />
-      <Toast />
+      {/* <SafeAreaView> */}
+        <Toast topOffset={56} />
+      {/* </SafeAreaView> */}
     </>
   );
 };

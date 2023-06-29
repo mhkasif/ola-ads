@@ -14,10 +14,29 @@
       "filename" : "splash 2.png",
       "idiom" : "universal",
       "scale" : "3x"
+    },
+    {
+      "filename" : "splash 3.png",
+      "idiom" : "iphone",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "splash 5.png",
+      "idiom" : "iphone",
+      "scale" : "2x"
+    },
+    {
+      "compression-type" : "lossless",
+      "filename" : "splash 4.png",
+      "idiom" : "iphone",
+      "scale" : "3x"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "compression-type" : "lossless"
   }
 }
