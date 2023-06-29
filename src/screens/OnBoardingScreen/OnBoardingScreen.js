@@ -20,7 +20,7 @@ const OnBoardingScreen = ({updateUserAction}) => {
   }, []);
 
   return (
-    <Box h="100%" bg="white">
+    <Box h="100%" bg={COLORS.primary}>
       <Box
         bg={{
           linearGradient,
