@@ -51,10 +51,6 @@ function CreatePost({
   const [categoriesList, setCategoriesList] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const {goBack} = useNavigation();
-  const initialValues = {
-    email: user?.email,
-    phone: '',
-  };
   const [state, setState] = useState({
     description: '',
     isLoading: false,
@@ -197,7 +193,10 @@ function CreatePost({
     <>
       <KeyboardAvoidingInputWrapper>
         <>
-          <Box pt={5} px={4}>
+          <Box
+            pt={5}
+            px={4}
+            {...(state.isLoading ? {pointerEvents: 'none'} : {})}>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="datetime"
@@ -275,6 +274,7 @@ function CreatePost({
       </KeyboardAvoidingInputWrapper>
       {image && (
         <CustomText
+        {...(state.isLoading ? {pointerEvents: 'none'} : {})}
           textAlign="center"
           underline
           color="blue.500"
@@ -301,7 +301,7 @@ function CreatePost({
         //   </HStack>
         // </Box>
       )}
-      <Box bg="white" flex={1} borderTopRadius={30} mt={5} pb={5}>
+      <Box {...(state.isLoading ? {pointerEvents: 'none'} : {})} bg="white" flex={1} borderTopRadius={30} mt={5} pb={5}>
         <>
           <Center>
             <CustomText fontSize="sm" color={COLORS.muted} my={2}>
@@ -322,24 +322,26 @@ function CreatePost({
           )}
         </>
       </Box>
-      <ContactModal
-        handleChange={handleChange}
-        initialValues={{email: state.email, phone: state.phone}}
-        isOpen={openModal === MODAL_NAMES.CONTACT_MODAL}
-        onClose={onClose}
-      />
-      <ImagePicker
-        callback={handleImageSelect}
-        isOpen={openModal === MODAL_NAMES.IMAGE_ACTION_SHEET}
-        onClose={onClose}
-        mediaType={mediaType}
-      />
-      <ImageView
-        images={[{uri: image?.uri}]}
-        imageIndex={0}
-        visible={openModal === MODAL_NAMES.VIEW_IMAGE}
-        onRequestClose={onClose}
-      />
+      <Box {...(state.isLoading ? {pointerEvents: 'none'} : {})} >
+        <ContactModal
+          handleChange={handleChange}
+          initialValues={{email: state.email, phone: state.phone}}
+          isOpen={openModal === MODAL_NAMES.CONTACT_MODAL}
+          onClose={onClose}
+        />
+        <ImagePicker
+          callback={handleImageSelect}
+          isOpen={openModal === MODAL_NAMES.IMAGE_ACTION_SHEET}
+          onClose={onClose}
+          mediaType={mediaType}
+        />
+        <ImageView
+          images={[{uri: image?.uri}]}
+          imageIndex={0}
+          visible={openModal === MODAL_NAMES.VIEW_IMAGE}
+          onRequestClose={onClose}
+        />
+      </Box>
     </>
   );
 }
@@ -382,7 +384,7 @@ const MediaItem = ({image, title, onPress}) => {
 const CategoryItem = memo(({handleSelectCategory, name, _id, image}) => {
   const [isChecked, setIsChecked] = useState(false);
   console.log('item');
-  const onCheck = useCallback((e) => {
+  const onCheck = useCallback(e => {
     e?.stopPropagation?.();
     setIsChecked(p => !p);
     handleSelectCategory(_id);
@@ -481,13 +483,13 @@ const ContactModal = ({
               {fields.map((field, index) => (
                 <CustomInput key={index} {...field} />
               ))}
-              <HStack justifyContent="space-between" mt={5} style={{gap:5}}>
+              <HStack justifyContent="space-between" mt={5} style={{gap: 5}}>
                 <CustomButton
                   textProps={{color: COLORS.primaryDark, bold: true}}
                   noGradient
                   buttonProps={{
                     // w: '47%',
-                    flex:1,
+                    flex: 1,
                     bg: COLORS.lightColor,
                     _pressed: {
                       bg: COLORS.lightColor,
@@ -501,7 +503,7 @@ const ContactModal = ({
                 <CustomButton
                   textProps={{color: COLORS.white, bold: true}}
                   buttonProps={{
-                    flex:1,
+                    flex: 1,
                     // _loading: {
                     //   bg: COLORS.primary,
                     // },

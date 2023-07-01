@@ -29,7 +29,7 @@ import {
 } from '@stripe/stripe-react-native';
 import {COLORS} from '@utils/colors';
 import {sleep} from '@utils/helpers';
-import {Dimensions, FlatList, StyleSheet} from 'react-native';
+import {Dimensions, FlatList, Linking, StyleSheet} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import {connect, useSelector} from 'react-redux';
@@ -42,6 +42,7 @@ import {
 
 import Loader from 'assets/loader.gif';
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
@@ -96,7 +97,47 @@ const ListOfPlansScreen = connect(
       });
     }
   };
-
+  const openLink = async url => {
+    try {
+      if (await InAppBrowser.isAvailable()) {
+        const result = await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#0C0F3D',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android Properties
+          showTitle: true,
+          // toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+        });
+        console.log({result});
+        // await this.sleep(800);
+        // Alert.alert(JSON.stringify(result))
+      } else Linking.openURL(url);
+    } catch (error) {
+      console.log({error});
+      // Alert.alert(error.message)
+    }
+  };
   const initializePaymentSheet = async id => {
     const ck = await createPaymentIntent(id);
     console.log({paymentIntent, ck});
@@ -127,59 +168,110 @@ const ListOfPlansScreen = connect(
     return ck;
   };
   const openPaymentSheet = async id => {
+    setLoading(LOADING_TYPE.LOADING_PLAN);
     try {
-      if (subscription) {
-        const {data, error: err} = await confirmPaymentAction(
-          subscription.subscription_id,
-        );
-        if (data) {
-          console.log({data});
-          if (data.status !== 'active') {
-            throw new Error('Your Payment is in pending');
-          }
-          Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2: 'Your order is confirmed!',
-          });
-          await sleep(500);
-          return goBack();
-        }
+      // if (subscription) {
+      //   const {data, error: err} = await confirmPaymentAction(
+      //     subscription.subscription_id,
+      //   );
+      //   if (data) {
+      //     console.log({data});
+      //     if (data.status !== 'active') {
+      //       throw new Error('Your Payment is in pending');
+      //     }
+      //     Toast.show({
+      //       type: 'success',
+      //       text1: 'Success',
+      //       text2: 'Your order is confirmed!',
+      //     });
+      //     await sleep(500);
+      //     return goBack();
+      //   }
+      //   if (err) throw new Error(err);
+      //   return goBack();
+      // }
+      const {data, error} = await createSubscriptionAction(id);
+      if (error) throw new Error(error);
+
+      if (data.subscription_url) await openLink(data.subscription_url);
+      const {data: d, error: err} = await confirmPaymentAction(
+        data.subscription_id,
+      );
+      if (err) throw new Error(err);
+      if (d.status !== 'active') {
+        throw new Error('Your Payment is Failed');
       }
-      setLoading(LOADING_TYPE.LOADING_PLAN);
-      const ck = (await initializePaymentSheet(id)) || {};
-      const {error} = await presentPaymentSheet();
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Your order is confirmed!',
+      });
       setLoading('');
-      if (error) {
-        console.log(`Error code: ${error.code}`, error.message);
-      } else {
-        console.log({ck, paymentIntent});
-        const {data, error} = await confirmPaymentAction(
-          ck.subscription_id || paymentIntent.subscription_id,
-        );
-        if (data) {
-          console.log({data});
-          if (data.status !== 'active') {
-            throw new Error('Your Payment is in pending');
-          }
-          Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2: 'Your order is confirmed!',
-          });
-          await sleep(500);
-          goBack();
-        }
-      }
+      goBack();
     } catch (error) {
+      setLoading('');
       Toast.show({
         type: 'error',
-        text1: 'Order Failed Payment',
+        text1: 'Error',
+        text2: error.message,
       });
-      console.error(error);
-      setLoading('');
+      console.log({error});
     }
   };
+  // const openPaymentSheet = async id => {
+  //   try {
+  //     if (subscription) {
+  //       const {data, error: err} = await confirmPaymentAction(
+  //         subscription.subscription_id,
+  //       );
+  //       if (data) {
+  //         console.log({data});
+  //         if (data.status !== 'active') {
+  //           throw new Error('Your Payment is in pending');
+  //         }
+  //         Toast.show({
+  //           type: 'success',
+  //           text1: 'Success',
+  //           text2: 'Your order is confirmed!',
+  //         });
+  //         await sleep(500);
+  //         return goBack();
+  //       }
+  //     }
+  //     setLoading(LOADING_TYPE.LOADING_PLAN);
+  //     const ck = (await initializePaymentSheet(id)) || {};
+  //     const {error} = await presentPaymentSheet();
+  //     setLoading('');
+  //     if (error) {
+  //       console.log(`Error code: ${error.code}`, error.message);
+  //     } else {
+  //       console.log({ck, paymentIntent});
+  //       const {data, error} = await confirmPaymentAction(
+  //         ck.subscription_id || paymentIntent.subscription_id,
+  //       );
+  //       if (data) {
+  //         console.log({data});
+  //         if (data.status !== 'active') {
+  //           throw new Error('Your Payment is in pending');
+  //         }
+  //         Toast.show({
+  //           type: 'success',
+  //           text1: 'Success',
+  //           text2: 'Your order is confirmed!',
+  //         });
+  //         await sleep(500);
+  //         goBack();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Order Failed Payment',
+  //     });
+  //     console.error(error);
+  //     setLoading('');
+  //   }
+  // };
   const fetchPlans = async () => {
     setLoading(LOADING_TYPE.FETCHING_PLANS);
     const {data} = await getPlansAction();
