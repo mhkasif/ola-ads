@@ -498,7 +498,7 @@ const ContactModal = ({
                     // colorScheme: '',
                     onPress: onClose,
                   }}>
-                  No
+                  Cancel
                 </CustomButton>
                 <CustomButton
                   textProps={{color: COLORS.white, bold: true}}
@@ -508,14 +508,14 @@ const ContactModal = ({
                     //   bg: COLORS.primary,
                     // },
                     isLoading: isSubmitting,
-                    isLoadingText: 'Submitting...',
+                    isLoadingText: 'Updating...',
                     // bg: COLORS.danger,
                     colorScheme: 'primarydark',
                     onPress: handleSubmit,
                     // w: '47%',
                   }}
                   noGradient>
-                  Yes, I'm Sure
+                  Update
                 </CustomButton>
               </HStack>
             </Modal.Body>

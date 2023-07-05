@@ -8,44 +8,38 @@ import {
   Image,
   Pressable,
   Radio,
-  Spinner,
   StatusBar,
   VStack,
-  useColorModeValue,
+  useColorModeValue
 } from 'native-base';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {PlanSkeleton} from '@components/Skeletons/Skeleton';
-import {useNavigation} from '@react-navigation/native';
-import {
-  confirmPlatformPayPayment,
-  initStripe,
-  usePlatformPay,
-  useStripe,
-} from '@stripe/stripe-react-native';
-import {COLORS} from '@utils/colors';
-import {sleep} from '@utils/helpers';
-import {Dimensions, FlatList, Linking, StyleSheet} from 'react-native';
-import {SceneMap, TabView} from 'react-native-tab-view';
+import { PlanSkeleton } from '@components/Skeletons/Skeleton';
+import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '@utils/colors';
+import { Dimensions, FlatList, Linking, StyleSheet } from 'react-native';
+import { SceneMap, TabView } from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
-import {connect, useSelector} from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import {
-  fetchMySubscription,
-  createSubscriptionAction,
-  getPlansAction,
   confirmPaymentAction,
+  createSubscriptionAction,
+  fetchMySubscription,
+  getPlansAction,
 } from 'redux/PaymentActions/paymentActions';
 
-import Loader from 'assets/loader.gif';
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
+import Loader from 'assets/loader.gif';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import { updateUserAction } from 'redux/authSlice/authActions';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
+  updateUserAction,
 };
 const PLANS_TYPE = {
   SUBSCRIPTION: 'SUBSCRIPTION',
@@ -58,45 +52,13 @@ const LOADING_TYPE = {
 const ListOfPlansScreen = connect(
   null,
   actions,
-)(({getPlansAction, createSubscriptionAction, type}) => {
-  const {isPlatformPaySupported, confirmPlatformPayPayment} = usePlatformPay();
+)(({getPlansAction, createSubscriptionAction, type, updateUserAction}) => {
   const {user} = useSelector(state => state.auth) || {};
   const subscription = user?.subscription;
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [loading, setLoading] = useState('');
-  const [paymentIntent, setPaymentIntent] = useState(null);
   const [plansList, setPlansList] = useState([]);
   const {goBack} = useNavigation();
-  const createPaymentIntent = async id => {
-    try {
-      console.log({id});
-      const {data, error} = (await createSubscriptionAction(id)) || {};
-      if (error) throw new Error(error);
-      // const {err} = await confirmPlatformPayPayment(data.client_secret, {
-      //   googlePay: {
-      //     testEnv: true,
-      //     merchantName: 'My merchant name',
-      //     merchantCountryCode: 'US',
-      //     currencyCode: 'USD',
-      //     billingAddressConfig: {
-      //       format: PlatformPay.BillingAddressFormat.Full,
-      //       isPhoneNumberRequired: true,
-      //       isRequired: true,
-      //     },
-      //   },
-      // });
-      // if (err) throw new Error(err);
-      setPaymentIntent(data);
-      return data;
-    } catch (error) {
-      console.log('Error creating Payment Intent:', error.message);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: error.message,
-      });
-    }
-  };
+
   const openLink = async url => {
     try {
       if (await InAppBrowser.isAvailable()) {
@@ -138,35 +100,35 @@ const ListOfPlansScreen = connect(
       // Alert.alert(error.message)
     }
   };
-  const initializePaymentSheet = async id => {
-    const ck = await createPaymentIntent(id);
-    console.log({paymentIntent, ck});
-    if (!paymentIntent && !ck) {
-      console.log('Payment Intent not found');
-      return;
-    }
+  // const initializePaymentSheet = async id => {
+  //   const ck = await createPaymentIntent(id);
+  //   console.log({paymentIntent, ck});
+  //   if (!paymentIntent && !ck) {
+  //     console.log('Payment Intent not found');
+  //     return;
+  //   }
 
-    const {error, paymentOption} = await initPaymentSheet({
-      paymentIntentClientSecret:
-        paymentIntent?.client_secret || ck.client_secret,
-      merchantDisplayName: 'Ola Ads',
-      customerEphemeralKeySecret: null,
-      googlePay: {
-        merchantCountryCode: 'US',
-        currencyCode: 'USD', // currency must be specified for setup mode
-        testEnv: true, // use test environment
-      },
-      // customerId: null,
-      // customFlow: true,
-      // allowsDelayedPaymentMethods: true,
-    });
+  //   const {error, paymentOption} = await initPaymentSheet({
+  //     paymentIntentClientSecret:
+  //       paymentIntent?.client_secret || ck.client_secret,
+  //     merchantDisplayName: 'Ola Ads',
+  //     customerEphemeralKeySecret: null,
+  //     googlePay: {
+  //       merchantCountryCode: 'US',
+  //       currencyCode: 'USD', // currency must be specified for setup mode
+  //       testEnv: true, // use test environment
+  //     },
+  //     // customerId: null,
+  //     // customFlow: true,
+  //     // allowsDelayedPaymentMethods: true,
+  //   });
 
-    console.log({error}, 'hello');
-    if (!error) {
-      setLoading(LOADING_TYPE.LOADING_PLAN);
-    }
-    return ck;
-  };
+  //   console.log({error}, 'hello');
+  //   if (!error) {
+  //     setLoading(LOADING_TYPE.LOADING_PLAN);
+  //   }
+  //   return ck;
+  // };
   const openPaymentSheet = async id => {
     setLoading(LOADING_TYPE.LOADING_PLAN);
     try {
@@ -201,6 +163,7 @@ const ListOfPlansScreen = connect(
       if (d.status !== 'active') {
         throw new Error('Your Payment is Failed');
       }
+      updateUserAction({subscription: d});
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -290,20 +253,6 @@ const ListOfPlansScreen = connect(
     if (PLANS_TYPE.SUBSCRIPTION === type) {
       fetchSubscription();
     } else fetchPlans();
-    async function initialize() {
-      await initStripe({
-        publishableKey:
-          'pk_test_51NDCRPINlBctypvqneWKS9nmWJVqcfRkW0IySEDnOJcuSHpxtKOJ61lNARhMzxOv0Ut8Zn5kqHczsZoNoF5j1m0n00VDU92ir4',
-      });
-      // await initializePaymentSheet();
-    }
-    initialize().catch(console.error);
-    (async function () {
-      if (!(await isPlatformPaySupported({googlePay: {testEnv: true}}))) {
-        console.log('Platform Pay not supported');
-        return;
-      }
-    })();
   }, []);
 
   return (
