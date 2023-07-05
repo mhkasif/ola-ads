@@ -1,8 +1,8 @@
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import CustomText from '@components/CustomText/CustomText';
-import { StackActions, useNavigation } from '@react-navigation/native';
-import { IMAGE_DIRECTORY } from '@utils/Urls';
-import { COLORS } from '@utils/colors';
+import {StackActions, useNavigation} from '@react-navigation/native';
+import {IMAGE_DIRECTORY} from '@utils/Urls';
+import {COLORS} from '@utils/colors';
 import Logout from 'assets/profileIcons/logout.png';
 import Password from 'assets/profileIcons/password.png';
 import Phone from 'assets/profileIcons/phone.png';
@@ -19,11 +19,11 @@ import {
   Pressable,
   ScrollView,
 } from 'native-base';
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { clearAds } from 'redux/adsActions/adsActions';
-import { logoutAction } from 'redux/authSlice/authActions';
-import { SCREEN_NAMES } from 'screens/screenNames';
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {clearAds} from 'redux/adsActions/adsActions';
+import {logoutAction} from 'redux/authSlice/authActions';
+import {SCREEN_NAMES} from 'screens/screenNames';
 
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
@@ -129,10 +129,11 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
             {cards.map(card => (
               <Card key={card.name} {...card} />
             ))}
-
           </Flex>
         </Center>
-        <CustomText my={2} textAlign="center">V_1.0.0</CustomText>
+        <CustomText my={2} textAlign="center">
+          V_1.0.0
+        </CustomText>
       </ScrollView>
     </Box>
   );
@@ -147,11 +148,21 @@ const Card = ({name, icon, bg, onPress = null}) => (
     w="45%"
     // maxW="42%"
     px={4}
-    py={2}
+    // py={2}
     m={2}
     h={84}>
     <Pressable onPress={onPress}>
-      <Image source={icon} alt={name} my={2} />
+
+        <Image
+          source={icon}
+          alt={name}
+          my={2}
+          h={7}
+          resizeMode="contain"
+          style={{aspectRatio: 1.1}}
+
+        />
+
       <CustomText color={bg ? COLORS.white : COLORS.primary}>{name}</CustomText>
     </Pressable>
   </Box>
