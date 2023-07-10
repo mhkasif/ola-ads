@@ -10,21 +10,21 @@ import {
   Radio,
   StatusBar,
   VStack,
-  useColorModeValue
+  useColorModeValue,
 } from 'native-base';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 // import {LIST_OF_GROUPS} from './groups';
 import CornerLabel from '@components/CornerLabel/CornerLabel';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { PlanSkeleton } from '@components/Skeletons/Skeleton';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '@utils/colors';
-import { Dimensions, FlatList, Linking, StyleSheet } from 'react-native';
-import { SceneMap, TabView } from 'react-native-tab-view';
+import {PlanSkeleton} from '@components/Skeletons/Skeleton';
+import {useNavigation} from '@react-navigation/native';
+import {COLORS} from '@utils/colors';
+import {Dimensions, FlatList, Linking, StyleSheet} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
-import { connect, useSelector } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {
   confirmPaymentAction,
   createSubscriptionAction,
@@ -35,7 +35,8 @@ import {
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
 import Loader from 'assets/loader.gif';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import { updateUserAction } from 'redux/authSlice/authActions';
+import {updateUserAction} from 'redux/authSlice/authActions';
+import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
@@ -257,22 +258,7 @@ const ListOfPlansScreen = connect(
 
   return (
     <>
-      {loading === LOADING_TYPE.LOADING_PLAN && (
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          // flex={1}
-
-          zIndex={100}
-          h="100%"
-          w="100%"
-          bg="rgba(255, 255, 255, 0.9)"
-          justifyContent="center"
-          alignItems="center">
-          <Image source={Loader} alt="loader" />
-        </Box>
-      )}
+      {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
       <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
         {loading === LOADING_TYPE.FETCHING_PLANS ? (
           [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)

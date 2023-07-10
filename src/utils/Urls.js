@@ -21,4 +21,5 @@ export const URLS = {
   CREATE_SUBSCRIPTION: '/user/create-subscription',
   MY_SUBSCRIPTION: '/user/my-subscription',
   CONFIRM_PAYMENT: '/user/retrive-subscription',
+  DEACTIVATE_ACCOUNT: '/user/deactivate-user',
 };

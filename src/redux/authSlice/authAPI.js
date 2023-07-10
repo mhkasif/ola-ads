@@ -1,5 +1,5 @@
 import {URLS} from '@utils/Urls';
-import {POST} from '@utils/constants';
+import {DEL, POST} from '@utils/constants';
 
 export const LOGIN_META = {
   method: POST,
@@ -7,6 +7,10 @@ export const LOGIN_META = {
   params: {
     accessToken: '',
   },
+};
+export const DEACTIVATE_ACCOUNT_META = {
+  method: DEL,
+  endpoint: URLS.DEACTIVATE_ACCOUNT,
 };
 
 export const SIGNUP_META = {
@@ -25,4 +29,3 @@ export const UPDATE_USER = {
     profile_photo: '',
   },
 };
-

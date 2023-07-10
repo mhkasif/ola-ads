@@ -22,14 +22,14 @@ import {
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {clearAds} from 'redux/adsActions/adsActions';
-import {logoutAction} from 'redux/authSlice/authActions';
+import {deactivateUserAction, logoutAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
 };
-const UserProfile = ({user, logoutAction, clearAds}) => {
+const UserProfile = ({user, logoutAction, clearAds,deactivateUserAction}) => {
   const [modalOpen, setModalOpen] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const onClose = () => {
@@ -74,7 +74,13 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
     setIsLoading(true);
     let res = await logoutAction();
     setIsLoading(false);
-    clearAds();
+
+    if (res) navigation.dispatch(resetAction);
+  };
+  const handleDeactivate = async () => {
+    setIsLoading(true);
+    let res = await deactivateUserAction();
+    setIsLoading(false);
     if (res) navigation.dispatch(resetAction);
   };
   return (
@@ -90,11 +96,13 @@ const UserProfile = ({user, logoutAction, clearAds}) => {
           actionText="Yes, I'm sure"
         />
         <ConfirmationModal
+        isLoading={isLoading}
           title="Deactivate Account"
+          isLoadingText='Deactivating...'
           body="Are you sure you want to deactivate your account?"
           isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
           onClose={onClose}
-          handleAction={handleLogout}
+          handleAction={handleDeactivate}
         />
 
         <Center mt={10}>
@@ -152,16 +160,14 @@ const Card = ({name, icon, bg, onPress = null}) => (
     m={2}
     h={84}>
     <Pressable onPress={onPress}>
-
-        <Image
-          source={icon}
-          alt={name}
-          my={2}
-          h={7}
-          resizeMode="contain"
-          style={{aspectRatio: 1.1}}
-
-        />
+      <Image
+        source={icon}
+        alt={name}
+        my={2}
+        h={7}
+        resizeMode="contain"
+        style={{aspectRatio: 1.1}}
+      />
 
       <CustomText color={bg ? COLORS.white : COLORS.primary}>{name}</CustomText>
     </Pressable>
@@ -173,5 +179,6 @@ const mapStateToProps = state => ({
 const actions = {
   logoutAction,
   clearAds,
+  deactivateUserAction
 };
 export default connect(mapStateToProps, actions)(UserProfile);

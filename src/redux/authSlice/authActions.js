@@ -1,9 +1,9 @@
 import auth from '@react-native-firebase/auth';
 import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
-import {LOGIN_META, UPDATE_USER} from './authAPI';
+import {DEACTIVATE_ACCOUNT_META, LOGIN_META, UPDATE_USER} from './authAPI';
 import {addAuth, removeAuth, updateAuth} from './authSlice';
-export const loginWithToken =  authToken =>async dispatch=> {
+export const loginWithToken = authToken => async dispatch => {
   try {
     const {error, data} = await apiMethod({
       ...LOGIN_META,
@@ -17,7 +17,7 @@ export const loginWithToken =  authToken =>async dispatch=> {
     }
     console.log({data});
     const {token, ...userData} = data.user;
-     d = {
+    d = {
       authToken: token,
       user: {
         ...userData,
@@ -32,7 +32,7 @@ export const loginWithToken =  authToken =>async dispatch=> {
     });
     // await sleep(1000);
 
-    return {error, data:d};
+    return {error, data: d};
   } catch (error) {
     return {error};
   }
@@ -48,7 +48,7 @@ export const loginAction =
       // const {user}=await auth().currentUser()
       let authToken = await user.getIdToken();
       const {error, data} = await dispatch(loginWithToken(authToken));
-      if (error){
+      if (error) {
         throw new Error(error);
       }
       return {data};
@@ -196,8 +196,24 @@ export const updateUserAction = data => async dispatch => {
 };
 export const deactivateUserAction = () => async dispatch => {
   try {
-    const user = auth().currentUser;
-  } catch (error) {}
+    const resp = await apiMethod(DEACTIVATE_ACCOUNT_META);
+    if (resp.error) {
+      throw new Error(resp.error);
+    }
+    Toast.show({
+      type: 'success',
+      text1: 'Account Deactivated',
+      text2: 'Your account has been deactivated',
+    });
+    dispatch(removeAuth());
+  } catch (error) {
+    console.log({error})
+    Toast.show({
+      type: 'error',
+      text1: 'Unable to deactivate account',
+      text2: error?.userInfo?.message || error,
+    });
+  }
 };
 
 export const passwordResetEmailAction = email => async () => {
@@ -254,8 +270,9 @@ export const updateProfileAction = formData => async dispatch => {
       text1: 'Profile Updated',
       text2: 'Your profile has been updated successfully',
     });
+    console.log({data})
 
-    dispatch(updateAuth({user: data.updatedUser}));
+    dispatch(updateAuth( data.updatedUser));
     return {data};
   } catch (error) {
     console.log({error});

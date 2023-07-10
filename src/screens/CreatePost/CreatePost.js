@@ -135,7 +135,7 @@ function CreatePost({
     formData.append('description', state.description);
     formData.append('email', state.email);
     formData.append('phone', state.phone);
-    formData.append('file', {...image, name: image.fileName});
+    if (image) formData.append('file', {...image, name: image.fileName});
     setState(p => ({...p, isLoading: true}));
 
     const {data, error} = await createAdAction(formData);
@@ -157,12 +157,14 @@ function CreatePost({
           }}
           px={3}
           buttonProps={{
-            isDisabled: !state.description.trim() || !image,
+            isDisabled: !state.description.trim() || !selectedCategories.length,
             onPress: handleSubmitData,
             isLoading: state.isLoading,
           }}
           bg={
-            state.isLoading || !state.description.trim() || !image
+            state.isLoading ||
+            !state.description.trim() ||
+            !selectedCategories.length
               ? COLORS.muted
               : 'success.700'
           }>
@@ -274,7 +276,7 @@ function CreatePost({
       </KeyboardAvoidingInputWrapper>
       {image && (
         <CustomText
-        {...(state.isLoading ? {pointerEvents: 'none'} : {})}
+          {...(state.isLoading ? {pointerEvents: 'none'} : {})}
           textAlign="center"
           underline
           color="blue.500"
@@ -301,7 +303,13 @@ function CreatePost({
         //   </HStack>
         // </Box>
       )}
-      <Box {...(state.isLoading ? {pointerEvents: 'none'} : {})} bg="white" flex={1} borderTopRadius={30} mt={5} pb={5}>
+      <Box
+        {...(state.isLoading ? {pointerEvents: 'none'} : {})}
+        bg="white"
+        flex={1}
+        borderTopRadius={30}
+        mt={5}
+        pb={5}>
         <>
           <Center>
             <CustomText fontSize="sm" color={COLORS.muted} my={2}>
@@ -322,7 +330,7 @@ function CreatePost({
           )}
         </>
       </Box>
-      <Box {...(state.isLoading ? {pointerEvents: 'none'} : {})} >
+      <Box {...(state.isLoading ? {pointerEvents: 'none'} : {})}>
         <ContactModal
           handleChange={handleChange}
           initialValues={{email: state.email, phone: state.phone}}

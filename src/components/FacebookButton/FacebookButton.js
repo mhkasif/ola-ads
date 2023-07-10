@@ -10,9 +10,11 @@ import {loginWithToken} from 'redux/authSlice/authActions';
 import Toast from 'react-native-toast-message';
 
 const FacebookButton = props => {
+  const {setIsLoading}=props
   const onFacebookButtonPress = async () => {
     try {
       // Attempt login with permissions
+      setIsLoading(true)
       const result = await LoginManager.logInWithPermissions([
         'public_profile',
         'email',
@@ -38,12 +40,14 @@ const FacebookButton = props => {
       const authToken = await user.user.getIdToken();
       const {error, data} = await props.loginWithToken(authToken);
       if (error) throw new Error(error);
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       Toast.show({
         type: 'error',
-        text1: 'Error',
-        text2: error.message,
-      });
+        text1: 'Log In Failed',
+        text2: error.nativeErrorMessage||error.message
+      })
       console.log({error});
     }
   };

@@ -1,11 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {combineReducers} from 'redux';
-import {persistReducer} from 'redux-persist';
+import { MMKV } from 'react-native-mmkv';
+import { initializeMMKVFlipper } from 'react-native-mmkv-flipper-plugin';
+import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
-import AuthReducer from './authSlice/authSlice';
 import AdsReducer from './adsActions/adsSlice';
-import {initializeMMKVFlipper} from 'react-native-mmkv-flipper-plugin';
-import {MMKV} from 'react-native-mmkv';
+import AuthReducer from './authSlice/authSlice';
 export const storage = new MMKV();
 export const reduxStorage = {
   setItem: (key, value) => {
@@ -32,7 +31,18 @@ const rootReducer = combineReducers({
   ads: AdsReducer,
 });
 
-export const persistedReducer = persistReducer(persistConfig, rootReducer);
+const Reducers = (state, action) => {
+  console.log({action});
+  if (action.type === 'auth/removeAuth') {
+    // for all keys defined in your persistConfig(s)
+    storage.delete('persist:root');
+    // storage.removeItem('persist:otherKey')
+
+    return rootReducer(undefined, action);
+  }
+  return rootReducer(state, action);
+};
+export const persistedReducer = persistReducer(persistConfig, Reducers);
 
 const mw = [thunk];
 if (__DEV__) {
@@ -42,4 +52,5 @@ if (__DEV__) {
 }
 
 const middleware = mw;
-export {middleware};
+export { middleware };
+

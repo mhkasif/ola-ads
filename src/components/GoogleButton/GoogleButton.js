@@ -1,17 +1,16 @@
 import CustomText from '@components/CustomText/CustomText';
-import {
-  GoogleSignin
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Google from 'assets/google-btn-logo.png';
-import { Button, Center, HStack, Image } from 'native-base';
-import React, { useEffect } from 'react';
+import {Button, Center, HStack, Image} from 'native-base';
+import React, {useEffect} from 'react';
 
 import auth from '@react-native-firebase/auth';
-import { connect } from 'react-redux';
-import { loginWithToken } from 'redux/authSlice/authActions';
+import {connect} from 'react-redux';
+import {loginWithToken} from 'redux/authSlice/authActions';
+import Toast from 'react-native-toast-message';
 
 const GoogleButton = props => {
-  const [state, setState] = React.useState({});
+  const {setIsLoading} = props;
   // 1077115806182-tdc7qof16mpke7ok6qlrqslfnad9p18k.apps.googleusercontent.com
   useEffect(() => {
     GoogleSignin.configure({
@@ -22,6 +21,7 @@ const GoogleButton = props => {
   const signIn = async () => {
     // Check if your device supports Google Play
     try {
+      setIsLoading(true);
       console.log(
         await GoogleSignin.hasPlayServices({
           showPlayServicesUpdateDialog: true,
@@ -39,7 +39,15 @@ const GoogleButton = props => {
       const authToken = await user.user.getIdToken();
       const {error, data} = await props.loginWithToken(authToken);
       console.log({error, data});
+      if (error) throw new Error(error);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: 'Log In Failed',
+        text2: error.nativeErrorMessage || error.message,
+      });
       console.log({error});
     }
   };
@@ -89,7 +97,6 @@ const GoogleButton = props => {
       shadowColor="#000"
       shadowOffset={{width: 0, height: 2}}
       onPress={signIn}
-      disabled={state.isSigninInProgress}
       shadowOpacity={0.3}>
       <Center>
         <HStack>
