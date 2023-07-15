@@ -36,7 +36,7 @@ const AppContainer = props => {
           </Provider>
         </NavigationContainer>
         {/* </LinearGradient> */}
-        {/* </StripeProvider> */}
+
       </NativeBaseProvider>
     </>
   );

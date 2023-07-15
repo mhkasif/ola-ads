@@ -14,8 +14,11 @@ const GoogleButton = props => {
   // 1077115806182-tdc7qof16mpke7ok6qlrqslfnad9p18k.apps.googleusercontent.com
   useEffect(() => {
     GoogleSignin.configure({
+      iosClientId:
+        '245208965834-9n1kka698ephntm27muvkkps61mpqgt5.apps.googleusercontent.com',
       webClientId:
-        '804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com',
+        // '804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com',
+        '245208965834-mevg11birill0tivsri7d72tjgotls16.apps.googleusercontent.com',
     });
   }, []);
   const signIn = async () => {

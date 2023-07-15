@@ -1,34 +1,49 @@
 {
   "project_info": {
-    "project_number": "804058128507",
-    "project_id": "ola-ads-f37ba",
-    "storage_bucket": "ola-ads-f37ba.appspot.com"
+    "project_number": "245208965834",
+    "project_id": "ola-ads-bb62f",
+    "storage_bucket": "ola-ads-bb62f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:804058128507:android:816425d18b1a021074c2de",
+        "mobilesdk_app_id": "1:245208965834:android:9376f3c8ffe2ed06b20a33",
         "android_client_info": {
           "package_name": "com.ola"
         }
       },
       "oauth_client": [
         {
-          "client_id": "804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com",
+          "client_id": "245208965834-m1p72n5n130606k31cp7tdho48od9vfe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ola",
+            "certificate_hash": "bcbc2ac5cf7eb8308ce4b62c630e51744e7460aa"
+          }
+        },
+        {
+          "client_id": "245208965834-ptvhko6bm33tj9dr0hhjq1756umnr1dv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBRNTjbge_XEzzRhN08LtklZPjSUQfits"
+          "current_key": "AIzaSyB6p3sez3XlfBRuvfuh3yTO-8CHdCrFW_w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com",
+              "client_id": "245208965834-mevg11birill0tivsri7d72tjgotls16.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "245208965834-9n1kka698ephntm27muvkkps61mpqgt5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ola"
+              }
             }
           ]
         }
@@ -36,36 +51,51 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:804058128507:android:f35a6f3fdc82736074c2de",
+        "mobilesdk_app_id": "1:245208965834:android:ef33d6143f87a54eb20a33",
         "android_client_info": {
-          "package_name": "com.olaa"
+          "package_name": "com.olaAds"
         }
       },
       "oauth_client": [
         {
-          "client_id": "804058128507-6ikero66sa78c29uhltrcricuiq261e8.apps.googleusercontent.com",
+          "client_id": "245208965834-77g3pfmcn5ovlooafr8nc71bmf3qft8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.olaa",
+            "package_name": "com.olaAds",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com",
+          "client_id": "245208965834-e3h5f5fqbip665or6a2u8p1sqvu1dl93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.olaAds",
+            "certificate_hash": "bcbc2ac5cf7eb8308ce4b62c630e51744e7460aa"
+          }
+        },
+        {
+          "client_id": "245208965834-ptvhko6bm33tj9dr0hhjq1756umnr1dv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBRNTjbge_XEzzRhN08LtklZPjSUQfits"
+          "current_key": "AIzaSyB6p3sez3XlfBRuvfuh3yTO-8CHdCrFW_w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "804058128507-qfqu0l7cv05nsubiqpbjh2c47dqmml6m.apps.googleusercontent.com",
+              "client_id": "245208965834-mevg11birill0tivsri7d72tjgotls16.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "245208965834-9n1kka698ephntm27muvkkps61mpqgt5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ola"
+              }
             }
           ]
         }
