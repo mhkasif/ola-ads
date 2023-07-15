@@ -2,6 +2,7 @@ import CustomButton from '@components/CustomButton/CustomButton';
 import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
 import FacebookButton from '@components/FacebookButton/FacebookButton';
+import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 import YUP from '@components/YUP/YUP';
@@ -20,6 +21,7 @@ import {
   StatusBar,
   VStack,
 } from 'native-base';
+import {useState} from 'react';
 import {connect} from 'react-redux';
 import {signupAction} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from '../screenNames';
@@ -61,6 +63,8 @@ const fields = [
 ];
 const SignupScreen = ({signupAction}) => {
   const {navigate, ...navigation} = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+
   const initialValues = fields.reduce((acc, field) => {
     if (field.name === 'fullName') acc[field.name] = '';
     if (field.name === 'email') acc[field.name] = '';
@@ -91,6 +95,8 @@ const SignupScreen = ({signupAction}) => {
       style={{
         flex: 1,
       }}>
+      {isLoading && <FullScreenLoader />}
+
       <StatusBar />
       <Box
         bg={{
@@ -193,8 +199,8 @@ const SignupScreen = ({signupAction}) => {
               </Box>
 
               <HStack space={3} justifyContent="center">
-                <FacebookButton w="45%" />
-                <GoogleButton w="45%" />
+                <FacebookButton w="45%" setIsLoading={setIsLoading} />
+                <GoogleButton w="45%" setIsLoading={setIsLoading} />
               </HStack>
             </Box>
           </Center>
