@@ -85,6 +85,7 @@ const GoogleButton = props => {
     // />
     <Button
       {...props}
+      flex={1}
       bg="#fff"
       _hover={{bg: '#fff'}}
       _active={{bg: '#fff'}}

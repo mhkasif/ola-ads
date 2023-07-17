@@ -3,12 +3,14 @@ import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
 import {DEACTIVATE_ACCOUNT_META, LOGIN_META, UPDATE_USER} from './authAPI';
 import {addAuth, removeAuth, updateAuth} from './authSlice';
-export const loginWithToken = authToken => async dispatch => {
+export const loginWithToken = (authToken, type, fullName) => async dispatch => {
   try {
     const {error, data} = await apiMethod({
       ...LOGIN_META,
       params: {
         accessToken: authToken,
+        //spread fullName if we have it
+        ...(fullName ? {fullName} : {}),
       },
     });
     let d;
@@ -21,6 +23,7 @@ export const loginWithToken = authToken => async dispatch => {
       authToken: token,
       user: {
         ...userData,
+        isNew: type === 'signup',
       },
     };
     dispatch(addAuth(d));
@@ -207,7 +210,7 @@ export const deactivateUserAction = () => async dispatch => {
     });
     dispatch(removeAuth());
   } catch (error) {
-    console.log({error})
+    console.log({error});
     Toast.show({
       type: 'error',
       text1: 'Unable to deactivate account',
@@ -270,9 +273,9 @@ export const updateProfileAction = formData => async dispatch => {
       text1: 'Profile Updated',
       text2: 'Your profile has been updated successfully',
     });
-    console.log({data})
+    console.log({data});
 
-    dispatch(updateAuth( data.updatedUser));
+    dispatch(updateAuth(data.updatedUser));
     return {data};
   } catch (error) {
     console.log({error});

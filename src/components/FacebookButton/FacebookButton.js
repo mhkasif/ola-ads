@@ -10,7 +10,7 @@ import {loginWithToken} from 'redux/authSlice/authActions';
 import Toast from 'react-native-toast-message';
 
 const FacebookButton = props => {
-  const {setIsLoading}=props
+  const {setIsLoading,type}=props
   const onFacebookButtonPress = async () => {
     try {
       // Attempt login with permissions
@@ -38,7 +38,7 @@ const FacebookButton = props => {
       // Sign-in the user with the credential
       const user = await auth().signInWithCredential(facebookCredential);
       const authToken = await user.user.getIdToken();
-      const {error, data} = await props.loginWithToken(authToken);
+      const {error, data} = await props.loginWithToken(authToken,type);
       if (error) throw new Error(error);
       setIsLoading(false)
     } catch (error) {
@@ -57,6 +57,7 @@ const FacebookButton = props => {
   return (
     <Button
       {...props}
+      flex={1}
       onPress={onFacebookButtonPress}
       bg="#fff"
       _hover={{bg: '#fff'}}

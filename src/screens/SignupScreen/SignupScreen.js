@@ -1,3 +1,4 @@
+import AppleButton from '@components/AppleButton/AppleButton';
 import CustomButton from '@components/CustomButton/CustomButton';
 import CustomInput from '@components/CustomInput/CustomInput';
 import CustomText from '@components/CustomText/CustomText';
@@ -6,10 +7,10 @@ import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 import YUP from '@components/YUP/YUP';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {COLORS, linearGradient} from '@utils/colors';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { COLORS, linearGradient } from '@utils/colors';
 import Logo from 'assets/logo.png';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import {
   Box,
   Center,
@@ -21,10 +22,11 @@ import {
   StatusBar,
   VStack,
 } from 'native-base';
-import {useState} from 'react';
-import {connect} from 'react-redux';
-import {signupAction} from 'redux/authSlice/authActions';
-import {SCREEN_NAMES} from '../screenNames';
+import { useState } from 'react';
+import { Platform } from 'react-native';
+import { connect } from 'react-redux';
+import { signupAction } from 'redux/authSlice/authActions';
+import { SCREEN_NAMES } from '../screenNames';
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
   fullName: YUP.string().required('Full name is required.'),
@@ -197,10 +199,22 @@ const SignupScreen = ({signupAction}) => {
                 </CustomText>
                 <Divider w="45%" borderColor="gray.300" />
               </Box>
-
+              {Platform.OS === 'ios' && (
+                <Box>
+                  <AppleButton type="signup" w="100%" setIsLoading={setIsLoading} />
+                </Box>
+              )}
               <HStack space={3} justifyContent="center">
-                <FacebookButton w="45%" setIsLoading={setIsLoading} />
-                <GoogleButton w="45%" setIsLoading={setIsLoading} />
+                <FacebookButton
+                  type="signup"
+                  w="45%"
+                  setIsLoading={setIsLoading}
+                />
+                <GoogleButton
+                  type="signup"
+                  w="45%"
+                  setIsLoading={setIsLoading}
+                />
               </HStack>
             </Box>
           </Center>

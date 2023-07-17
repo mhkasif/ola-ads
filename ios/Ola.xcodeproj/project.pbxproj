@@ -13,7 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		6FE6155A1E8D5839150E2256 /* libPods-Ola.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A475F5CC6264C87E99050A96 /* libPods-Ola.a */; };
 		9ADF048D052AE5BAF279D4ED /* libPods-Ola-OlaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D0A07DA6F29EA9FA761CBD /* libPods-Ola-OlaTests.a */; };
-		C46040E12A5D918B005EE3D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C46040E02A5D918B005EE3D4 /* GoogleService-Info.plist */; };
+		C47847112A64F8EB00CAA46B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C47847102A64F8EB00CAA46B /* GoogleService-Info.plist */; };
 		C48715712A4A8BF90014AE6C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C48715702A4A8BF90014AE6C /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +43,7 @@
 		65D0A07DA6F29EA9FA761CBD /* libPods-Ola-OlaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Ola-OlaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A475F5CC6264C87E99050A96 /* libPods-Ola.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Ola.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C40E65C32A49DD5D008A1AC8 /* Ola.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Ola.entitlements; path = Ola/Ola.entitlements; sourceTree = "<group>"; };
-		C46040E02A5D918B005EE3D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Users/mhk/Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C47847102A64F8EB00CAA46B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Users/mhk/Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C48715702A4A8BF90014AE6C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		EB40864F406AB6D9072C74DF /* Pods-Ola-OlaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ola-OlaTests.release.xcconfig"; path = "Target Support Files/Pods-Ola-OlaTests/Pods-Ola-OlaTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -120,7 +120,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				C46040E02A5D918B005EE3D4 /* GoogleService-Info.plist */,
+				C47847102A64F8EB00CAA46B /* GoogleService-Info.plist */,
 				C43BB9F42A48773C0005A170 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* Ola */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -258,7 +258,7 @@
 			files = (
 				C48715712A4A8BF90014AE6C /* Launch Screen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				C46040E12A5D918B005EE3D4 /* GoogleService-Info.plist in Resources */,
+				C47847112A64F8EB00CAA46B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

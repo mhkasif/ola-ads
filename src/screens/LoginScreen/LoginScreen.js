@@ -21,12 +21,14 @@ import {
 import { connect } from 'react-redux';
 import { loginAction } from 'redux/authSlice/authActions';
 
+import AppleButton from '@components/AppleButton/AppleButton';
 import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 import YUP from '@components/YUP/YUP';
 import { StackActions } from '@react-navigation/native';
 import { linearGradient } from '@utils/colors';
 import { useState } from 'react';
+import { Platform } from 'react-native';
 import { SCREEN_NAMES } from '../screenNames';
 
 // ...
@@ -198,10 +200,14 @@ const LoginScreen = ({loginAction}) => {
                 </CustomText>
                 <Divider w="45%" borderColor="gray.300" />
               </Box>
-
+              {Platform.OS === 'ios' && (
+                <Box>
+                  <AppleButton w="100%" setIsLoading={setIsLoading} />
+                </Box>
+              )}
               <HStack space={3} justifyContent="center">
-                <FacebookButton w="45%" setIsLoading={setIsLoading} />
-                <GoogleButton w="45%" setIsLoading={setIsLoading} />
+                <FacebookButton setIsLoading={setIsLoading} />
+                <GoogleButton setIsLoading={setIsLoading} />
               </HStack>
             </Box>
           </Center>
