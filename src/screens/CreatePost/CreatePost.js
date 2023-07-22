@@ -32,11 +32,13 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect} from 'react-redux';
 import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
 import {sleep} from '@utils/helpers';
+import {Calendar} from 'react-native-calendars';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
   VIEW_IMAGE: 'VIEW_IMAGE',
+  CALENDAR: 'CALENDAR',
 };
 function CreatePost({
   user,
@@ -50,11 +52,12 @@ function CreatePost({
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
+  // const [selectedDate, setSelectedDate] = useState([]);
   const {goBack} = useNavigation();
   const [state, setState] = useState({
     description: '',
     isLoading: false,
-    schedule_date: '',
+    schedule_date: [],
     email: user?.email,
     phone: user?.phone || '',
   });
@@ -93,15 +96,8 @@ function CreatePost({
   const handleChange = useCallback((value, name) => {
     setState(p => ({...p, [name]: value}));
   }, []);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
 
   const handleImageSelect = async images => {
     console.log(images[0]);
@@ -126,11 +122,15 @@ function CreatePost({
         formData.append(`categories[]`, item);
       });
     }
-    if (state.schedule_date)
-      formData.append(
-        'schedule_date',
-        new Date(state.schedule_date).toISOString(),
-      );
+    if (state.schedule_date.length){
+      state.schedule_date.forEach((item, i) => {
+        formData.append(`schedule_date[]`, new Date(item).toISOString());
+      });
+    }
+      // formData.append(
+      //   'schedule_date',
+      //   new Date(state.schedule_date).toISOString(),
+      // );
 
     formData.append('description', state.description);
     formData.append('email', state.email);
@@ -143,11 +143,7 @@ function CreatePost({
 
     setState(p => ({...p, isLoading: false}));
   };
-  const handleSelectDate = async date => {
-    console.log({date});
-    setState(p => ({...p, schedule_date: date}));
-    hideDatePicker();
-  };
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -190,7 +186,15 @@ function CreatePost({
   useEffect(() => {
     fetchCategories();
   }, []);
-
+  const setScheduleDate = p => {
+    setState(prev => {
+      let sd = prev.schedule_date;
+      if (sd.includes(p)) {
+        return {...prev, schedule_date: sd.filter(item => item !== p)};
+      }
+      return {...prev, schedule_date: [...sd, p]};
+    });
+  };
   return (
     <>
       <KeyboardAvoidingInputWrapper>
@@ -199,7 +203,7 @@ function CreatePost({
             pt={5}
             px={4}
             {...(state.isLoading ? {pointerEvents: 'none'} : {})}>
-            <DateTimePickerModal
+            {/* <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="datetime"
               date={
@@ -209,8 +213,13 @@ function CreatePost({
               onCancel={hideDatePicker}
               minimumDate={new Date()}
               accentColor="red"
+            /> */}
+            <ScheduleDateModal
+              isOpen={openModal === MODAL_NAMES.CALENDAR}
+              selectedDate={state.schedule_date}
+              setScheduleDate={setScheduleDate}
+              onClose={onClose}
             />
-
             <Box h="65%">
               <VStack>
                 {fields.map((field, index) => (
@@ -253,7 +262,7 @@ function CreatePost({
                   {
                     title: 'Schedule Post',
                     buttonProps: {
-                      onPress: showDatePicker,
+                      onPress: onOpen(MODAL_NAMES.CALENDAR),
                       leftIcon: (
                         <Icon
                           as={MaterialIcon}
@@ -532,6 +541,49 @@ const ContactModal = ({
           </Modal.Content>
         )}
       </Formik>
+    </Modal>
+  );
+};
+const ScheduleDateModal = ({isOpen, setScheduleDate, selectedDate,onClose}) => {
+  const selectedDateFunc = () => {
+    let obj = {};
+    selectedDate.forEach((item, i) => {
+      obj[item] = {selected: true, selectedColor: COLORS.primary};
+    });
+    return obj;
+  };
+  return (
+    <Modal isOpen={isOpen} size="lg" >
+      <Modal.Content>
+        <Modal.CloseButton onPress={onClose} />
+        <Modal.Header>Schedule Date</Modal.Header>
+        <Modal.Body>
+          <Calendar
+            // Customize the appearance of the calendar
+            style={{
+              // borderWidth: 1,
+              // borderColor: 'gray',
+              // height: 350,
+            }}
+            theme={{
+              selectedDayBackgroundColor: COLORS.primary,
+            }}
+            // Specify the current date
+            current={new Date()}
+            minDate={new Date()}
+            // Callback that gets called when the user selects a day
+            onDayPress={day => {
+              console.log('selected day', day);
+              setScheduleDate(day.dateString);
+            }}
+            // Mark specific dates as marked
+            markedDates={
+              selectedDateFunc()
+              // '2023-07-24': {selected: true,},
+            }
+          />
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 };

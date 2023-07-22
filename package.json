@@ -31,6 +31,7 @@
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-native": "0.71.7",
+    "react-native-calendars": "^1.1300.0",
     "react-native-fbsdk-next": "^11.2.1",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-gradle-plugin": "^0.71.17",

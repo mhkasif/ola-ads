@@ -442,6 +442,8 @@ PODS:
     - FBSDKGamingServicesKit (~> 15.0.0)
     - FBSDKShareKit (~> 15.0.0)
     - React-Core
+  - react-native-flipper (0.192.0):
+    - React-Core
   - react-native-flipper-performance-plugin (0.4.0):
     - React-Core
     - react-native-flipper-performance-plugin/FBDefines (= 0.4.0)
@@ -636,6 +638,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
+  - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-flipper-performance-plugin (from `../node_modules/react-native-flipper-performance-plugin`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
@@ -753,6 +756,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
+  react-native-flipper:
+    :path: "../node_modules/react-native-flipper"
   react-native-flipper-performance-plugin:
     :path: "../node_modules/react-native-flipper-performance-plugin"
   react-native-image-picker:
@@ -874,6 +879,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9885f6f94d231b95a739ef7bb50536fb87ce7539
   React-logger: 3f8ebad1be1bf3299d1ab6d7f971802d7395c7ef
   react-native-fbsdk-next: 5291a5d67aab4e649d072c50988033ff0d05b915
+  react-native-flipper: 1ff68d2514c4c3f3577c8d528419488f2394c553
   react-native-flipper-performance-plugin: 42ec5017abd26e7c5a1f527f2db92c14a90cabdb
   react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-mmkv: 7da5e18e55c04a9af9a7e0ab9792a1e8d33765a1
