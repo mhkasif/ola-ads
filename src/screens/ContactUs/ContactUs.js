@@ -8,7 +8,9 @@ import {COLORS} from '@utils/colors';
 const ContactUs = () => {
   return (
     <Box>
-      <Heading size="2xl" m={4}>Get In Touch</Heading>
+      <Heading size="2xl" m={4}>
+        Get In Touch
+      </Heading>
 
       <Box mt={5} pl={4} bg="white" py={5} px={2} mx={2}>
         <HStack alignItems="center">
@@ -31,7 +33,7 @@ const ContactUs = () => {
 
           <Heading size="sm">+44 7949891781</Heading>
         </HStack>
-        <HStack alignItems="center" >
+        <HStack alignItems="center">
           <Icon
             as={MaterialIcon}
             name="place"
