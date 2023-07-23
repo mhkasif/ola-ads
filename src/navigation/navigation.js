@@ -8,6 +8,7 @@ import PostScreen from 'screens/PostScreen/PostScreen';
 import { SCREEN_NAMES } from 'screens/screenNames';
 import AuthStackNavigator from './AuthStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
+import ContactUs from 'screens/ContactUs/ContactUs';
 const header = ({route: {name}, ...props}) => (
   <CustomHeader title={name} {...props} />
 );
@@ -57,6 +58,13 @@ const RootNavigator = () => {
           <Stack.Screen
             name={SCREEN_NAMES.POST_DETAILS}
             component={PostScreen}
+            options={{
+              header,
+            }}
+          />
+          <Stack.Screen
+            name={SCREEN_NAMES.CONTACT}
+            component={ContactUs}
             options={{
               header,
             }}

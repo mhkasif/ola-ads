@@ -29,7 +29,7 @@ const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
 };
-const UserProfile = ({user, logoutAction, clearAds,deactivateUserAction}) => {
+const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
   const [modalOpen, setModalOpen] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const onClose = () => {
@@ -57,7 +57,12 @@ const UserProfile = ({user, logoutAction, clearAds,deactivateUserAction}) => {
       icon: Plan,
       onPress: () => navigate(SCREEN_NAMES.PLANS),
     },
-    {name: 'Contact Us', icon: Phone},
+    {
+      name: 'Contact Us',
+      icon: Phone,
+      onPress: () => navigate(SCREEN_NAMES.CONTACT),
+    },
+
     {
       name: 'Terms & Conditions',
       icon: Terms,
@@ -96,9 +101,9 @@ const UserProfile = ({user, logoutAction, clearAds,deactivateUserAction}) => {
           actionText="Yes, I'm sure"
         />
         <ConfirmationModal
-        isLoading={isLoading}
+          isLoading={isLoading}
           title="Deactivate Account"
-          isLoadingText='Deactivating...'
+          isLoadingText="Deactivating..."
           body="Are you sure you want to deactivate your account?"
           isOpen={modalOpen === MODAL_NAMES.DEACTIVATE}
           onClose={onClose}
@@ -179,6 +184,6 @@ const mapStateToProps = state => ({
 const actions = {
   logoutAction,
   clearAds,
-  deactivateUserAction
+  deactivateUserAction,
 };
 export default connect(mapStateToProps, actions)(UserProfile);
