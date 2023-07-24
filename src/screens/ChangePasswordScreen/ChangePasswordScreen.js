@@ -155,6 +155,6 @@ const actions = {
 connect(null, actions)(PasswordScreen);
 const ChangePasswordScreen=()=>{
   const auth=useSelector(state=>state.auth)
-  return auth?.user?.provider?<CustomText m={4} fontSize="lg">You cannot change your password since you are login using {auth?.user?.provider?.split(".")[0]}</CustomText>:<PasswordScreen updatePasswordAction={updatePasswordAction} />
+  return auth?.user?.provider?<CustomText m={4} fontSize="lg">You cannot change your password since you are login using {auth?.user?.provider?.split(".")?.[0]}</CustomText>:<PasswordScreen updatePasswordAction={updatePasswordAction} />
 }
 export default ChangePasswordScreen
