@@ -1,9 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {Box, Flex, HStack, Heading, Icon} from 'native-base';
-import CustomText from '@components/CustomText/CustomText';
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import {COLORS} from '@utils/colors';
+import { COLORS } from '@utils/colors';
+import { Box, HStack, Heading, Icon } from 'native-base';
+import React from 'react';
 
 const ContactUs = () => {
   return (
@@ -12,7 +10,7 @@ const ContactUs = () => {
         Get In Touch
       </Heading>
 
-      <Box mt={5} pl={4} bg="white" py={5} px={2} mx={2}>
+      <Box mt={5} pl={4} bg="white" py={5} px={2} mx={4}>
         <HStack alignItems="center">
           <Icon
             as={MaterialIcon}

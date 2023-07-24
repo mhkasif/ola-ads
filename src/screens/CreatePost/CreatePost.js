@@ -569,8 +569,8 @@ const ScheduleDateModal = ({isOpen, setScheduleDate, selectedDate,onClose}) => {
               selectedDayBackgroundColor: COLORS.primary,
             }}
             // Specify the current date
-            current={new Date()}
-            minDate={new Date()}
+            current={new Date().toISOString()}
+            minDate={new Date().toISOString()}
             // Callback that gets called when the user selects a day
             onDayPress={day => {
               console.log('selected day', day);
