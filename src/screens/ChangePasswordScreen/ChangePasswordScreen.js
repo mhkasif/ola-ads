@@ -9,7 +9,7 @@ import { Formik } from 'formik';
 import { Box, Divider } from 'native-base';
 import React, { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { updatePasswordAction } from 'redux/authSlice/authActions';
 const initialValues = {
   currentPassword: '',
@@ -30,7 +30,7 @@ const formValidation = YUP.object().shape({
   }),
 });
 
-const ChangePasswordScreen = ({updatePasswordAction}) => {
+const PasswordScreen = ({updatePasswordAction}) => {
   const {goBack} = useNavigation();
   const [oldPasswordVerified, setOldPasswordVerified] = useState({
     verified: false,
@@ -152,4 +152,9 @@ const ChangePasswordScreen = ({updatePasswordAction}) => {
 const actions = {
   updatePasswordAction,
 };
-export default connect(null, actions)(ChangePasswordScreen);
+connect(null, actions)(PasswordScreen);
+const ChangePasswordScreen=()=>{
+  const auth=useSelector(state=>state.auth)
+  return auth?.user?.provider?<CustomText m={4} fontSize="lg">You cannot change your password since you are login using {auth?.user?.provider?.split(".")[0]}</CustomText>:<PasswordScreen updatePasswordAction={updatePasswordAction} />
+}
+export default ChangePasswordScreen
