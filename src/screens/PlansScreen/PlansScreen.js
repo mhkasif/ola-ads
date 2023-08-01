@@ -9,6 +9,7 @@ import {
   Pressable,
   Radio,
   StatusBar,
+  Switch,
   VStack,
   useColorModeValue,
 } from 'native-base';
@@ -59,100 +60,53 @@ const ListOfPlansScreen = connect(
   const [loading, setLoading] = useState('');
   const [plansList, setPlansList] = useState([]);
   const {goBack} = useNavigation();
+  const [isYearly, setIsYearly] = useState(true);
 
   const openLink = async url => {
     try {
-      if (await InAppBrowser.isAvailable()) {
-        const result = await InAppBrowser.open(url, {
-          // iOS Properties
-          dismissButtonStyle: 'cancel',
-          preferredBarTintColor: '#0C0F3D',
-          preferredControlTintColor: 'white',
-          readerMode: false,
-          animated: true,
-          modalPresentationStyle: 'fullScreen',
-          modalTransitionStyle: 'coverVertical',
-          modalEnabled: true,
-          enableBarCollapsing: false,
-          // Android Properties
-          showTitle: true,
-          // toolbarColor: '#6200EE',
-          secondaryToolbarColor: 'black',
-          navigationBarColor: 'black',
-          navigationBarDividerColor: 'white',
-          enableUrlBarHiding: true,
-          enableDefaultShare: true,
-          forceCloseOnRedirection: false,
-          // Specify full animation resource identifier(package:anim/name)
-          // or only resource name(in case of animation bundled with app).
-          animations: {
-            startEnter: 'slide_in_right',
-            startExit: 'slide_out_left',
-            endEnter: 'slide_in_left',
-            endExit: 'slide_out_right',
-          },
-        });
-        console.log({result});
-        // await this.sleep(800);
-        // Alert.alert(JSON.stringify(result))
-      } else Linking.openURL(url);
+      // if (await InAppBrowser.isAvailable()) {
+      // const result = await InAppBrowser.open(url, {
+      //   // iOS Properties
+      //   dismissButtonStyle: 'cancel',
+      //   preferredBarTintColor: '#0C0F3D',
+      //   preferredControlTintColor: 'white',
+      //   readerMode: false,
+      //   animated: true,
+      //   modalPresentationStyle: 'fullScreen',
+      //   modalTransitionStyle: 'coverVertical',
+      //   modalEnabled: true,
+      //   enableBarCollapsing: false,
+      //   // Android Properties
+      //   showTitle: true,
+      //   // toolbarColor: '#6200EE',
+      //   secondaryToolbarColor: 'black',
+      //   navigationBarColor: 'black',
+      //   navigationBarDividerColor: 'white',
+      //   enableUrlBarHiding: true,
+      //   enableDefaultShare: true,
+      //   forceCloseOnRedirection: false,
+      //   // Specify full animation resource identifier(package:anim/name)
+      //   // or only resource name(in case of animation bundled with app).
+      //   animations: {
+      //     startEnter: 'slide_in_right',
+      //     startExit: 'slide_out_left',
+      //     endEnter: 'slide_in_left',
+      //     endExit: 'slide_out_right',
+      //   },
+      // });
+      // console.log({result});
+      // await this.sleep(800);
+      // Alert.alert(JSON.stringify(result))
+      // } else
+      Linking.openURL(url);
     } catch (error) {
       console.log({error});
       // Alert.alert(error.message)
     }
   };
-  // const initializePaymentSheet = async id => {
-  //   const ck = await createPaymentIntent(id);
-  //   console.log({paymentIntent, ck});
-  //   if (!paymentIntent && !ck) {
-  //     console.log('Payment Intent not found');
-  //     return;
-  //   }
-
-  //   const {error, paymentOption} = await initPaymentSheet({
-  //     paymentIntentClientSecret:
-  //       paymentIntent?.client_secret || ck.client_secret,
-  //     merchantDisplayName: 'Ola Ads',
-  //     customerEphemeralKeySecret: null,
-  //     googlePay: {
-  //       merchantCountryCode: 'US',
-  //       currencyCode: 'USD', // currency must be specified for setup mode
-  //       testEnv: true, // use test environment
-  //     },
-  //     // customerId: null,
-  //     // customFlow: true,
-  //     // allowsDelayedPaymentMethods: true,
-  //   });
-
-  //   console.log({error}, 'hello');
-  //   if (!error) {
-  //     setLoading(LOADING_TYPE.LOADING_PLAN);
-  //   }
-  //   return ck;
-  // };
   const openPaymentSheet = async id => {
     setLoading(LOADING_TYPE.LOADING_PLAN);
     try {
-      // if (subscription) {
-      //   const {data, error: err} = await confirmPaymentAction(
-      //     subscription.subscription_id,
-      //   );
-      //   if (data) {
-      //     console.log({data});
-      //     if (data.status !== 'active') {
-      //       throw new Error('Your Payment is in pending');
-      //     }
-      //     Toast.show({
-      //       type: 'success',
-      //       text1: 'Success',
-      //       text2: 'Your order is confirmed!',
-      //     });
-      //     await sleep(500);
-      //     return goBack();
-      //   }
-      //   if (err) throw new Error(err);
-      //   return goBack();
-      // }
       const {data, error} = await createSubscriptionAction(id);
       if (error) throw new Error(error);
 
@@ -182,60 +136,7 @@ const ListOfPlansScreen = connect(
       console.log({error});
     }
   };
-  // const openPaymentSheet = async id => {
-  //   try {
-  //     if (subscription) {
-  //       const {data, error: err} = await confirmPaymentAction(
-  //         subscription.subscription_id,
-  //       );
-  //       if (data) {
-  //         console.log({data});
-  //         if (data.status !== 'active') {
-  //           throw new Error('Your Payment is in pending');
-  //         }
-  //         Toast.show({
-  //           type: 'success',
-  //           text1: 'Success',
-  //           text2: 'Your order is confirmed!',
-  //         });
-  //         await sleep(500);
-  //         return goBack();
-  //       }
-  //     }
-  //     setLoading(LOADING_TYPE.LOADING_PLAN);
-  //     const ck = (await initializePaymentSheet(id)) || {};
-  //     const {error} = await presentPaymentSheet();
-  //     setLoading('');
-  //     if (error) {
-  //       console.log(`Error code: ${error.code}`, error.message);
-  //     } else {
-  //       console.log({ck, paymentIntent});
-  //       const {data, error} = await confirmPaymentAction(
-  //         ck.subscription_id || paymentIntent.subscription_id,
-  //       );
-  //       if (data) {
-  //         console.log({data});
-  //         if (data.status !== 'active') {
-  //           throw new Error('Your Payment is in pending');
-  //         }
-  //         Toast.show({
-  //           type: 'success',
-  //           text1: 'Success',
-  //           text2: 'Your order is confirmed!',
-  //         });
-  //         await sleep(500);
-  //         goBack();
-  //       }
-  //     }
-  //   } catch (error) {
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: 'Order Failed Payment',
-  //     });
-  //     console.error(error);
-  //     setLoading('');
-  //   }
-  // };
+
   const fetchPlans = async () => {
     setLoading(LOADING_TYPE.FETCHING_PLANS);
     const {data} = await getPlansAction();
@@ -249,6 +150,9 @@ const ListOfPlansScreen = connect(
     console.log({data});
     data && setPlansList([data]);
     setLoading('');
+  };
+  const changeSwitch = _ => {
+    setIsYearly(p => !p);
   };
   useEffect(() => {
     if (PLANS_TYPE.SUBSCRIPTION === type) {
@@ -269,18 +173,46 @@ const ListOfPlansScreen = connect(
             You have not subscribed to any plan yet. Please subscribe to a plan
           </CustomText>
         ) : (
-          <FlatList
-            estimatedItemSize={120}
-            data={plansList}
-            renderItem={({item}) => (
-              <RenderItem
-                type={type}
-                key={item.title}
-                {...item}
-                handlePayPress={openPaymentSheet}
+          <Box>
+            <HStack alignItems="center" justifyContent="center">
+              <CustomText
+                fontSize="lg"
+                bold
+                color={!isYearly ? COLORS.primary : COLORS.muted}>
+                Monthly
+              </CustomText>
+              <Switch
+                onToggle={changeSwitch}
+                isChecked={isYearly}
+                offTrackColor="muted.500"
+                onTrackColor="muted.500"
+                mx={3}
               />
-            )}
-          />
+              <CustomText
+                fontSize="lg"
+                bold
+                color={isYearly ? COLORS.primary : COLORS.muted}>
+                Yearly
+              </CustomText>
+            </HStack>
+
+            <FlatList
+              estimatedItemSize={120}
+              data={plansList.filter(
+                x =>
+                  (x.period === 'Yearly' && isYearly) ||
+                  (x.period === 'Monthly' && !isYearly),
+              )}
+              renderItem={({item}) => (
+                <RenderItem
+                  type={type}
+                  key={item.title}
+                  {...item}
+                  handlePayPress={openPaymentSheet}
+                />
+              )}
+            />
+          </Box>
         )}
       </VStack>
     </>
