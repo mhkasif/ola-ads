@@ -34,6 +34,7 @@ function AppleSignIn({loginWithToken, type, setIsLoading}) {
       const user =await auth().signInWithCredential(appleCredential);
       console.log({user})
       const authToken = await user.user.getIdToken();
+      console.log(user.user)
       const {error, data} = await loginWithToken(authToken, type,user.user.displayName);
       if (error) throw new Error(error);
       setIsLoading(false);

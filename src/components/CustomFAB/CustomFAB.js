@@ -17,9 +17,9 @@ const FAB = ({children, ...props}) => {
         end={{x: 1, y: 1}}
         // locations={[0.1747, 1.461]}
         >
-        {/* <CustomText selectable={false} onPress={handlePress} style={styles.title}> */}
+        <CustomText  onPress={handlePress} style={styles.title}>
           {children}
-        {/* </CustomText> */}
+        </CustomText>
       </LinearGradeientWrapper>
     </Pressable>
   );

@@ -1,6 +1,6 @@
 import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
-import { COLORS } from '@utils/colors';
-import { Box, HStack, Heading, Icon } from 'native-base';
+import {COLORS} from '@utils/colors';
+import {Box, HStack, Heading, Icon} from 'native-base';
 import React from 'react';
 
 const ContactUs = () => {
@@ -21,16 +21,6 @@ const ContactUs = () => {
 
           <Heading size="sm">info@Ola-Ads.com</Heading>
         </HStack>
-        <HStack alignItems="center" my={5}>
-          <Icon
-            as={MaterialIcon}
-            name="phone"
-            color={COLORS.primary}
-            mr={3}
-            size="2xl"></Icon>
-
-          <Heading size="sm">+44 7949891781</Heading>
-        </HStack>
         <HStack alignItems="center">
           <Icon
             as={MaterialIcon}
@@ -39,7 +29,9 @@ const ContactUs = () => {
             mr={3}
             size="2xl"></Icon>
 
-          <Heading size="sm">86-90 Paul Street, UK</Heading>
+          <Heading size="sm">
+            86-90 Paul Street, London, England, United Kingdom, EC2A 4NE
+          </Heading>
         </HStack>
       </Box>
     </Box>
