@@ -2,6 +2,7 @@ import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {COLORS} from '@utils/colors';
 import {Box, HStack, Heading, Icon} from 'native-base';
 import React from 'react';
+import { Linking } from 'react-native';
 
 const ContactUs = () => {
   return (
@@ -19,9 +20,9 @@ const ContactUs = () => {
             mr={3}
             size="2xl"></Icon>
 
-          <Heading size="sm">info@Ola-Ads.com</Heading>
+          <Heading size="sm" onPress={()=>Linking.openURL('mailto:info@Ola-Ads.com')}>info@Ola-Ads.com</Heading>
         </HStack>
-        <HStack alignItems="center">
+        <HStack alignItems="center" mt={4}>
           <Icon
             as={MaterialIcon}
             name="place"

@@ -174,7 +174,7 @@ const ListOfPlansScreen = connect(
           </CustomText>
         ) : (
           <Box>
-            <HStack alignItems="center" justifyContent="center">
+            {!type&&<HStack alignItems="center" justifyContent="center">
               <CustomText
                 fontSize="lg"
                 bold
@@ -194,7 +194,7 @@ const ListOfPlansScreen = connect(
                 color={isYearly ? COLORS.primary : COLORS.muted}>
                 Yearly
               </CustomText>
-            </HStack>
+            </HStack>}
 
             <FlatList
               estimatedItemSize={120}

@@ -6,10 +6,12 @@ const TermsAndCondition = () => {
   return (
     <ScrollView>
       <Box h="100%" w="100%" py={5} px={2}>
-        <CustomHeading my={2} size="lg">Terms and Conditions for Ola-Ads App</CustomHeading>
+        <CustomHeading my={2} size="lg">
+          Terms and Conditions for Ola-Ads App
+        </CustomHeading>
         <Box ml={2}>
           <Box>
-            <CustomHeading >1. Agreement</CustomHeading>
+            <CustomHeading>1. Agreement</CustomHeading>
             <CustomText>
               These Terms and Conditions ("Agreement") govern your use of the
               Ola-Ads mobile application ("App") provided by Ola Entertainment
@@ -37,7 +39,9 @@ const TermsAndCondition = () => {
                 your account credentials secure. You are responsible for all
                 activities that occur under your account.
               </CustomText>
-              <CustomHeading size="sm">3.2. Prohibited Activities</CustomHeading>
+              <CustomHeading size="sm">
+                3.2. Prohibited Activities
+              </CustomHeading>
               <CustomText>
                 You agree not to engage in any of the following activities while
                 using the App:
@@ -45,14 +49,12 @@ const TermsAndCondition = () => {
               <Box mx={2}>
                 <CustomText>
                   3.2.1. Violating any applicable laws, regulations, or
-                  third-party rights.
-                  3.2.2. Attempting to gain unauthorized
-                  access to the App or any related systems or networks.
-                  3.2.3. Interfering with or disrupting the functionality or security
-                  of the App.
-                  3.2.4. Uploading or transmitting any harmful or
-                  malicious content, including viruses or malware.
-                  3.2.5. Engaging in any fraudulent, deceptive, or harmful activities.
+                  third-party rights. 3.2.2. Attempting to gain unauthorized
+                  access to the App or any related systems or networks. 3.2.3.
+                  Interfering with or disrupting the functionality or security
+                  of the App. 3.2.4. Uploading or transmitting any harmful or
+                  malicious content, including viruses or malware. 3.2.5.
+                  Engaging in any fraudulent, deceptive, or harmful activities.
                   3.2.6. Prohibited activities include, but are not limited to:
                 </CustomText>
                 <Box mx={2}>
@@ -70,7 +72,7 @@ const TermsAndCondition = () => {
             </Box>
           </Box>
           <Box>
-            <CustomHeading >4. Intellectual Property</CustomHeading>
+            <CustomHeading>4. Intellectual Property</CustomHeading>
             <CustomText>
               The App and its content, including but not limited to text,
               graphics, images, logos, and software, are owned by Ola
@@ -81,11 +83,9 @@ const TermsAndCondition = () => {
               <CustomText>
                 4.1. Reproduce, copy, or modify the App or any portion of its
                 content without prior written consent from Ola Entertainment
-                LTD.
-                4.2. Distribute, display, or publish any part of the App or
+                LTD. 4.2. Distribute, display, or publish any part of the App or
                 its content without prior written consent from Ola Entertainment
-                LTD.
-                4.3. Use any data mining, scraping, or similar data
+                LTD. 4.3. Use any data mining, scraping, or similar data
                 gathering methods to extract information from the App.
               </CustomText>
             </Box>
@@ -101,7 +101,9 @@ const TermsAndCondition = () => {
               data protection laws.
             </CustomText>
             <Box ml={2}>
-              <CustomHeading>Ola Entertainment LTD's Privacy Policy:</CustomHeading>
+              <CustomHeading>
+                Ola Entertainment LTD's Privacy Policy:
+              </CustomHeading>
               <CustomText>
                 5.1 The types of personal information we collect from users,
                 such as name, email address, and demographic information.
@@ -135,7 +137,9 @@ const TermsAndCondition = () => {
             </Box>
           </Box>
           <Box>
-            <CustomHeading>6. Disclaimers and Limitations of Liability</CustomHeading>
+            <CustomHeading>
+              6. Disclaimers and Limitations of Liability
+            </CustomHeading>
             <Box ml={2}>
               <CustomHeading size="sm">6.1. Warranty Disclaimer</CustomHeading>
               <CustomText>
@@ -145,7 +149,9 @@ const TermsAndCondition = () => {
                 uninterrupted, error-free, or free from viruses or other harmful
                 components.
               </CustomText>
-              <CustomHeading size="sm">6.2. Limitation of Liability</CustomHeading>
+              <CustomHeading size="sm">
+                6.2. Limitation of Liability
+              </CustomHeading>
               <CustomText>
                 To the maximum extent permitted by law, Ola Entertainment LTD
                 shall not be liable for any direct, indirect, incidental,
@@ -188,11 +194,15 @@ const TermsAndCondition = () => {
             </CustomText>
           </Box>
           <Box>
-            <CustomHeading>10. Governing Law and Dispute Resolution</CustomHeading>
+            <CustomHeading>
+              10. Governing Law and Dispute Resolution
+            </CustomHeading>
             <CustomText>
               This Agreement shall be governed by and construed in accordance
               with the laws of Jurisdiction. Any disputes arising out of or
-              relating
+              relating to this Agreement shall be resolved through negotiation
+              or alternative dispute resolution methods agreed upon by both
+              parties.
             </CustomText>
           </Box>
         </Box>
@@ -202,6 +212,10 @@ const TermsAndCondition = () => {
 };
 
 export default TermsAndCondition;
-const CustomHeading=({children,size="md"})=>{
-  return<Heading my={2} size={size}>{children}</Heading>
-}
+const CustomHeading = ({children, size = 'md'}) => {
+  return (
+    <Heading my={2} size={size}>
+      {children}
+    </Heading>
+  );
+};

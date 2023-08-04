@@ -43,16 +43,6 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
 
   const cards = [
     {
-      name: 'Deactivate Account',
-      icon: User,
-      onPress: openModal(MODAL_NAMES.DEACTIVATE),
-    },
-    {
-      name: 'Change Password',
-      icon: Password,
-      onPress: () => navigate(SCREEN_NAMES.CHANGE_PASSWORD),
-    },
-    {
       name: 'Choose Your Plan',
       icon: Plan,
       onPress: () => navigate(SCREEN_NAMES.PLANS),
@@ -62,12 +52,24 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
       icon: Phone,
       onPress: () => navigate(SCREEN_NAMES.CONTACT),
     },
-
     {
       name: 'Terms & Conditions',
       icon: Terms,
       onPress: () => navigate(SCREEN_NAMES.Terms),
     },
+    {
+      name: 'Change Password',
+      icon: Password,
+      onPress: () => navigate(SCREEN_NAMES.CHANGE_PASSWORD),
+    },
+    {
+      name: 'Deactivate Account',
+      icon: User,
+      onPress: openModal(MODAL_NAMES.DEACTIVATE),
+    },
+
+
+
     {
       name: 'Logout',
       icon: Logout,
@@ -144,9 +146,6 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
             ))}
           </Flex>
         </Center>
-        <CustomText my={2} textAlign="center">
-          V_1.0.0
-        </CustomText>
       </ScrollView>
     </Box>
   );
