@@ -22,7 +22,13 @@ import MaterialIcon from '@components/MaterialIcon/MaterialIcon';
 import {PlanSkeleton} from '@components/Skeletons/Skeleton';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '@utils/colors';
-import {Dimensions, FlatList, Linking, StyleSheet} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Linking,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import {connect, useSelector} from 'react-redux';
@@ -43,6 +49,7 @@ const actions = {
   createSubscriptionAction,
   updateUserAction,
 };
+const isIOS = Platform.OS === 'ios';
 const PLANS_TYPE = {
   SUBSCRIPTION: 'SUBSCRIPTION',
   PLANS: 'PLANS',
@@ -55,7 +62,7 @@ const ListOfPlansScreen = connect(
   null,
   actions,
 )(({getPlansAction, createSubscriptionAction, type, updateUserAction}) => {
-  const {user} = useSelector(state => state.auth) || {};
+  const {user, authToken} = useSelector(state => state.auth) || {};
   const subscription = user?.subscription;
   const [loading, setLoading] = useState('');
   const [plansList, setPlansList] = useState([]);
@@ -64,41 +71,40 @@ const ListOfPlansScreen = connect(
 
   const openLink = async url => {
     try {
-      // if (await InAppBrowser.isAvailable()) {
-      // const result = await InAppBrowser.open(url, {
-      //   // iOS Properties
-      //   dismissButtonStyle: 'cancel',
-      //   preferredBarTintColor: '#0C0F3D',
-      //   preferredControlTintColor: 'white',
-      //   readerMode: false,
-      //   animated: true,
-      //   modalPresentationStyle: 'fullScreen',
-      //   modalTransitionStyle: 'coverVertical',
-      //   modalEnabled: true,
-      //   enableBarCollapsing: false,
-      //   // Android Properties
-      //   showTitle: true,
-      //   // toolbarColor: '#6200EE',
-      //   secondaryToolbarColor: 'black',
-      //   navigationBarColor: 'black',
-      //   navigationBarDividerColor: 'white',
-      //   enableUrlBarHiding: true,
-      //   enableDefaultShare: true,
-      //   forceCloseOnRedirection: false,
-      //   // Specify full animation resource identifier(package:anim/name)
-      //   // or only resource name(in case of animation bundled with app).
-      //   animations: {
-      //     startEnter: 'slide_in_right',
-      //     startExit: 'slide_out_left',
-      //     endEnter: 'slide_in_left',
-      //     endExit: 'slide_out_right',
-      //   },
-      // });
-      // console.log({result});
-      // await this.sleep(800);
-      // Alert.alert(JSON.stringify(result))
-      // } else
-      Linking.openURL(url);
+      if (!isIOS && (await InAppBrowser.isAvailable())) {
+        const result = await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#0C0F3D',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android Properties
+          showTitle: true,
+          // toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+        });
+        console.log({result});
+        // await this.sleep(800);
+        // Alert.alert(JSON.stringify(result))
+      } else Linking.openURL(url);
     } catch (error) {
       console.log({error});
       // Alert.alert(error.message)
@@ -159,7 +165,9 @@ const ListOfPlansScreen = connect(
       fetchSubscription();
     } else fetchPlans();
   }, []);
-
+  const handleAllPlans = () => {
+    Linking.openURL('http://localhost:3000/plans/' + authToken);
+  };
   return (
     <>
       {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
@@ -174,35 +182,41 @@ const ListOfPlansScreen = connect(
           </CustomText>
         ) : (
           <Box>
-            {!type&&<HStack alignItems="center" justifyContent="center">
-              <CustomText
-                fontSize="lg"
-                bold
-                color={!isYearly ? COLORS.primary : COLORS.muted}>
-                Monthly
-              </CustomText>
-              <Switch
-                onToggle={changeSwitch}
-                isChecked={isYearly}
-                offTrackColor="muted.500"
-                onTrackColor="muted.500"
-                mx={3}
-              />
-              <CustomText
-                fontSize="lg"
-                bold
-                color={isYearly ? COLORS.primary : COLORS.muted}>
-                Yearly
-              </CustomText>
-            </HStack>}
+            {!type && (
+              <HStack alignItems="center" justifyContent="center">
+                <CustomText
+                  fontSize="lg"
+                  bold
+                  color={!isYearly ? COLORS.primary : COLORS.muted}>
+                  Monthly
+                </CustomText>
+                <Switch
+                  onToggle={changeSwitch}
+                  isChecked={isYearly}
+                  offTrackColor="muted.500"
+                  onTrackColor="muted.500"
+                  mx={3}
+                />
+                <CustomText
+                  fontSize="lg"
+                  bold
+                  color={isYearly ? COLORS.primary : COLORS.muted}>
+                  Yearly
+                </CustomText>
+              </HStack>
+            )}
 
             <FlatList
               estimatedItemSize={120}
-              data={plansList.filter(
-                x =>
-                  (x.period === 'Yearly' && isYearly) ||
-                  (x.period === 'Monthly' && !isYearly),
-              )}
+              data={
+                PLANS_TYPE.SUBSCRIPTION === type
+                  ? plansList
+                  : plansList.filter(
+                      x =>
+                        (x.period === 'Yearly' && isYearly) ||
+                        (x.period === 'Monthly' && !isYearly),
+                    )
+              }
               renderItem={({item}) => (
                 <RenderItem
                   type={type}
@@ -212,6 +226,16 @@ const ListOfPlansScreen = connect(
                 />
               )}
             />
+          </Box>
+        )}
+        {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
+          <Box flex={1} justifyContent="flex-end">
+            <CustomButton
+              buttonProps={{
+                onPress: handleAllPlans,
+              }}>
+              See All Plans
+            </CustomButton>
           </Box>
         )}
       </VStack>
@@ -345,6 +369,9 @@ const renderScene = SceneMap({
   first: FirstRoute,
   second: SecondRoute,
 });
+const renderSceneIOS = SceneMap({
+  first: FirstRoute,
+});
 
 // function Plans() {
 //   const {width} = useWindowDimensions();
@@ -366,16 +393,25 @@ const renderScene = SceneMap({
 // }
 function Plans() {
   const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    {
-      key: 'first',
-      title: 'Subscribed',
-    },
-    {
-      key: 'second',
-      title: 'More Plans',
-    },
-  ]);
+  const [routes] = useState(
+    isIOS
+      ? [
+          {
+            key: 'first',
+            title: 'Subscribed',
+          },
+        ]
+      : [
+          {
+            key: 'first',
+            title: 'Subscribed',
+          },
+          {
+            key: 'second',
+            title: 'More Plans',
+          },
+        ],
+  );
 
   const renderTabBar = props => {
     // const inputRange = props.navigationState.routes.map((x, i) => i);
@@ -425,7 +461,7 @@ function Plans() {
         index,
         routes,
       }}
-      renderScene={renderScene}
+      renderScene={isIOS ? renderSceneIOS : renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={setIndex}
       initialLayout={initialLayout}

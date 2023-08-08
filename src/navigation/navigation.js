@@ -1,14 +1,15 @@
 import CustomHeader from '@components/CustomHeader/CustomHeader';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import CreatePost from 'screens/CreatePost/CreatePost';
 import OnBoardingScreen from 'screens/OnBoardingScreen/OnBoardingScreen';
 import PostScreen from 'screens/PostScreen/PostScreen';
-import { SCREEN_NAMES } from 'screens/screenNames';
+import {SCREEN_NAMES} from 'screens/screenNames';
 import AuthStackNavigator from './AuthStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
 import ContactUs from 'screens/ContactUs/ContactUs';
+import TermsAndCondition from 'screens/TermsAndCondition/TermsAndCondition';
 const header = ({route: {name}, ...props}) => (
   <CustomHeader title={name} {...props} />
 );
@@ -23,8 +24,6 @@ const RootNavigator = () => {
         component={SplashScreen}
         options={{headerShown: false}}
       /> */}
-
-
 
       {!user ? (
         <>
@@ -42,11 +41,11 @@ const RootNavigator = () => {
             options={{headerShown: false}}
             // initialParams={{route}}
           />
-           <Stack.Screen
-        name={SCREEN_NAMES.ONBOARDING}
-        component={OnBoardingScreen}
-        options={{headerShown: false}}
-      />
+          <Stack.Screen
+            name={SCREEN_NAMES.ONBOARDING}
+            component={OnBoardingScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name={SCREEN_NAMES.CREATE_AD}
             component={CreatePost}
@@ -71,6 +70,11 @@ const RootNavigator = () => {
           />
         </>
       )}
+      <Stack.Screen
+        name={SCREEN_NAMES.Terms}
+        component={TermsAndCondition}
+        options={{header}}
+      />
     </Stack.Navigator>
   );
 };

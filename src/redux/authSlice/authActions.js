@@ -1,10 +1,11 @@
 import auth from '@react-native-firebase/auth';
-import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
+import apiMethod, { fileUploadMethod } from '@utils/HTTPServices';
 import Toast from 'react-native-toast-message';
-import {DEACTIVATE_ACCOUNT_META, LOGIN_META, UPDATE_USER} from './authAPI';
-import {addAuth, removeAuth, updateAuth} from './authSlice';
+import { DEACTIVATE_ACCOUNT_META, DELETE_USER_META, LOGIN_META, UPDATE_USER } from './authAPI';
+import { addAuth, removeAuth, updateAuth } from './authSlice';
 export const loginWithToken = (authToken, type, fullName) => async dispatch => {
   try {
+    console.log({type});
     const {error, data} = await apiMethod({
       ...LOGIN_META,
       params: {
@@ -23,7 +24,7 @@ export const loginWithToken = (authToken, type, fullName) => async dispatch => {
       authToken: token,
       user: {
         ...userData,
-        isNew: type === 'signup',
+        isNew: !!type,
       },
     };
     dispatch(addAuth(d));
@@ -214,6 +215,27 @@ export const deactivateUserAction = () => async dispatch => {
     Toast.show({
       type: 'error',
       text1: 'Unable to deactivate account',
+      text2: error?.userInfo?.message || error,
+    });
+  }
+};
+export const deleteUser = () => async dispatch => {
+  try {
+    const resp = await apiMethod(DELETE_USER_META);
+    if (resp.error) {
+      throw new Error(resp.error);
+    }
+    Toast.show({
+      type: 'success',
+      text1: 'Account Deleted',
+      text2: 'Your account has been deleted',
+    });
+    dispatch(removeAuth());
+  } catch (error) {
+    console.log({error});
+    Toast.show({
+      type: 'error',
+      text1: 'Unable to delete account',
       text2: error?.userInfo?.message || error,
     });
   }

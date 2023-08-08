@@ -22,14 +22,25 @@ import {
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {clearAds} from 'redux/adsActions/adsActions';
-import {deactivateUserAction, logoutAction} from 'redux/authSlice/authActions';
+import {
+  deactivateUserAction,
+  logoutAction,
+  deleteUser,
+} from 'redux/authSlice/authActions';
 import {SCREEN_NAMES} from 'screens/screenNames';
 
 const MODAL_NAMES = {
   LOGOUT: 'LOGOUT',
   DEACTIVATE: 'DEACTIVATE',
+  DELETE: 'DELETE',
 };
-const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
+const UserProfile = ({
+  user,
+  logoutAction,
+  clearAds,
+  deactivateUserAction,
+  deleteUser,
+}) => {
   const [modalOpen, setModalOpen] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const onClose = () => {
@@ -68,8 +79,6 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
       onPress: openModal(MODAL_NAMES.DEACTIVATE),
     },
 
-
-
     {
       name: 'Logout',
       icon: Logout,
@@ -82,6 +91,12 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
     let res = await logoutAction();
     setIsLoading(false);
 
+    if (res) navigation.dispatch(resetAction);
+  };
+  const handleDelete = async () => {
+    setIsLoading(true);
+    let res = await deleteUser();
+    setIsLoading(false);
     if (res) navigation.dispatch(resetAction);
   };
   const handleDeactivate = async () => {
@@ -100,7 +115,18 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
           isOpen={modalOpen === MODAL_NAMES.LOGOUT}
           onClose={onClose}
           handleAction={handleLogout}
-          actionText="Yes, I'm sure"
+          actionText="Logout"
+        />
+
+        <ConfirmationModal
+          isLoading={isLoading}
+          title="Delete Account"
+          body="Are you sure you want to delete account?"
+          isOpen={modalOpen === MODAL_NAMES.DELETE}
+          onClose={onClose}
+          handleAction={handleDelete}
+          actionText="Delete"
+          isLoadingText="Deleting..."
         />
         <ConfirmationModal
           isLoading={isLoading}
@@ -146,6 +172,15 @@ const UserProfile = ({user, logoutAction, clearAds, deactivateUserAction}) => {
             ))}
           </Flex>
         </Center>
+        <Center>
+          <CustomText
+            onPress={openModal(MODAL_NAMES.DELETE)}
+            fontSize="md"
+            mt={4}
+            color={COLORS.danger}>
+            Delete Account
+          </CustomText>
+        </Center>
       </ScrollView>
     </Box>
   );
@@ -184,5 +219,6 @@ const actions = {
   logoutAction,
   clearAds,
   deactivateUserAction,
+  deleteUser,
 };
 export default connect(mapStateToProps, actions)(UserProfile);

@@ -7,8 +7,12 @@ import {
 import {connect} from 'react-redux';
 import {loginWithToken} from 'redux/authSlice/authActions';
 import Toast from 'react-native-toast-message';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SCREEN_NAMES } from 'screens/screenNames';
 
 function AppleSignIn({loginWithToken, type, setIsLoading}) {
+  const {navigate, ...navigation} = useNavigation();
+
   async function onAppleButtonPress() {
     // Start the sign-in request
     try {
@@ -36,8 +40,15 @@ function AppleSignIn({loginWithToken, type, setIsLoading}) {
       const authToken = await user.user.getIdToken();
       console.log(user.user)
       const {error, data} = await loginWithToken(authToken, type,user.user.displayName);
-      if (error) throw new Error(error);
       setIsLoading(false);
+      if (error) throw new Error(error);
+      if (!error) {
+        const resetAction = StackActions.replace(
+          data.user.isNew ? SCREEN_NAMES.ONBOARDING : SCREEN_NAMES.MAIN,
+        );
+
+        navigation.dispatch(resetAction);
+      }
     } catch (error) {
       setIsLoading(false);
       Toast.show({

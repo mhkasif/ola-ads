@@ -1,5 +1,8 @@
 import CustomText from '@components/CustomText/CustomText';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import Google from 'assets/google-btn-logo.png';
 import {Button, Center, HStack, Image} from 'native-base';
 import React, {useEffect} from 'react';
@@ -8,9 +11,14 @@ import auth from '@react-native-firebase/auth';
 import {connect} from 'react-redux';
 import {loginWithToken} from 'redux/authSlice/authActions';
 import Toast from 'react-native-toast-message';
+import {StackActions, useNavigation} from '@react-navigation/native';
+import {SCREEN_NAMES} from 'screens/screenNames';
 
 const GoogleButton = props => {
-  const {setIsLoading} = props;
+  const {navigate, ...navigation} = useNavigation();
+
+  const {setIsLoading, type} = props;
+  console.log(type);
   // 1077115806182-tdc7qof16mpke7ok6qlrqslfnad9p18k.apps.googleusercontent.com
   useEffect(() => {
     GoogleSignin.configure({
@@ -23,6 +31,7 @@ const GoogleButton = props => {
   }, []);
   const signIn = async () => {
     // Check if your device supports Google Play
+    console.log('singin', type);
     try {
       setIsLoading(true);
       console.log(
@@ -40,12 +49,23 @@ const GoogleButton = props => {
       const user = await auth().signInWithCredential(googleCredential);
       console.log(await user.user.getIdToken());
       const authToken = await user.user.getIdToken();
-      const {error, data} = await props.loginWithToken(authToken);
+      const {error, data} = await props.loginWithToken(authToken, type);
       console.log({error, data});
-      if (error) throw new Error(error);
       setIsLoading(false);
+      if (error) throw new Error(error);
+      if (!error) {
+        const resetAction = StackActions.replace(
+          data.user.isNew ? SCREEN_NAMES.ONBOARDING : SCREEN_NAMES.MAIN,
+        );
+
+        navigation.dispatch(resetAction);
+      }
     } catch (error) {
       setIsLoading(false);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        return;
+      }
+
       Toast.show({
         type: 'error',
         text1: 'Log In Failed',

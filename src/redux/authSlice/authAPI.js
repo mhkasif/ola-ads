@@ -12,6 +12,10 @@ export const DEACTIVATE_ACCOUNT_META = {
   method: DEL,
   endpoint: URLS.DEACTIVATE_ACCOUNT,
 };
+export const DELETE_USER_META = {
+  method: DEL,
+  endpoint: URLS.DELETE_USER,
+};
 
 export const SIGNUP_META = {
   method: POST,

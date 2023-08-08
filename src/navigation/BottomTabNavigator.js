@@ -96,10 +96,10 @@ const BottomTabNavigator = ({route, ...props}) => {
           component={EditProfile}
         />
         <ProfileStack.Screen name={SCREEN_NAMES.PLANS} component={Plans} />
-        <ProfileStack.Screen
+        {/* <ProfileStack.Screen
           name={SCREEN_NAMES.Terms}
           component={TermsAndCondition}
-        />
+        /> */}
       </ProfileStack.Navigator>
     ),
     [],

@@ -7,10 +7,10 @@ import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
 import GoogleButton from '@components/GoogleButton/GoogleButton';
 import KeyboardAvoidingInputWrapper from '@components/KeyboardAvoidingInputWrapper/KeyboardAvoidingInputWrapper';
 import YUP from '@components/YUP/YUP';
-import { StackActions, useNavigation } from '@react-navigation/native';
-import { COLORS, linearGradient } from '@utils/colors';
+import {StackActions, useNavigation} from '@react-navigation/native';
+import {COLORS, linearGradient} from '@utils/colors';
 import Logo from 'assets/logo.png';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 import {
   Box,
   Center,
@@ -22,55 +22,75 @@ import {
   StatusBar,
   VStack,
 } from 'native-base';
-import { useState } from 'react';
-import { Platform } from 'react-native';
-import { connect } from 'react-redux';
-import { signupAction } from 'redux/authSlice/authActions';
-import { SCREEN_NAMES } from '../screenNames';
+import {useState} from 'react';
+import {Platform} from 'react-native';
+import {connect} from 'react-redux';
+import {signupAction} from 'redux/authSlice/authActions';
+import {SCREEN_NAMES} from '../screenNames';
+import CustomCheckbox from '@components/CustomCheckbox/CustomCheckbox';
 const formValidation = YUP.object().shape({
   email: YUP.string().email('Email is invalid').required('Email is required.'),
   fullName: YUP.string().required('Full name is required.'),
   password: YUP.string()
     .required('Password is required')
     .min(8, 'Password must be atleast 8 character long.'),
+  acceptTerms: YUP.boolean()
+    .required()
+    .oneOf([true], 'Accept Terms is required'),
 });
-const fields = [
-  {
-    name: 'fullName',
-    label: 'Name',
-    // type: 'text',
-    inputProps: {
-      placeholder: 'Enter your full name',
-    },
-    validate: true,
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    type: 'email',
-    inputProps: {
-      placeholder: 'Enter your email',
-    },
-    validate: true,
-  },
-  {
-    name: 'password',
-    label: 'Password',
-    type: 'password',
-    inputProps: {
-      placeholder: 'Enter your password',
-    },
-    validate: true,
-  },
-];
 const SignupScreen = ({signupAction}) => {
   const {navigate, ...navigation} = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [fields] = useState([
+    {
+      name: 'fullName',
+      label: 'Name',
+      // type: 'text',
+      inputProps: {
+        placeholder: 'Enter your full name',
+      },
+      validate: true,
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      inputProps: {
+        placeholder: 'Enter your email',
+      },
+      validate: true,
+    },
+    {
+      name: 'password',
+      label: 'Password',
+      type: 'password',
+      inputProps: {
+        placeholder: 'Enter your password',
+      },
+      validate: true,
+    },
+    {
+      name: 'acceptTerms',
+      label: (
+        <>
+          <CustomText>Accept </CustomText>
+          <CustomText
+            underline
+            onPress={() => navigate(SCREEN_NAMES.Terms)}
+            fontWeight="medium">
+            Terms and Conditions
+          </CustomText>
+        </>
+      ),
+      type: 'checkbox',
+      validate: true,
+    },
+  ]);
   const initialValues = fields.reduce((acc, field) => {
     if (field.name === 'fullName') acc[field.name] = '';
     if (field.name === 'email') acc[field.name] = '';
     if (field.name === 'password') acc[field.name] = '';
+    if (field.name === 'acceptTerms') acc[field.name] = false;
     return acc;
   }, {});
 
@@ -152,9 +172,13 @@ const SignupScreen = ({signupAction}) => {
                 validationSchema={formValidation}>
                 {({isSubmitting, handleSubmit}) => (
                   <VStack space={3} mt="5">
-                    {fields.map(field => (
-                      <CustomInput {...field} key={field.name} />
-                    ))}
+                    {fields.map(field =>
+                      field.type === 'checkbox' ? (
+                        <CustomCheckbox {...field} key={field.name} />
+                      ) : (
+                        <CustomInput {...field} key={field.name} />
+                      ),
+                    )}
 
                     <CustomButton
                       buttonProps={{
@@ -201,7 +225,11 @@ const SignupScreen = ({signupAction}) => {
               </Box>
               {Platform.OS === 'ios' && (
                 <Box>
-                  <AppleButton type="signup" w="100%" setIsLoading={setIsLoading} />
+                  <AppleButton
+                    type="signup"
+                    w="100%"
+                    setIsLoading={setIsLoading}
+                  />
                 </Box>
               )}
               <HStack space={3} justifyContent="center">

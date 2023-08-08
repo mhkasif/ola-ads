@@ -8,10 +8,15 @@ import {Settings} from 'react-native-fbsdk-next';
 import {connect} from 'react-redux';
 import {loginWithToken} from 'redux/authSlice/authActions';
 import Toast from 'react-native-toast-message';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SCREEN_NAMES } from 'screens/screenNames';
 
 const FacebookButton = props => {
   const {setIsLoading,type}=props
+  const {navigate, ...navigation} = useNavigation();
+
   const onFacebookButtonPress = async () => {
+    console.log("facebook",type)
     try {
       // Attempt login with permissions
       setIsLoading(true)
@@ -39,8 +44,15 @@ const FacebookButton = props => {
       const user = await auth().signInWithCredential(facebookCredential);
       const authToken = await user.user.getIdToken();
       const {error, data} = await props.loginWithToken(authToken,type);
-      if (error) throw new Error(error);
       setIsLoading(false)
+      if (error) throw new Error(error);
+      if (!error) {
+        const resetAction = StackActions.replace(
+          data.user.isNew ? SCREEN_NAMES.ONBOARDING : SCREEN_NAMES.MAIN,
+        );
+
+        navigation.dispatch(resetAction);
+      }
     } catch (error) {
       setIsLoading(false)
       Toast.show({
