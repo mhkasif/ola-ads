@@ -166,7 +166,7 @@ const ListOfPlansScreen = connect(
     } else fetchPlans();
   }, []);
   const handleAllPlans = () => {
-    Linking.openURL('http://localhost:3000/plans/' + authToken);
+    Linking.openURL('https://payment.ola-ads.com/token' + authToken);
   };
   return (
     <>
