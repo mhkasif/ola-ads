@@ -61,15 +61,15 @@ const RootNavigator = () => {
               header,
             }}
           />
-          <Stack.Screen
-            name={SCREEN_NAMES.CONTACT}
-            component={ContactUs}
-            options={{
-              header,
-            }}
-          />
         </>
       )}
+      <Stack.Screen
+        name={SCREEN_NAMES.CONTACT}
+        component={ContactUs}
+        options={{
+          header,
+        }}
+      />
       <Stack.Screen
         name={SCREEN_NAMES.Terms}
         component={TermsAndCondition}

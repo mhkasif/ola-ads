@@ -1,8 +1,11 @@
 import CustomText from '@components/CustomText/CustomText';
-import {Box, Heading, ScrollView} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {Box, Center, Heading, ScrollView} from 'native-base';
 import React from 'react';
+import {SCREEN_NAMES} from 'screens/screenNames';
 
 const TermsAndCondition = () => {
+  const {navigate, ...navigation} = useNavigation();
   return (
     <ScrollView>
       <Box h="100%" w="100%" py={5} px={2}>
@@ -206,6 +209,15 @@ const TermsAndCondition = () => {
             </CustomText>
           </Box>
         </Box>
+      <Center>
+        <CustomText
+        my={2}
+          textDecorationLine="underline"
+          textDecoration="underline"
+          onPress={() => navigate(SCREEN_NAMES.CONTACT)}>
+          Contact Us
+        </CustomText>
+      </Center>
       </Box>
     </ScrollView>
   );
