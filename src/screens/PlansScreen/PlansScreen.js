@@ -228,6 +228,12 @@ const ListOfPlansScreen = connect(
             />
           </Box>
         )}
+        {isIOS && (
+          <CustomText mt={3}>
+            You can't make changes to your plan in the app. We know it's not
+            ideal.
+          </CustomText>
+        )}
         {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
           <Box flex={1} justifyContent="flex-end">
             <CustomButton
