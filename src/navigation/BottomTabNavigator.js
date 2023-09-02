@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen/ChangePasswordScreen';
 import EditProfile from 'screens/EditProfile/EditProfile';
 import HomeScreen from 'screens/HomeScreen/HomeScreen';
+import InAppPurchase from 'screens/InAppPurchase/InAppPurchase';
 import ListOfPostsScreen from 'screens/ListOfPostsScreen/ListOfPostsScreen';
 import Plans from 'screens/PlansScreen/PlansScreen';
 import TermsAndCondition from 'screens/TermsAndCondition/TermsAndCondition';
@@ -95,6 +96,7 @@ const BottomTabNavigator = ({route, ...props}) => {
           name={SCREEN_NAMES.EDIT_PROFILE}
           component={EditProfile}
         />
+        {/* <ProfileStack.Screen name={SCREEN_NAMES.PLANS} component={InAppPurchase} /> */}
         <ProfileStack.Screen name={SCREEN_NAMES.PLANS} component={Plans} />
         {/* <ProfileStack.Screen
           name={SCREEN_NAMES.Terms}

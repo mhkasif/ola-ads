@@ -71,7 +71,7 @@ const ListOfPlansScreen = connect(
 
   const openLink = async url => {
     try {
-      if (!isIOS && (await InAppBrowser.isAvailable())) {
+      if (await InAppBrowser.isAvailable()) {
         const result = await InAppBrowser.open(url, {
           // iOS Properties
           dismissButtonStyle: 'cancel',
@@ -228,13 +228,13 @@ const ListOfPlansScreen = connect(
             />
           </Box>
         )}
-        {isIOS && (
+        {/* {isIOS && (
           <CustomText mt={3}>
             You can't make changes to your plan in the app. We know it's not
             ideal.
           </CustomText>
-        )}
-        {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
+        )} */}
+        {/* {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
           <Box flex={1} justifyContent="flex-end">
             <CustomButton
               buttonProps={{
@@ -243,7 +243,7 @@ const ListOfPlansScreen = connect(
               See All Plans
             </CustomButton>
           </Box>
-        )}
+        )} */}
       </VStack>
     </>
   );
@@ -399,25 +399,16 @@ const renderSceneIOS = SceneMap({
 // }
 function Plans() {
   const [index, setIndex] = useState(0);
-  const [routes] = useState(
-    isIOS
-      ? [
-          {
-            key: 'first',
-            title: 'Subscribed',
-          },
-        ]
-      : [
-          {
-            key: 'first',
-            title: 'Subscribed',
-          },
-          {
-            key: 'second',
-            title: 'More Plans',
-          },
-        ],
-  );
+  const [routes] = useState([
+    {
+      key: 'first',
+      title: 'Subscribed',
+    },
+    {
+      key: 'second',
+      title: 'More Plans',
+    },
+  ]);
 
   const renderTabBar = props => {
     // const inputRange = props.navigationState.routes.map((x, i) => i);
@@ -467,7 +458,8 @@ function Plans() {
         index,
         routes,
       }}
-      renderScene={isIOS ? renderSceneIOS : renderScene}
+      // renderScene={isIOS ? renderSceneIOS : renderScene}
+      renderScene={renderScene}
       renderTabBar={renderTabBar}
       onIndexChange={setIndex}
       initialLayout={initialLayout}
