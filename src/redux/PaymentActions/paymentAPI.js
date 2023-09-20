@@ -24,3 +24,7 @@ export const GET_CONFIRM_PAYMENT_STATUS_META = {
     subscription_id: '',
   },
 };
+export const GET_SYNC_SUBSCRIPTION_META = {
+  method: GET,
+  endpoint: URLS.SYNC_SUBSCRIPTION,
+};

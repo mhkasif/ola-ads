@@ -35,3 +35,19 @@ export const UTCToLocal = (date, noFormat) => {
   const formattedDate = format(zonedDate, 'yyyy-MMM-dd HH:mm:ss');
   return noFormat ? zonedDate : formattedDate;
 };
+export const extractCurrencyAndValue = currencyString => {
+  // Use a regular expression to match any currency symbol and the number part
+  const match = currencyString.match(/([^\d.,]+)([\d.,]+)/);
+
+  // Check if a match is found
+  if (match) {
+    // Extract the currency symbol (group 1) and the numeric value (group 2)
+    const currency = match[1].trim();
+    const valueString = match[2].replace(/,/g, ''); // Remove commas for parsing
+    const value = parseFloat(valueString.replace(',', '.')); // Replace comma with period for decimal parsing
+    return [currency, value];
+  }
+
+  // If no match is found, return null or handle the error as needed
+  return null;
+};

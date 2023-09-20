@@ -23,4 +23,5 @@ export const URLS = {
   CONFIRM_PAYMENT: '/user/retrive-subscription',
   DEACTIVATE_ACCOUNT: '/user/deactivate-user',
   DELETE_USER: '/user/delete-user',
+  SYNC_SUBSCRIPTION: '/user/revcat-user',
 };

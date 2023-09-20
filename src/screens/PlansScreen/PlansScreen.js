@@ -2,10 +2,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
+  Center,
   HStack,
   Heading,
   Icon,
-  Image,
   Pressable,
   Radio,
   StatusBar,
@@ -33,23 +33,33 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import Toast from 'react-native-toast-message';
 import {connect, useSelector} from 'react-redux';
 import {
-  confirmPaymentAction,
   createSubscriptionAction,
   fetchMySubscription,
   getPlansAction,
+  syncSubscriptionWithRevenueCat,
 } from 'redux/PaymentActions/paymentActions';
 
 import ConfirmationModal from '@components/ConfirmationModal/ConfirmationModal';
-import Loader from 'assets/loader.gif';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {updateUserAction} from 'redux/authSlice/authActions';
 import FullScreenLoader from '@components/FullScreenLoader/FullScreenLoader';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import Purchases from 'react-native-purchases';
+import {updateUserAction} from 'redux/authSlice/authActions';
+import {extractCurrencyAndValue} from '@utils/helpers';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
   updateUserAction,
+  syncSubscriptionWithRevenueCat,
 };
-const isIOS = Platform.OS === 'ios';
+let ids = {
+  ios: ['28082023_yearly_advanced', '28082023_monthly_advanced'],
+  android: [
+    // '28082023_ola_ads:28082023-yearly-advanced',
+    // '28082023_ola_ads:28082023-monthly-advanced',
+    '28082023-yearly-advanced',
+    '28082023-monthly-advanced',
+  ],
+};
 const PLANS_TYPE = {
   SUBSCRIPTION: 'SUBSCRIPTION',
   PLANS: 'PLANS',
@@ -61,180 +71,213 @@ const LOADING_TYPE = {
 const ListOfPlansScreen = connect(
   null,
   actions,
-)(({getPlansAction, createSubscriptionAction, type, updateUserAction}) => {
-  const {user, authToken} = useSelector(state => state.auth) || {};
-  const subscription = user?.subscription;
-  const [loading, setLoading] = useState('');
-  const [plansList, setPlansList] = useState([]);
-  const {goBack} = useNavigation();
-  const [isYearly, setIsYearly] = useState(true);
+)(
+  ({
+    getPlansAction,
+    createSubscriptionAction,
+    type,
+    updateUserAction,
+    syncSubscriptionWithRevenueCat,
+  }) => {
+    const {user, authToken} = useSelector(state => state.auth) || {};
+    const subscription = user?.subscription;
+    const [loading, setLoading] = useState('');
+    const [plansList, setPlansList] = useState([]);
+    const {goBack} = useNavigation();
+    const [isYearly, setIsYearly] = useState(false);
+    const [customerInfo, setCustomerInfo] = useState(null);
+    const openPaymentSheet = async id => {
+      setLoading(LOADING_TYPE.LOADING_PLAN);
+      try {
+        const p = await Purchases.purchaseProduct(id);
+        console.log(p);
+        if (!!p.customerInfo.activeSubscriptions.length) {
+          // syncSubscriptionWithRevenueCat();
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: 'Your order is confirmed!',
+          });
+          setLoading('');
+          // goBack();
+        }
 
-  const openLink = async url => {
-    try {
-      if (await InAppBrowser.isAvailable()) {
-        const result = await InAppBrowser.open(url, {
-          // iOS Properties
-          dismissButtonStyle: 'cancel',
-          preferredBarTintColor: '#0C0F3D',
-          preferredControlTintColor: 'white',
-          readerMode: false,
-          animated: true,
-          modalPresentationStyle: 'fullScreen',
-          modalTransitionStyle: 'coverVertical',
-          modalEnabled: true,
-          enableBarCollapsing: false,
-          // Android Properties
-          showTitle: true,
-          // toolbarColor: '#6200EE',
-          secondaryToolbarColor: 'black',
-          navigationBarColor: 'black',
-          navigationBarDividerColor: 'white',
-          enableUrlBarHiding: true,
-          enableDefaultShare: true,
-          forceCloseOnRedirection: false,
-          // Specify full animation resource identifier(package:anim/name)
-          // or only resource name(in case of animation bundled with app).
-          animations: {
-            startEnter: 'slide_in_right',
-            startExit: 'slide_out_left',
-            endEnter: 'slide_in_left',
-            endExit: 'slide_out_right',
-          },
+        // const {data, error} = await createSubscriptionAction(id);
+        // if (error) throw new Error(error);
+
+        // if (data.subscription_url) await openLink(data.subscription_url);
+        // const {data: d, error: err} = await confirmPaymentAction(
+        //   data.subscription_id,
+        // );
+        // if (err) throw new Error(err);
+        // if (d.status !== 'active') {
+        //   throw new Error('Your Payment is Failed');
+        // }
+        // updateUserAction({subscription: d});
+      } catch (error) {
+        setLoading('');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error.message,
         });
-        console.log({result});
-        // await this.sleep(800);
-        // Alert.alert(JSON.stringify(result))
-      } else Linking.openURL(url);
-    } catch (error) {
-      console.log({error});
-      // Alert.alert(error.message)
-    }
-  };
-  const openPaymentSheet = async id => {
-    setLoading(LOADING_TYPE.LOADING_PLAN);
-    try {
-      const {data, error} = await createSubscriptionAction(id);
-      if (error) throw new Error(error);
-
-      if (data.subscription_url) await openLink(data.subscription_url);
-      const {data: d, error: err} = await confirmPaymentAction(
-        data.subscription_id,
-      );
-      if (err) throw new Error(err);
-      if (d.status !== 'active') {
-        throw new Error('Your Payment is Failed');
+        console.log({error});
       }
-      updateUserAction({subscription: d});
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Your order is confirmed!',
-      });
+    };
+    const init = async () => {
+      Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+      try {
+        if (Platform.OS === 'ios') {
+          Purchases.configure({
+            apiKey: 'appl_kbvzktoNFYAOwDTMOyUYDpTINCB',
+            appUserID: user._id,
+          });
+        } else if (Platform.OS === 'android') {
+          Purchases.configure({
+            apiKey: 'goog_XBQodaBWmqhKZGBTilDqbdcPfNa',
+            appUserID: user._id,
+          });
+        }
+        const offerings=await Purchases.getOfferings()
+        console.log(offerings,'offerings')
+        // const {data, error} = await Purchases.getOfferings();
+        // console.log(await Purchases.getAppUserID(), 'app id');
+        // setCustomerInfo(await Purchases.getCustomerInfo());
+        // console.log(await Purchases.getCustomerInfo(), 'customer info');
+      } catch (error) {
+        console.log({error});
+      }
+    };
+    const restorePurchase = async () => {
+      try {
+        setLoading(LOADING_TYPE.LOADING_PLAN);
+        const res = await Purchases.restorePurchases();
+        // await syncSubscriptionWithRevenueCat();
+        console.log(res, 'res');
+        if(!!res.activeSubscriptions.length){
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Your purchases are restored!',
+        });
+        setLoading('');
+        goBack();}
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error.message,
+        });
+        setLoading('');
+      }
+    };
+    const fetchPlans = async () => {
+      setLoading(LOADING_TYPE.FETCHING_PLANS);
+      let {data} = await getPlansAction();
+      let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
+      console.log(fetchedProducts, 'fetched products');
+      let newData = [];
+      if (data) {
+        data = data.forEach(x => {
+          let product = fetchedProducts.find(
+            y =>
+              y.identifier === x.product_id_android ||
+              y.identifier === x.product_id_ios,
+          );
+          x.price = product.priceString;
+          x.id = product.identifier;
+          newData.push(x);
+        });
+        console.log(newData);
+        newData && setPlansList(newData);
+        setLoading('');
+      }
+    };
+    const fetchSubscription = async () => {
+      setLoading(LOADING_TYPE.FETCHING_PLANS);
+      const {data} = await fetchMySubscription();
+
+      data && setPlansList([data]);
       setLoading('');
-      goBack();
-    } catch (error) {
-      setLoading('');
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: error.message,
-      });
-      console.log({error});
-    }
-  };
+    };
+    const changeSwitch = _ => {
+      setIsYearly(p => !p);
+    };
+    useEffect(() => {
+      init();
+      if (PLANS_TYPE.SUBSCRIPTION === type) {
+        fetchSubscription();
+      } else fetchPlans();
+    }, []);
 
-  const fetchPlans = async () => {
-    setLoading(LOADING_TYPE.FETCHING_PLANS);
-    const {data} = await getPlansAction();
-
-    data && setPlansList(data);
-    setLoading('');
-  };
-  const fetchSubscription = async () => {
-    setLoading(LOADING_TYPE.FETCHING_PLANS);
-    const {data} = await fetchMySubscription();
-    console.log({data});
-    data && setPlansList([data]);
-    setLoading('');
-  };
-  const changeSwitch = _ => {
-    setIsYearly(p => !p);
-  };
-  useEffect(() => {
-    if (PLANS_TYPE.SUBSCRIPTION === type) {
-      fetchSubscription();
-    } else fetchPlans();
-  }, []);
-  const handleAllPlans = () => {
-    Linking.openURL('https://payment.ola-ads.com/token/' + authToken);
-  };
-  return (
-    <>
-      {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
-      <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
-        {loading === LOADING_TYPE.FETCHING_PLANS ? (
-          [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)
-        ) : !loading &&
-          !plansList.length &&
-          PLANS_TYPE.SUBSCRIPTION === type ? (
-          <CustomText textAlign="center">
-            You have not subscribed to any plan yet. Please subscribe to a plan
-          </CustomText>
-        ) : (
-          <Box>
-            {!type && (
-              <HStack alignItems="center" justifyContent="center">
-                <CustomText
-                  fontSize="lg"
-                  bold
-                  color={!isYearly ? COLORS.primary : COLORS.muted}>
-                  Monthly
-                </CustomText>
-                <Switch
-                  onToggle={changeSwitch}
-                  isChecked={isYearly}
-                  offTrackColor="muted.500"
-                  onTrackColor="muted.500"
-                  mx={3}
-                />
-                <CustomText
-                  fontSize="lg"
-                  bold
-                  color={isYearly ? COLORS.primary : COLORS.muted}>
-                  Yearly
-                </CustomText>
-              </HStack>
-            )}
-
-            <FlatList
-              estimatedItemSize={120}
-              data={
-                PLANS_TYPE.SUBSCRIPTION === type
-                  ? plansList
-                  : plansList.filter(
-                      x =>
-                        (x.period === 'Yearly' && isYearly) ||
-                        (x.period === 'Monthly' && !isYearly),
-                    )
-              }
-              renderItem={({item}) => (
-                <RenderItem
-                  type={type}
-                  key={item.title}
-                  {...item}
-                  handlePayPress={openPaymentSheet}
-                />
+    return (
+      <>
+        {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
+        <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
+          {loading === LOADING_TYPE.FETCHING_PLANS ? (
+            [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)
+          ) : !loading &&
+            !plansList.length &&
+            PLANS_TYPE.SUBSCRIPTION === type ? (
+            <CustomText textAlign="center">
+              You have not subscribed to any plan yet. Please subscribe to a
+              plan
+            </CustomText>
+          ) : (
+            <Box>
+              {!type && (
+                <HStack alignItems="center" justifyContent="center">
+                  <CustomText
+                    fontSize="lg"
+                    bold
+                    color={!isYearly ? COLORS.primary : COLORS.muted}>
+                    Monthly
+                  </CustomText>
+                  <Switch
+                    onToggle={changeSwitch}
+                    isChecked={isYearly}
+                    offTrackColor="muted.500"
+                    onTrackColor="muted.500"
+                    mx={3}
+                  />
+                  <CustomText
+                    fontSize="lg"
+                    bold
+                    color={isYearly ? COLORS.primary : COLORS.muted}>
+                    Yearly
+                  </CustomText>
+                </HStack>
               )}
-            />
-          </Box>
-        )}
-        {/* {isIOS && (
+
+              <FlatList
+                estimatedItemSize={120}
+                data={
+                  PLANS_TYPE.SUBSCRIPTION === type
+                    ? plansList
+                    : plansList.filter(
+                        x =>
+                          (x.period === 'Yearly' && isYearly) ||
+                          (x.period === 'Monthly' && !isYearly),
+                      )
+                }
+                renderItem={({item}) => (
+                  <RenderItem
+                    type={type}
+                    key={item.title}
+                    {...item}
+                    handlePayPress={openPaymentSheet}
+                  />
+                )}
+              />
+            </Box>
+          )}
+          {/* {isIOS && (
           <CustomText mt={3}>
             You can't make changes to your plan in the app. We know it's not
             ideal.
           </CustomText>
         )} */}
-        {/* {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
+          {/* {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
           <Box flex={1} justifyContent="flex-end">
             <CustomButton
               buttonProps={{
@@ -244,10 +287,22 @@ const ListOfPlansScreen = connect(
             </CustomButton>
           </Box>
         )} */}
-      </VStack>
-    </>
-  );
-});
+        </VStack>
+        {loading !== LOADING_TYPE.FETCHING_PLANS &&
+          PLANS_TYPE.SUBSCRIPTION === type && (
+            <Center my={3}>
+              <CustomText
+                underline
+                color={COLORS.primary}
+                onPress={restorePurchase}>
+                Restore Purchase
+              </CustomText>
+            </Center>
+          )}
+      </>
+    );
+  },
+);
 // export default ListOfPlansScreen;
 
 const RenderItem = ({index, handlePayPress, type, ...item}) => {
@@ -266,8 +321,12 @@ const RenderItem = ({index, handlePayPress, type, ...item}) => {
   };
   const handlePay = async () => {
     setLoading(true);
-    await handlePayPress(item._id);
+    await handlePayPress(
+      Platform.OS === 'ios' ? item.product_id_ios : item.product_id_android,
+    );
   };
+  const [currency, price] = extractCurrencyAndValue(item.price);
+
   return (
     <Pressable onPress={type === PLANS_TYPE.SUBSCRIPTION ? () => {} : onPress}>
       <Box
@@ -301,10 +360,10 @@ const RenderItem = ({index, handlePayPress, type, ...item}) => {
                 {item.title}
               </CustomText>
               <HStack alignItems="center">
-                <Heading size="2xl">{item.price}</Heading>
-                <CustomText color={COLORS.muted} ml={2}>
-                  / {item.period}
-                </CustomText>
+                <Heading size="lg" color={COLORS.muted}>
+                  {currency}{' '}
+                </Heading>
+                <Heading size="2xl">{price.toLocaleString('en-US')}</Heading>
               </HStack>
             </VStack>
           </Box>

@@ -1,0 +1,79 @@
+{
+  "identifier" : "3255375A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6451315776",
+    "_developerTeamID" : "X7RBBTNAXC",
+    "_lastSynchronizedDate" : 715722267.15791404
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21374952",
+      "localizations" : [
+
+      ],
+      "name" : "Ola-ads",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6463645101",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "7 ads per week. Cancel anytime.",
+              "displayName" : "Monthly Advanced",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "28082023_monthly_advanced",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Advanced",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "199.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6463645080",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "7 ads per week. Cancel anytime.",
+              "displayName" : "Yearly Advanced",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "28082023_yearly_advanced",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly Advanced",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

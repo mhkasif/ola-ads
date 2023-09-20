@@ -35,7 +35,6 @@
     "react-native-fbsdk-next": "^11.2.1",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-gradle-plugin": "^0.71.17",
-    "react-native-iap": "^12.10.7",
     "react-native-image-picker": "^5.3.1",
     "react-native-image-viewing": "^0.2.2",
     "react-native-inappbrowser-reborn": "^3.7.0",
