@@ -99,7 +99,7 @@ const ListOfPlansScreen = connect(
             text2: 'Your order is confirmed!',
           });
           setLoading('');
-          // goBack();
+          goBack();
         }
 
         // const {data, error} = await createSubscriptionAction(id);
@@ -178,7 +178,7 @@ const ListOfPlansScreen = connect(
       console.log(fetchedProducts, 'fetched products');
       let newData = [];
       if (data) {
-        data = data.forEach(x => {
+        data.forEach(x => {
           let product = fetchedProducts.find(
             y =>
               y.identifier === x.product_id_android ||
@@ -195,9 +195,24 @@ const ListOfPlansScreen = connect(
     };
     const fetchSubscription = async () => {
       setLoading(LOADING_TYPE.FETCHING_PLANS);
-      const {data} = await fetchMySubscription();
+      let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
 
-      data && setPlansList([data]);
+      let {data} = await fetchMySubscription();
+      let newData = [];
+      if (data) {
+
+          let product = fetchedProducts.find(
+            y =>
+              y.identifier === data.product_id_android ||
+              y.identifier === data.product_id_ios,
+          );
+          data.price = product.priceString;
+          data.id = product.identifier;
+          newData.push(data);
+
+        console.log(newData);
+        newData && setPlansList(newData);
+      }
       setLoading('');
     };
     const changeSwitch = _ => {
