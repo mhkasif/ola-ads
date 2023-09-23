@@ -3,6 +3,7 @@
 import {
   Box,
   Center,
+  Flex,
   HStack,
   Heading,
   Icon,
@@ -45,6 +46,7 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import Purchases from 'react-native-purchases';
 import {updateUserAction} from 'redux/authSlice/authActions';
 import {extractCurrencyAndValue} from '@utils/helpers';
+import {SCREEN_NAMES} from 'screens/screenNames';
 const actions = {
   getPlansAction,
   createSubscriptionAction,
@@ -71,228 +73,249 @@ const LOADING_TYPE = {
 const ListOfPlansScreen = connect(
   null,
   actions,
-)(
-  ({
-    getPlansAction,
-    createSubscriptionAction,
-    type,
-    updateUserAction,
-    syncSubscriptionWithRevenueCat,
-  }) => {
-    const {user, authToken} = useSelector(state => state.auth) || {};
-    const subscription = user?.subscription;
-    const [loading, setLoading] = useState('');
-    const [plansList, setPlansList] = useState([]);
-    const {goBack} = useNavigation();
-    const [isYearly, setIsYearly] = useState(false);
-    const [customerInfo, setCustomerInfo] = useState(null);
-    const openPaymentSheet = async id => {
-      setLoading(LOADING_TYPE.LOADING_PLAN);
-      try {
-        const p = await Purchases.purchaseProduct(id);
-        console.log(p);
-        if (!!p.customerInfo.activeSubscriptions.length) {
-          // syncSubscriptionWithRevenueCat();
-          Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2: 'Your order is confirmed!',
-          });
-          setLoading('');
-          goBack();
-        }
-
-        // const {data, error} = await createSubscriptionAction(id);
-        // if (error) throw new Error(error);
-
-        // if (data.subscription_url) await openLink(data.subscription_url);
-        // const {data: d, error: err} = await confirmPaymentAction(
-        //   data.subscription_id,
-        // );
-        // if (err) throw new Error(err);
-        // if (d.status !== 'active') {
-        //   throw new Error('Your Payment is Failed');
-        // }
-        // updateUserAction({subscription: d});
-      } catch (error) {
-        setLoading('');
+)(({getPlansAction, type}) => {
+  const {user, authToken} = useSelector(state => state.auth) || {};
+  const subscription = user?.subscription;
+  const [loading, setLoading] = useState('');
+  const [plansList, setPlansList] = useState([]);
+  const {goBack, navigate} = useNavigation();
+  const [isYearly, setIsYearly] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState(null);
+  const openPaymentSheet = async item => {
+    console.log(item, 'item');
+    setLoading(LOADING_TYPE.LOADING_PLAN);
+    try {
+      const p = await Purchases.purchasePackage(item.product);
+      console.log(p);
+      if (!!p.customerInfo.activeSubscriptions.length) {
+        // syncSubscriptionWithRevenueCat();
         Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: error.message,
+          type: 'success',
+          text1: 'Success',
+          text2: 'Your order is confirmed!',
         });
-        console.log({error});
+        setLoading('');
+        goBack();
       }
-    };
-    const init = async () => {
-      Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-      try {
-        if (Platform.OS === 'ios') {
-          Purchases.configure({
-            apiKey: 'appl_kbvzktoNFYAOwDTMOyUYDpTINCB',
-            appUserID: user._id,
-          });
-        } else if (Platform.OS === 'android') {
-          Purchases.configure({
-            apiKey: 'goog_XBQodaBWmqhKZGBTilDqbdcPfNa',
-            appUserID: user._id,
-          });
-        }
-        const offerings=await Purchases.getOfferings()
-        console.log(offerings,'offerings')
-        // const {data, error} = await Purchases.getOfferings();
-        // console.log(await Purchases.getAppUserID(), 'app id');
-        // setCustomerInfo(await Purchases.getCustomerInfo());
-        // console.log(await Purchases.getCustomerInfo(), 'customer info');
-      } catch (error) {
-        console.log({error});
+
+      // const {data, error} = await createSubscriptionAction(id);
+      // if (error) throw new Error(error);
+
+      // if (data.subscription_url) await openLink(data.subscription_url);
+      // const {data: d, error: err} = await confirmPaymentAction(
+      //   data.subscription_id,
+      // );
+      // if (err) throw new Error(err);
+      // if (d.status !== 'active') {
+      //   throw new Error('Your Payment is Failed');
+      // }
+      // updateUserAction({subscription: d});
+    } catch (error) {
+      setLoading('');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message,
+      });
+      console.log({error});
+    }
+  };
+  const init = async () => {
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+    try {
+      if (Platform.OS === 'ios') {
+        Purchases.configure({
+          apiKey: 'appl_kbvzktoNFYAOwDTMOyUYDpTINCB',
+          appUserID: user._id,
+        });
+      } else if (Platform.OS === 'android') {
+        Purchases.configure({
+          apiKey: 'goog_XBQodaBWmqhKZGBTilDqbdcPfNa',
+          appUserID: user._id,
+        });
       }
-    };
-    const restorePurchase = async () => {
-      try {
-        setLoading(LOADING_TYPE.LOADING_PLAN);
-        const res = await Purchases.restorePurchases();
-        // await syncSubscriptionWithRevenueCat();
-        console.log(res, 'res');
-        if(!!res.activeSubscriptions.length){
+
+      // const {data, error} = await Purchases.getOfferings();
+      // console.log(await Purchases.getAppUserID(), 'app id');
+      // setCustomerInfo(await Purchases.getCustomerInfo());
+      // console.log(await Purchases.getCustomerInfo(), 'customer info');
+    } catch (error) {
+      console.log({error});
+    }
+  };
+  const restorePurchase = async () => {
+    try {
+      setLoading(LOADING_TYPE.LOADING_PLAN);
+      const res = await Purchases.restorePurchases();
+      // await syncSubscriptionWithRevenueCat();
+      console.log(res, 'res');
+      if (!!res.activeSubscriptions.length) {
         Toast.show({
           type: 'success',
           text1: 'Success',
           text2: 'Your purchases are restored!',
         });
-        setLoading('');
-        goBack();}
-      } catch (error) {
+        goBack();
+      } else {
         Toast.show({
           type: 'error',
           text1: 'Error',
-          text2: error.message,
+          text2: 'No Purchases to restore',
         });
         setLoading('');
-      }
-    };
-    const fetchPlans = async () => {
-      setLoading(LOADING_TYPE.FETCHING_PLANS);
-      let {data} = await getPlansAction();
-      let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
-      console.log(fetchedProducts, 'fetched products');
-      let newData = [];
-      if (data) {
-        data.forEach(x => {
-          let product = fetchedProducts.find(
-            y =>
-              y.identifier === x.product_id_android ||
-              y.identifier === x.product_id_ios,
-          );
-          x.price = product.priceString;
-          x.id = product.identifier;
-          newData.push(x);
-        });
-        console.log(newData);
-        newData && setPlansList(newData);
-        setLoading('');
-      }
-    };
-    const fetchSubscription = async () => {
-      setLoading(LOADING_TYPE.FETCHING_PLANS);
-      let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
-
-      let {data} = await fetchMySubscription();
-      let newData = [];
-      if (data) {
-
-          let product = fetchedProducts.find(
-            y =>
-              y.identifier === data.product_id_android ||
-              y.identifier === data.product_id_ios,
-          );
-          data.price = product.priceString;
-          data.id = product.identifier;
-          newData.push(data);
-
-        console.log(newData);
-        newData && setPlansList(newData);
       }
       setLoading('');
-    };
-    const changeSwitch = _ => {
-      setIsYearly(p => !p);
-    };
-    useEffect(() => {
-      init();
-      if (PLANS_TYPE.SUBSCRIPTION === type) {
-        fetchSubscription();
-      } else fetchPlans();
-    }, []);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'No Purchases to restore',
+      });
+      setLoading('');
+    }
+  };
+  const fetchPlans = async () => {
+    setLoading(LOADING_TYPE.FETCHING_PLANS);
+    console.log('hellow');
+    let {data} = await getPlansAction();
+    if (!Array.isArray(data)) {
+      data = [data];
+    }
+    console.log(data, 'dataAAAAAA');
+    // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
+    const offerings = await Purchases.getOfferings();
+    console.log(offerings, 'offerings');
+    // console.log(fetchedProducts, 'fetched products');
+    let newData = [];
+    if (data && data.length) {
+      data.forEach(x => {
+        let product = offerings.current.availablePackages.find(
+          y =>
+            y.product.identifier === x.product_id_android ||
+            y.product.identifier === x.product_id_ios,
+        );
+        console.log(x, product, 'prod');
+        if (product) {
+          x.product = product;
+          x.price = product.product.priceString;
+          x.id = product.product.identifier;
+          newData.push(x);
+        }
+      });
 
-    return (
-      <>
-        {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
-        <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
-          {loading === LOADING_TYPE.FETCHING_PLANS ? (
-            [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)
-          ) : !loading &&
-            !plansList.length &&
-            PLANS_TYPE.SUBSCRIPTION === type ? (
-            <CustomText textAlign="center">
-              You have not subscribed to any plan yet. Please subscribe to a
-              plan
-            </CustomText>
-          ) : (
-            <Box>
-              {!type && (
-                <HStack alignItems="center" justifyContent="center">
-                  <CustomText
-                    fontSize="lg"
-                    bold
-                    color={!isYearly ? COLORS.primary : COLORS.muted}>
-                    Monthly
-                  </CustomText>
-                  <Switch
-                    onToggle={changeSwitch}
-                    isChecked={isYearly}
-                    offTrackColor="muted.500"
-                    onTrackColor="muted.500"
-                    mx={3}
-                  />
-                  <CustomText
-                    fontSize="lg"
-                    bold
-                    color={isYearly ? COLORS.primary : COLORS.muted}>
-                    Yearly
-                  </CustomText>
-                </HStack>
+      setPlansList(newData);
+    }
+    setLoading('');
+  };
+  const fetchSubscription = async () => {
+    setLoading(LOADING_TYPE.FETCHING_PLANS);
+    // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
+    const offerings = await Purchases.getOfferings();
+    let {data} = await fetchMySubscription();
+    let newData = [];
+    if (data) {
+      let product = offerings.current.availablePackages.find(
+        y =>
+          y.product.identifier === data.product_id_android ||
+          y.product.identifier === data.product_id_ios,
+      );
+      data.price = product?.product?.priceString;
+      data.id = product?.product?.identifier;
+      newData.push(data);
+
+      console.log(newData);
+      !!newData.length && setPlansList(newData);
+    }
+    setLoading('');
+  };
+  const changeSwitch = _ => {
+    setIsYearly(p => !p);
+  };
+  useEffect(() => {
+    console.log(type);
+    init();
+    if (PLANS_TYPE.SUBSCRIPTION === type) {
+      fetchSubscription();
+    } else fetchPlans();
+  }, []);
+
+  return (
+    <>
+      {loading === LOADING_TYPE.LOADING_PLAN && <FullScreenLoader />}
+      <VStack space={5} bg={COLORS.bg} flex="1" p={3}>
+        {loading === LOADING_TYPE.FETCHING_PLANS ? (
+          [1, 2, 3, 4].map(x => <PlanSkeleton key={x} />)
+        ) : !loading &&
+          !plansList.length &&
+          PLANS_TYPE.SUBSCRIPTION === type ? (
+          <CustomText textAlign="center">
+            You have not subscribed to any plan yet. Please subscribe to a plan
+          </CustomText>
+        ) : (
+          <Box>
+            {!type && (
+              <HStack alignItems="center" justifyContent="center">
+                <CustomText
+                  fontSize="lg"
+                  bold
+                  color={!isYearly ? COLORS.primary : COLORS.muted}>
+                  Monthly
+                </CustomText>
+                <Switch
+                  onToggle={changeSwitch}
+                  isChecked={isYearly}
+                  offTrackColor="muted.500"
+                  onTrackColor="muted.500"
+                  mx={3}
+                />
+                <CustomText
+                  fontSize="lg"
+                  bold
+                  color={isYearly ? COLORS.primary : COLORS.muted}>
+                  Yearly
+                </CustomText>
+              </HStack>
+            )}
+            {!plansList.filter(
+              x =>
+                (x.period === 'Yearly' && isYearly) ||
+                (x.period === 'Monthly' && !isYearly),
+            ).length && (
+              <Center mt={3}>
+                <CustomText>{`There is no ${
+                  isYearly ? 'yearly' : 'monthly'
+                } plan available`}</CustomText>
+              </Center>
+            )}
+            <FlatList
+              estimatedItemSize={120}
+              data={
+                PLANS_TYPE.SUBSCRIPTION === type
+                  ? plansList
+                  : plansList.filter(
+                      x =>
+                        (x.period === 'Yearly' && isYearly) ||
+                        (x.period === 'Monthly' && !isYearly),
+                    )
+              }
+              renderItem={({item}) => (
+                <RenderItem
+                  type={type}
+                  key={item.title}
+                  {...item}
+                  handlePayPress={openPaymentSheet}
+                />
               )}
-
-              <FlatList
-                estimatedItemSize={120}
-                data={
-                  PLANS_TYPE.SUBSCRIPTION === type
-                    ? plansList
-                    : plansList.filter(
-                        x =>
-                          (x.period === 'Yearly' && isYearly) ||
-                          (x.period === 'Monthly' && !isYearly),
-                      )
-                }
-                renderItem={({item}) => (
-                  <RenderItem
-                    type={type}
-                    key={item.title}
-                    {...item}
-                    handlePayPress={openPaymentSheet}
-                  />
-                )}
-              />
-            </Box>
-          )}
-          {/* {isIOS && (
+            />
+          </Box>
+        )}
+        {/* {isIOS && (
           <CustomText mt={3}>
             You can't make changes to your plan in the app. We know it's not
             ideal.
           </CustomText>
         )} */}
-          {/* {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
+        {/* {isIOS && type === PLANS_TYPE.SUBSCRIPTION && (
           <Box flex={1} justifyContent="flex-end">
             <CustomButton
               buttonProps={{
@@ -302,22 +325,32 @@ const ListOfPlansScreen = connect(
             </CustomButton>
           </Box>
         )} */}
-        </VStack>
-        {loading !== LOADING_TYPE.FETCHING_PLANS &&
-          PLANS_TYPE.SUBSCRIPTION === type && (
-            <Center my={3}>
-              <CustomText
-                underline
-                color={COLORS.primary}
-                onPress={restorePurchase}>
-                Restore Purchase
-              </CustomText>
-            </Center>
-          )}
-      </>
-    );
-  },
-);
+      </VStack>
+      {loading !== LOADING_TYPE.FETCHING_PLANS &&
+        PLANS_TYPE.SUBSCRIPTION !== type && (
+          <Center my={3}>
+            <CustomText
+              underline
+              color={COLORS.primary}
+              onPress={restorePurchase}>
+              Restore Purchase
+            </CustomText>
+          </Center>
+        )}
+      {loading !== LOADING_TYPE.FETCHING_PLANS &&
+        PLANS_TYPE.SUBSCRIPTION !== type && (
+          <HStack justifyContent="center" mb={2}>
+            <CustomText
+              underline
+              color={COLORS.primary}
+              onPress={() => navigate(SCREEN_NAMES.Terms)}>
+              Terms & Condition
+            </CustomText>
+          </HStack>
+        )}
+    </>
+  );
+});
 // export default ListOfPlansScreen;
 
 const RenderItem = ({index, handlePayPress, type, ...item}) => {
@@ -337,7 +370,8 @@ const RenderItem = ({index, handlePayPress, type, ...item}) => {
   const handlePay = async () => {
     setLoading(true);
     await handlePayPress(
-      Platform.OS === 'ios' ? item.product_id_ios : item.product_id_android,
+      // Platform.OS === 'ios' ? item.product_id_ios : item.product_id_android,
+      item,
     );
   };
   const [currency, price] = extractCurrencyAndValue(item.price);

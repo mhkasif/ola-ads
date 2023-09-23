@@ -24,10 +24,10 @@ export const getPlansAction = () => async () => {
     if (error) {
       throw new Error(error);
     }
-    console.log({data});
     return {data};
   } catch (error) {
     console.log({error});
+    return {error}
   }
 };
 
