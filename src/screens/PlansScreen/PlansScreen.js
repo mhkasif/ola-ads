@@ -143,6 +143,48 @@ const ListOfPlansScreen = connect(
       console.log({error});
     }
   };
+  const openLink = async isPrivacy => {
+    //open inappBrowser
+    let url = isPrivacy
+      ? 'https://ola-ads.com/privacy-policy-2/'
+      : 'https://ola-ads.com/terms-condition/';
+    // Linking.openURL('')
+    if (await InAppBrowser.isAvailable()) {
+      const result = await InAppBrowser.open(url, {
+        // iOS Properties
+        dismissButtonStyle: 'cancel',
+        preferredBarTintColor: '#0C0F3D',
+        preferredControlTintColor: 'white',
+        readerMode: false,
+        animated: true,
+        modalPresentationStyle: 'fullScreen',
+        modalTransitionStyle: 'coverVertical',
+        modalEnabled: true,
+        enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        // toolbarColor: '#6200EE',
+        secondaryToolbarColor: 'black',
+        navigationBarColor: 'black',
+        navigationBarDividerColor: 'white',
+        enableUrlBarHiding: true,
+        enableDefaultShare: true,
+        forceCloseOnRedirection: false,
+        // Specify full animation resource identifier(package:anim/name)
+        // or only resource name(in case of animation bundled with app).
+        animations: {
+          startEnter: 'slide_in_right',
+          startExit: 'slide_out_left',
+          endEnter: 'slide_in_left',
+          endExit: 'slide_out_right',
+        },
+      });
+
+      // await this.sleep(800);
+      // Alert.alert(JSON.stringify(result))
+    } else Linking.openURL(url);
+  };
+
   const restorePurchase = async () => {
     try {
       setLoading(LOADING_TYPE.LOADING_PLAN);
@@ -343,8 +385,18 @@ const ListOfPlansScreen = connect(
             <CustomText
               underline
               color={COLORS.primary}
-              onPress={() => navigate(SCREEN_NAMES.Terms)}>
+              onPress={() => openLink()}>
               Terms & Condition
+            </CustomText>
+            <CustomText mx={4} color={COLORS.primary}>
+              &
+            </CustomText>
+
+            <CustomText
+              underline
+              color={COLORS.primary}
+              onPress={() => openLink('privacy')}>
+              Privacy Policy
             </CustomText>
           </HStack>
         )}

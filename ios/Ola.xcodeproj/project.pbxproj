@@ -17,7 +17,8 @@
 		C47A25522A9FA4A900837EBF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C47A25512A9FA4A900837EBF /* StoreKit.framework */; };
 		C48715712A4A8BF90014AE6C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C48715702A4A8BF90014AE6C /* Launch Screen.storyboard */; };
 		C4A88F902AA90E150077E8C2 /* Ola Ads.storekit in Resources */ = {isa = PBXBuildFile; fileRef = C4A88F8F2AA90E150077E8C2 /* Ola Ads.storekit */; };
-		C4A88F922AA90E330077E8C2 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = C4A88F912AA90E330077E8C2 /* StoreKitTestCertificate.cer */; };
+		C4CC1D212AC0419E004B7FAD /* Ola Ads.storekit in Resources */ = {isa = PBXBuildFile; fileRef = C4CC1D202AC0419E004B7FAD /* Ola Ads.storekit */; };
+		C4CC1D232AC041BB004B7FAD /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = C4CC1D222AC041BB004B7FAD /* StoreKitTestCertificate.cer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +51,8 @@
 		C47A25512A9FA4A900837EBF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C48715702A4A8BF90014AE6C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		C4A88F8F2AA90E150077E8C2 /* Ola Ads.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Ola Ads.storekit"; sourceTree = "<group>"; };
-		C4A88F912AA90E330077E8C2 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = StoreKitTestCertificate.cer; path = ../../../../Users/mhk/Desktop/StoreKitTestCertificate.cer; sourceTree = "<group>"; };
+		C4CC1D202AC0419E004B7FAD /* Ola Ads.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Ola Ads.storekit"; sourceTree = "<group>"; };
+		C4CC1D222AC041BB004B7FAD /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
 		EB40864F406AB6D9072C74DF /* Pods-Ola-OlaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ola-OlaTests.release.xcconfig"; path = "Target Support Files/Pods-Ola-OlaTests/Pods-Ola-OlaTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -104,7 +106,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				C4A88F8F2AA90E150077E8C2 /* Ola Ads.storekit */,
-				C4A88F912AA90E330077E8C2 /* StoreKitTestCertificate.cer */,
 			);
 			name = Ola;
 			sourceTree = "<group>";
@@ -130,6 +131,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C4CC1D202AC0419E004B7FAD /* Ola Ads.storekit */,
+				C4CC1D222AC041BB004B7FAD /* StoreKitTestCertificate.cer */,
 				C47847102A64F8EB00CAA46B /* GoogleService-Info.plist */,
 				C43BB9F42A48773C0005A170 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* Ola */,
@@ -266,11 +269,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4A88F922AA90E330077E8C2 /* StoreKitTestCertificate.cer in Resources */,
 				C48715712A4A8BF90014AE6C /* Launch Screen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				C4CC1D212AC0419E004B7FAD /* Ola Ads.storekit in Resources */,
 				C47847112A64F8EB00CAA46B /* GoogleService-Info.plist in Resources */,
 				C4A88F902AA90E150077E8C2 /* Ola Ads.storekit in Resources */,
+				C4CC1D232AC041BB004B7FAD /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,5 @@
 {
-  "identifier" : "3255375A",
+  "identifier" : "1523901C",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -9,7 +9,7 @@
   "settings" : {
     "_applicationInternalID" : "6451315776",
     "_developerTeamID" : "X7RBBTNAXC",
-    "_lastSynchronizedDate" : 715722267.15791404
+    "_lastSynchronizedDate" : 717242788.68529904
   },
   "subscriptionGroups" : [
     {
@@ -28,12 +28,37 @@
           ],
           "displayPrice" : "19.99",
           "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6467549401",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Ola Ads Monthly subscription",
+              "displayName" : "Monthly",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "28082023_monthly_advanced1",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "6463645101",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "7 ads per week. Cancel anytime.",
+              "description" : "7 ads per week. Cancel anytime",
               "displayName" : "Monthly Advanced",
               "locale" : "en_GB"
             }
@@ -51,19 +76,19 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "199.99",
+          "displayPrice" : "200.0",
           "familyShareable" : false,
-          "groupNumber" : 2,
-          "internalID" : "6463645080",
+          "groupNumber" : 1,
+          "internalID" : "6467431622",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "7 ads per week. Cancel anytime.",
-              "displayName" : "Yearly Advanced",
+              "description" : "Ola Ads Apple ",
+              "displayName" : "Ola ads",
               "locale" : "en_GB"
             }
           ],
-          "productID" : "28082023_yearly_advanced",
+          "productID" : "28082023_yearly_advanced2",
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Yearly Advanced",
           "subscriptionGroupID" : "21374952",
