@@ -19,3 +19,7 @@ export const GET_CATEGORIES_META = {
   endpoint: URLS.GET_CATEGORIES,
 };
 
+export const GET_DAYS_META={
+  method: GET,
+  endpoint:URLS.DAYS
+}

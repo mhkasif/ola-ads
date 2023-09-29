@@ -22,7 +22,7 @@ const PostScreen = ({
       date,
       categories,
       _id,
-      schedule_date,
+      schedule_dates,
       published,
     },
   },
@@ -30,13 +30,11 @@ const PostScreen = ({
 }) => {
   const ref = useRef(null);
   const [openModal, setOpenModal] = React.useState(false);
-  const onClose = () => setOpenModal("");
+  const onClose = () => setOpenModal('');
   const onOpen = () => setOpenModal(MODAL_NAMES.VIEW_IMAGE);
   return (
     <Box bg={COLORS.bg} px={4} py={6} h="100%">
-      {schedule_date && !published && (
-        <Timer mb={3} published={published} futureDate={schedule_date} />
-      )}
+
       {media?.pathname && (
         <ImageView
           images={[{uri: IMAGE_DIRECTORY + media?.pathname}]}
@@ -99,7 +97,7 @@ const PostScreen = ({
               fontWeight="bold">
               Posted On: {UTCToLocal(date)}
             </CustomText>
-            {schedule_date && (
+            {schedule_dates && (
               <CustomText
                 // mt={2}
                 color="coolGray.400"
@@ -111,12 +109,7 @@ const PostScreen = ({
                 }}
                 letterSpacing="lg"
                 fontWeight="bold">
-                {isBefore(UTCToLocal(schedule_date, true), new Date()) &&
-                published
-                  ? 'published At: '
-                  : 'Scheduled At: '}
-
-                {UTCToLocal(schedule_date)}
+                Scheduled For : {schedule_dates} days
               </CustomText>
             )}
           </VStack>

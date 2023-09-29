@@ -44,15 +44,13 @@ const PostCard = ({
   status,
   categories,
   published = false,
-  schedule_date,
+  schedule_dates,
   date,
   _id,
   media,
   noStatusIcon,
 }) => {
-  const isPublished =
-    published ||
-    (schedule_date && isBefore(UTCToLocal(schedule_date, true), new Date()));
+
   const {navigate} = useNavigation();
   const ref = useRef(null);
   const handleClick = () => {
@@ -63,7 +61,7 @@ const PostCard = ({
       categories,
       date,
       media,
-      schedule_date,
+      schedule_dates,
       published,
     });
   };
@@ -199,46 +197,21 @@ const PostCard = ({
                 Created At:
                 {UTCToLocal(date)}
               </CustomText>
-              {isPublished && (
-                <CustomText
-                  // mt={2}
-                  color="coolGray.400"
-                  _dark={{
-                    color: 'warmGray.200',
-                  }}
-                  style={{
-                    fontSize: 8,
-                  }}
-                  letterSpacing="lg"
-                  fontWeight="bold">
-                  {isPublished && `Published At: ${UTCToLocal(schedule_date)}`}
-                </CustomText>
-              )}
-              {!isPublished && schedule_date && (
-                <CustomText
-                  // mt={2}
-                  color="warning.400"
-                  style={{
-                    fontSize: 10,
-                  }}
-                  letterSpacing="lg"
-                  fontWeight="bold">
-                  <HStack alignItems="center">
-                    <Icon
-                      as={MaterialIcon}
-                      name="timer"
-                      size="lg"
-                      color="warning.500"
-                    />
-                    <Timer
-                      color="warning.500"
-                      futureDate={schedule_date}
-                      published={published}
-                      justTime
-                    />
-                  </HStack>
-                </CustomText>
-              )}
+
+              <CustomText
+                color="coolGray.400"
+                _dark={{
+                  color: 'warmGray.200',
+                }}
+                style={{
+                  fontSize: 8,
+                }}
+                letterSpacing="lg"
+                fontWeight="bold">
+                Schedule For:
+                {schedule_dates} days
+              </CustomText>
+
             </VStack>
           </Box>
         </Box>

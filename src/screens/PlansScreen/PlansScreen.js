@@ -217,6 +217,8 @@ const ListOfPlansScreen = connect(
     }
   };
   const fetchPlans = async () => {
+    try {
+
     setLoading(LOADING_TYPE.FETCHING_PLANS);
     console.log('hellow');
     let {data} = await getPlansAction();
@@ -248,27 +250,47 @@ const ListOfPlansScreen = connect(
       setPlansList(newData);
     }
     setLoading('');
+
+  } catch (error) {
+    setLoading('');
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'No Plans Available',
+    });
+
+
+  }
   };
   const fetchSubscription = async () => {
     setLoading(LOADING_TYPE.FETCHING_PLANS);
-    // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
-    const offerings = await Purchases.getOfferings();
-    let {data} = await fetchMySubscription();
-    let newData = [];
-    if (data) {
-      let product = offerings.current.availablePackages.find(
-        y =>
-          y.product.identifier === data.product_id_android ||
-          y.product.identifier === data.product_id_ios,
-      );
-      data.price = product?.product?.priceString;
-      data.id = product?.product?.identifier;
-      newData.push(data);
+    try {
+      // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
+      const offerings = await Purchases.getOfferings();
+      let {data} = await fetchMySubscription();
+      let newData = [];
+      if (data) {
+        let product = offerings.current.availablePackages.find(
+          y =>
+            y.product.identifier === data.product_id_android ||
+            y.product.identifier === data.product_id_ios,
+        );
+        data.price = product?.product?.priceString;
+        data.id = product?.product?.identifier;
+        newData.push(data);
 
-      console.log(newData);
-      !!newData.length && setPlansList(newData);
+        console.log(newData);
+        !!newData.length && setPlansList(newData);
+      }
+      setLoading('');
+    } catch (error) {
+      setLoading('');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'No Subscription Available',
+      });
     }
-    setLoading('');
   };
   const changeSwitch = _ => {
     setIsYearly(p => !p);
@@ -318,7 +340,7 @@ const ListOfPlansScreen = connect(
                 </CustomText>
               </HStack>
             )}
-            {!plansList.filter(
+            {PLANS_TYPE.SUBSCRIPTION !== type&&!plansList.filter(
               x =>
                 (x.period === 'Yearly' && isYearly) ||
                 (x.period === 'Monthly' && !isYearly),

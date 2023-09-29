@@ -16,27 +16,36 @@ import FormData from 'form-data';
 import {Formik} from 'formik';
 import {
   Avatar,
+  Badge,
   Box,
   Center,
   Checkbox,
+  Flex,
   HStack,
   Icon,
   Image,
   Modal,
   Pressable,
+  Spinner,
   VStack,
 } from 'native-base';
 import React, {memo, useCallback, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {connect} from 'react-redux';
-import {createAdAction, getCategoriesAction} from 'redux/adsActions/adsActions';
+import {connect, useDispatch} from 'react-redux';
+import {
+  createAdAction,
+  getCategoriesAction,
+  getDaysAction,
+} from 'redux/adsActions/adsActions';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
   CONTACT_MODAL: 'CONTACT_MODAL',
   VIEW_IMAGE: 'VIEW_IMAGE',
+  SCHEDULE_MODAL: 'SCHEDULE_MODAL',
 };
 function CreatePost({
   user,
@@ -121,16 +130,14 @@ function CreatePost({
   const handleSubmitData = async () => {
     console.log(state, selectedCategories);
     const formData = new FormData();
+    console.log(state, 'state');
     if (selectedCategories.length) {
       selectedCategories.forEach((item, i) => {
         formData.append(`categories[]`, item);
       });
     }
     if (state.schedule_date)
-      formData.append(
-        'schedule_date',
-        new Date(state.schedule_date).toISOString(),
-      );
+      formData.append('schedule_date', state.schedule_date?._id);
 
     formData.append('description', state.description);
     formData.append('email', state.email);
@@ -146,7 +153,6 @@ function CreatePost({
   const handleSelectDate = async date => {
     console.log({date});
     setState(p => ({...p, schedule_date: date}));
-    hideDatePicker();
   };
   useEffect(() => {
     navigation.setOptions({
@@ -199,17 +205,13 @@ function CreatePost({
             pt={5}
             px={4}
             {...(state.isLoading ? {pointerEvents: 'none'} : {})}>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="datetime"
-              date={
-                state.schedule_date ? new Date(state.schedule_date) : new Date()
-              }
-              onConfirm={handleSelectDate}
-              onCancel={hideDatePicker}
-              minimumDate={new Date()}
-              accentColor="red"
-            />
+            {MODAL_NAMES.SCHEDULE_MODAL === openModal && (
+              <ScheduleModal
+                day={state.schedule_date}
+                onClose={onClose}
+                handleSelectDate={handleSelectDate}
+              />
+            )}
 
             <Box h="65%">
               <VStack>
@@ -253,7 +255,8 @@ function CreatePost({
                   {
                     title: 'Schedule Post',
                     buttonProps: {
-                      onPress: showDatePicker,
+                      onPress: onOpen(MODAL_NAMES.SCHEDULE_MODAL),
+
                       leftIcon: (
                         <Icon
                           as={MaterialIcon}
@@ -532,6 +535,113 @@ const ContactModal = ({
           </Modal.Content>
         )}
       </Formik>
+    </Modal>
+  );
+};
+const ScheduleModal = ({handleSelectDate, onClose, day}) => {
+  // const leastDestructiveRef = useRef(null);
+  const [selectedDay, setSelectedDay] = useState(day || null);
+  const [days, setDays] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const getDays = async () => {
+    setIsLoading(true);
+    const {error, data} = await dispatch(getDaysAction());
+    setIsLoading(false);
+    console.log(data, 'data');
+    setDays(data || []);
+    if (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error in fetching Data',
+      });
+    }
+  };
+  useEffect(() => {
+    getDays();
+  }, []);
+  const handleSubmit = () => {
+    handleSelectDate(selectedDay);
+    onClose();
+  };
+
+  return (
+    <Modal
+      size="xl"
+      isOpen={true}
+      // leastDestructiveRef={leastDestructiveRef}
+      onClose={onClose}>
+      <Modal.Content>
+        <Modal.CloseButton />
+        <Modal.Header>Schedule Days</Modal.Header>
+
+        <Modal.Body px={6}>
+          {isLoading ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : !isLoading && !days.length ? (
+            <Center my={3}>
+              <CustomText>No Schedule Days Available</CustomText>
+            </Center>
+          ) : (
+            <Flex flexDirection="row" flexWrap="wrap">
+              {days?.map((field, index) => (
+                <Pressable onPress={() => setSelectedDay(field)}>
+                  <Badge
+                    rounded="sm"
+                    variant={
+                      selectedDay?._id === field._id ? 'solid' : 'outline'
+                    }
+                    colorScheme="primary"
+                    key={field._id}
+                    m={1}
+                    alignSelf="center">
+                    {field.days} Days
+                  </Badge>
+                </Pressable>
+              ))}
+            </Flex>
+          )}
+          <HStack justifyContent="space-between" mt={5} style={{gap: 5}}>
+            <CustomButton
+              textProps={{color: COLORS.primaryDark, bold: true}}
+              noGradient
+              buttonProps={{
+                // w: '47%',
+                flex: 1,
+                bg: COLORS.lightColor,
+                _pressed: {
+                  bg: COLORS.lightColor,
+                },
+                // variant: 'ghost',
+                // colorScheme: '',
+                onPress: onClose,
+              }}>
+              Cancel
+            </CustomButton>
+            <CustomButton
+              textProps={{color: COLORS.white, bold: true}}
+              buttonProps={{
+                isDisabled: !days.length || isLoading,
+                flex: 1,
+                // _loading: {
+                //   bg: COLORS.primary,
+                // },
+                // bg: COLORS.danger,
+                colorScheme: 'primarydark',
+                onPress: !days.length || isLoading ? () => {} : handleSubmit,
+                // w: '47%',
+              }}
+              noGradient>
+              Update
+            </CustomButton>
+          </HStack>
+        </Modal.Body>
+        {/* <Modal.Footer> */}
+        {/* </Modal.Footer> */}
+      </Modal.Content>
     </Modal>
   );
 };

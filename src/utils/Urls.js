@@ -24,4 +24,5 @@ export const URLS = {
   DEACTIVATE_ACCOUNT: '/user/deactivate-user',
   DELETE_USER: '/user/delete-user',
   SYNC_SUBSCRIPTION: '/user/revcat-user',
+  DAYS: '/user/days',
 };

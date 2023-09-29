@@ -1,16 +1,15 @@
 /* eslint-disable no-undef */
-import Toast from 'react-native-toast-message';
-import {
-  GET_ADS_META,
-  CREATE_AD_META,
-  GET_CATEGORIES_META,
-  GET_PLANS_META,
-  CREATE_SUBSCRIPTION_META,
-} from './adsAPI';
 import apiMethod, {fileUploadMethod} from '@utils/HTTPServices';
-import {appendAds, removeAds, setAds} from './adsSlice';
-import {store} from 'redux/store';
 import {generateQueryString} from '@utils/helpers';
+import Toast from 'react-native-toast-message';
+import {store} from 'redux/store';
+import {
+  CREATE_AD_META,
+  GET_ADS_META,
+  GET_CATEGORIES_META,
+  GET_DAYS_META,
+} from './adsAPI';
+import {appendAds, removeAds, setAds} from './adsSlice';
 
 export const createAdAction = formData => async dispatch => {
   try {
@@ -103,5 +102,17 @@ export const appendAdsAction = () => async dispatch => {
       text1: 'Failed to fetch more ad',
       text2: error,
     });
+  }
+};
+export const getDaysAction = () => async (dispatch) => {
+  try {
+    const {data, error} = await apiMethod(GET_DAYS_META);
+    if (error) {
+      throw new Error(error);
+    }
+    return {data};
+  } catch (error) {
+    console.log({error});
+    return {error};
   }
 };
