@@ -218,58 +218,59 @@ const ListOfPlansScreen = connect(
   };
   const fetchPlans = async () => {
     try {
+      setLoading(LOADING_TYPE.FETCHING_PLANS);
+      console.log('hellow');
+      let {data} = await getPlansAction();
+      if (!Array.isArray(data)) {
+        data = [data];
+      }
+      console.log(data, 'dataAAAAAA');
+      // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
+      const offerings = await Purchases.getOfferings();
+      // console.log(fetchedProducts, 'fetched products');
+      let newData = [];
+      if (data && data.length) {
+        data.forEach(x => {
+          let product = offerings.current.availablePackages.find(
+            y =>
+              y.product.identifier === x.product_id_android ||
+              y.product.identifier === x.product_id_ios,
+          );
 
-    setLoading(LOADING_TYPE.FETCHING_PLANS);
-    console.log('hellow');
-    let {data} = await getPlansAction();
-    if (!Array.isArray(data)) {
-      data = [data];
-    }
-    console.log(data, 'dataAAAAAA');
-    // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
-    const offerings = await Purchases.getOfferings();
-    console.log(offerings, 'offerings');
-    // console.log(fetchedProducts, 'fetched products');
-    let newData = [];
-    if (data && data.length) {
-      data.forEach(x => {
-        let product = offerings.current.availablePackages.find(
-          y =>
-            y.product.identifier === x.product_id_android ||
-            y.product.identifier === x.product_id_ios,
-        );
-        console.log(x, product, 'prod');
-        if (product) {
-          x.product = product;
-          x.price = product.product.priceString;
-          x.id = product.product.identifier;
-          newData.push(x);
-        }
+          if (product) {
+            x.product = product;
+            x.price = product.product.priceString;
+            x.id = product.product.identifier;
+            newData.push(x);
+          }
+        });
+
+        setPlansList(newData);
+      }
+      setLoading('');
+    } catch (error) {
+      setLoading('');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'No Plans Available',
       });
-
-      setPlansList(newData);
     }
-    setLoading('');
-
-  } catch (error) {
-    setLoading('');
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'No Plans Available',
-    });
-
-
-  }
   };
   const fetchSubscription = async () => {
+    let newData = [];
     setLoading(LOADING_TYPE.FETCHING_PLANS);
     try {
       // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
-      const offerings = await Purchases.getOfferings();
       let {data} = await fetchMySubscription();
-      let newData = [];
-      if (data) {
+      if (data && data.price_id === 'free') {
+        newData.push(data);
+        !!newData.length && setPlansList(newData);
+        setLoading('');
+        return;
+      }
+      const offerings = await Purchases.getOfferings();
+      if (data && data.price_id !== 'free') {
         let product = offerings.current.availablePackages.find(
           y =>
             y.product.identifier === data.product_id_android ||
@@ -284,6 +285,7 @@ const ListOfPlansScreen = connect(
       }
       setLoading('');
     } catch (error) {
+      console.error(error);
       setLoading('');
       Toast.show({
         type: 'error',
@@ -301,7 +303,7 @@ const ListOfPlansScreen = connect(
     if (PLANS_TYPE.SUBSCRIPTION === type) {
       fetchSubscription();
     } else fetchPlans();
-  }, []);
+  }, [type]);
 
   return (
     <>
@@ -340,17 +342,18 @@ const ListOfPlansScreen = connect(
                 </CustomText>
               </HStack>
             )}
-            {PLANS_TYPE.SUBSCRIPTION !== type&&!plansList.filter(
-              x =>
-                (x.period === 'Yearly' && isYearly) ||
-                (x.period === 'Monthly' && !isYearly),
-            ).length && (
-              <Center mt={3}>
-                <CustomText>{`There is no ${
-                  isYearly ? 'yearly' : 'monthly'
-                } plan available`}</CustomText>
-              </Center>
-            )}
+            {PLANS_TYPE.SUBSCRIPTION !== type &&
+              !plansList.filter(
+                x =>
+                  (x.period === 'Yearly' && isYearly) ||
+                  (x.period === 'Monthly' && !isYearly),
+              ).length && (
+                <Center mt={3}>
+                  <CustomText>{`There is no ${
+                    isYearly ? 'yearly' : 'monthly'
+                  } plan available`}</CustomText>
+                </Center>
+              )}
             <FlatList
               estimatedItemSize={120}
               data={
