@@ -509,6 +509,7 @@ const RenderItem = ({index, handlePayPress, type, ...item}) => {
               ))}
             </VStack>
           </Box>
+
           {/* <Banner message="star"/>
            */}
         </Box>
@@ -529,6 +530,11 @@ const RenderItem = ({index, handlePayPress, type, ...item}) => {
             color={COLORS.white}
           />
         </CornerLabel>
+      {type === PLANS_TYPE.SUBSCRIPTION && (
+        <Center>
+          <CustomText>Remaining Ads: {item.remaining_ads} </CustomText>
+        </Center>
+      )}
       </Box>
       <ConfirmationModal
         title="Change Plan"
