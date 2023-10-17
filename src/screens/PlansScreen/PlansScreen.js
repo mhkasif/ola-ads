@@ -351,7 +351,7 @@ const ListOfPlansScreen = connect(
               ).length && (
                 <Center mt={3}>
                   <CustomText>{`There is no ${
-                    isYearly ? 'yearly' : 'monthly'
+                    isYearly ? 'half yearly' : 'monthly'
                   } plan available`}</CustomText>
                 </Center>
               )}
