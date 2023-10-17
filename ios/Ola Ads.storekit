@@ -1,5 +1,5 @@
 {
-  "identifier" : "1523901C",
+  "identifier" : "19EF4925",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -9,7 +9,7 @@
   "settings" : {
     "_applicationInternalID" : "6451315776",
     "_developerTeamID" : "X7RBBTNAXC",
-    "_lastSynchronizedDate" : 717242788.68529904
+    "_lastSynchronizedDate" : 719058028.48220301
   },
   "subscriptionGroups" : [
     {
@@ -26,71 +26,96 @@
           "codeOffers" : [
 
           ],
+          "displayPrice" : "99.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6469452375",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Half Yearly Advance Plan",
+              "displayName" : "Half Yearly Advance ",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "8881212_half_yearly_advance",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Half Yearly Advance",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "249.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6469452324",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Half Yearly premium plan",
+              "displayName" : "Half Yearly Premium",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "8881212_half_yearly_premium",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Half Yearly Premium",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
           "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6469452430",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Ola Ads Monthly Advance Plan",
+              "displayName" : "Monthly Advance",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "8881212_monthly_advance",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Advance",
+          "subscriptionGroupID" : "21374952",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "49.99",
           "familyShareable" : false,
           "groupNumber" : 2,
-          "internalID" : "6467549401",
+          "internalID" : "6469452405",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Ola Ads Monthly subscription",
-              "displayName" : "Monthly",
+              "description" : "Ola Ads Monthly Premium Plan",
+              "displayName" : "Monthly Premium",
               "locale" : "en_GB"
             }
           ],
-          "productID" : "28082023_monthly_advanced1",
+          "productID" : "8881212_monthly_premium_1",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Monthly",
-          "subscriptionGroupID" : "21374952",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "19.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6463645101",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "7 ads per week. Cancel anytime",
-              "displayName" : "Monthly Advanced",
-              "locale" : "en_GB"
-            }
-          ],
-          "productID" : "28082023_monthly_advanced",
-          "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Monthly Advanced",
-          "subscriptionGroupID" : "21374952",
-          "type" : "RecurringSubscription"
-        },
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "200.0",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6467431622",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Ola Ads Apple ",
-              "displayName" : "Ola ads",
-              "locale" : "en_GB"
-            }
-          ],
-          "productID" : "28082023_yearly_advanced2",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Yearly Advanced",
+          "referenceName" : "Monthly Premium",
           "subscriptionGroupID" : "21374952",
           "type" : "RecurringSubscription"
         }

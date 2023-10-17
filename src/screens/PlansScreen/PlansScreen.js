@@ -219,7 +219,7 @@ const ListOfPlansScreen = connect(
   const fetchPlans = async () => {
     try {
       setLoading(LOADING_TYPE.FETCHING_PLANS);
-      console.log('hellow');
+
       let {data} = await getPlansAction();
       if (!Array.isArray(data)) {
         data = [data];
@@ -227,7 +227,7 @@ const ListOfPlansScreen = connect(
       console.log(data, 'dataAAAAAA');
       // let fetchedProducts = await Purchases.getProducts(ids[Platform.OS]);
       const offerings = await Purchases.getOfferings();
-      // console.log(fetchedProducts, 'fetched products');
+      console.log(offerings, 'offering products');
       let newData = [];
       if (data && data.length) {
         data.forEach(x => {
@@ -244,7 +244,7 @@ const ListOfPlansScreen = connect(
             newData.push(x);
           }
         });
-
+        console.log(newData,"new data")
         setPlansList(newData);
       }
       setLoading('');
@@ -293,6 +293,7 @@ const ListOfPlansScreen = connect(
         text2: 'No Subscription Available',
       });
     }
+
   };
   const changeSwitch = _ => {
     setIsYearly(p => !p);
@@ -338,14 +339,14 @@ const ListOfPlansScreen = connect(
                   fontSize="lg"
                   bold
                   color={isYearly ? COLORS.primary : COLORS.muted}>
-                  Yearly
+                  Half Yearly
                 </CustomText>
               </HStack>
             )}
             {PLANS_TYPE.SUBSCRIPTION !== type &&
               !plansList.filter(
                 x =>
-                  (x.period === 'Yearly' && isYearly) ||
+                  (x.period === 'Half Yearly' && isYearly) ||
                   (x.period === 'Monthly' && !isYearly),
               ).length && (
                 <Center mt={3}>
@@ -361,7 +362,7 @@ const ListOfPlansScreen = connect(
                   ? plansList
                   : plansList.filter(
                       x =>
-                        (x.period === 'Yearly' && isYearly) ||
+                        (x.period === 'Half Yearly' && isYearly) ||
                         (x.period === 'Monthly' && !isYearly),
                     )
               }
