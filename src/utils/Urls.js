@@ -7,7 +7,8 @@ export const BASIC_URL =
     ? Platform.OS === 'ios'
       ? 'http://localhost:3000'
       : 'http://10.0.2.2:3000'
-    : 'https://test.markcoders.com/ola_ads_api';
+    // : 'https://test.markcoders.com/ola_ads_api';
+    : 'https://admin.ola-ads.com/server';
 
 export const IMAGE_DIRECTORY = ENV === 'dev' ? BASIC_URL : '';
 export const BASE_URL = BASIC_URL + '/api/v1';
