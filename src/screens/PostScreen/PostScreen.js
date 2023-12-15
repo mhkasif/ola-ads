@@ -4,7 +4,7 @@ import Timer from '@components/Timer/Timer';
 import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
 import {UTCToLocal} from '@utils/helpers';
-import {isBefore} from 'date-fns';
+import {format, isBefore} from 'date-fns';
 import {Box, Divider, HStack, Image, ScrollView, VStack} from 'native-base';
 import React, {useRef} from 'react';
 import Video from 'react-native-video';
@@ -16,6 +16,8 @@ const MODAL_NAMES = {
 const PostScreen = ({
   route: {
     params: {
+      to,
+      from,
       description,
       media,
       status,
@@ -112,6 +114,36 @@ const PostScreen = ({
                 Scheduled For : {schedule_dates} days
               </CustomText>
             )}
+            {from&&to && (
+                <>
+                <CustomText
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}
+                  style={{
+                    fontSize: 10,
+                  }}
+                  letterSpacing="lg"
+                  fontWeight="bold">
+                  From:
+                  {format(new Date(from),"Pp")}
+                </CustomText>
+                <CustomText
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}
+                  style={{
+                    fontSize: 10,
+                  }}
+                  letterSpacing="lg"
+                  fontWeight="bold">
+                  To:
+                  {format(new Date(to),"Pp")}
+                </CustomText>
+                </>
+              )}
           </VStack>
           <CustomBadge
             // size="lg"

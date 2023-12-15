@@ -7,7 +7,7 @@ import {IMAGE_DIRECTORY} from '@utils/Urls';
 import {COLORS} from '@utils/colors';
 import {UTCToLocal} from '@utils/helpers';
 import PlayIcon from 'assets/playIcon.png';
-import {isBefore} from 'date-fns';
+import {format, isBefore} from 'date-fns';
 import {Box, HStack, Icon, Image, Pressable, VStack} from 'native-base';
 import {memo, useMemo, useRef} from 'react';
 import {StyleSheet} from 'react-native';
@@ -45,12 +45,13 @@ const PostCard = ({
   categories,
   published = false,
   schedule_dates,
+  to,
+  from,
   date,
   _id,
   media,
   noStatusIcon,
 }) => {
-
   const {navigate} = useNavigation();
   const ref = useRef(null);
   const handleClick = () => {
@@ -63,6 +64,8 @@ const PostCard = ({
       media,
       schedule_dates,
       published,
+      to,
+      from,
     });
   };
 
@@ -198,20 +201,51 @@ const PostCard = ({
                 {UTCToLocal(date)}
               </CustomText>
 
-              <CustomText
-                color="coolGray.400"
-                _dark={{
-                  color: 'warmGray.200',
-                }}
-                style={{
-                  fontSize: 8,
-                }}
-                letterSpacing="lg"
-                fontWeight="bold">
-                Schedule For:
-                {schedule_dates} days
-              </CustomText>
-
+              {schedule_dates && (
+                <CustomText
+                  color="coolGray.400"
+                  _dark={{
+                    color: 'warmGray.200',
+                  }}
+                  style={{
+                    fontSize: 8,
+                  }}
+                  letterSpacing="lg"
+                  fontWeight="bold">
+                  Schedule For:
+                  {schedule_dates} days
+                </CustomText>
+              )}
+              {from && to && (
+                <>
+                  <CustomText
+                    color="coolGray.400"
+                    _dark={{
+                      color: 'warmGray.200',
+                    }}
+                    style={{
+                      fontSize: 8,
+                    }}
+                    letterSpacing="lg"
+                    fontWeight="bold">
+                    From:
+                    {format(new Date(from), 'Pp')}
+                  </CustomText>
+                  <CustomText
+                    color="coolGray.400"
+                    _dark={{
+                      color: 'warmGray.200',
+                    }}
+                    style={{
+                      fontSize: 8,
+                    }}
+                    letterSpacing="lg"
+                    fontWeight="bold">
+                    To:
+                    {format(new Date(to), 'Pp')}
+                  </CustomText>
+                </>
+              )}
             </VStack>
           </Box>
         </Box>

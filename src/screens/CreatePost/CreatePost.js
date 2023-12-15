@@ -14,12 +14,18 @@ import Picture from 'assets/picture.png';
 import Video from 'assets/video.png';
 import FormData from 'form-data';
 import {Formik} from 'formik';
+// import {Calendar} from 'react-native-calendars';
+// import Calendar from 'react-native-calendars-range';
+
+import CalendarPicker from 'react-native-calendar-picker';
+
 import {
   Avatar,
   Badge,
   Box,
   Center,
   Checkbox,
+  Divider,
   Flex,
   HStack,
   Icon,
@@ -29,8 +35,8 @@ import {
   Spinner,
   VStack,
 } from 'native-base';
-import React, {memo, useCallback, useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import {Dimensions, FlatList, View, StyleSheet, Platform} from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {connect, useDispatch} from 'react-redux';
@@ -40,6 +46,9 @@ import {
   getDaysAction,
 } from 'redux/adsActions/adsActions';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import {format} from 'date-fns';
 
 const MODAL_NAMES = {
   IMAGE_ACTION_SHEET: 'IMAGE_ACTION_SHEET',
@@ -66,6 +75,8 @@ function CreatePost({
     schedule_date: '',
     email: user?.email,
     phone: user?.phone || '',
+    to: '',
+    from: '',
   });
   const [image, setImage] = useState(null);
   const fields = [
@@ -138,6 +149,10 @@ function CreatePost({
     }
     if (state.schedule_date)
       formData.append('schedule_date', state.schedule_date?._id);
+    if (state.to && state.from) {
+      formData.append('to', state.to);
+      formData.append('from', state.from);
+    }
 
     formData.append('description', state.description);
     formData.append('email', state.email);
@@ -150,9 +165,20 @@ function CreatePost({
 
     setState(p => ({...p, isLoading: false}));
   };
-  const handleSelectDate = async date => {
-    console.log({date});
-    setState(p => ({...p, schedule_date: date}));
+  const handleSelectDate = async ({selectedDay, time, rangeDate}) => {
+    try {
+      const [h, m, s] = [time.getHours(), time.getMinutes(), time.getSeconds()];
+
+      let to =
+        rangeDate.to &&
+        format(new Date(rangeDate.to.toDateString()).setHours(h, m, s), 'Pp');
+      let from =
+        rangeDate.from &&
+        format(new Date(rangeDate.from.toDateString()).setHours(h, m, s), 'Pp');
+      setState(p => ({...p, schedule_date: selectedDay, to, from}));
+    } catch (error) {
+      console.log('erorr', error);
+    }
   };
   useEffect(() => {
     navigation.setOptions({
@@ -543,6 +569,27 @@ const ScheduleModal = ({handleSelectDate, onClose, day}) => {
   const [selectedDay, setSelectedDay] = useState(day || null);
   const [days, setDays] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [rangeDate, setRangeDate] = useState({
+    from: null,
+    to: null,
+  });
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedTime, setSelectedTime] = useState(new Date());
+
+  const showTime = () => {
+    setShowTimePicker(true);
+  };
+
+  const handleTimeChange = (event, time) => {
+    setShowTimePicker(Platform.OS === 'ios'); // On iOS, the picker doesn't dismiss by itself
+
+    if (time) {
+      setSelectedTime(time);
+    }
+  };
+
+  const dateCompRef = useRef(null);
+
   const dispatch = useDispatch();
   const getDays = async () => {
     setIsLoading(true);
@@ -562,10 +609,34 @@ const ScheduleModal = ({handleSelectDate, onClose, day}) => {
     getDays();
   }, []);
   const handleSubmit = () => {
-    handleSelectDate(selectedDay);
+    handleSelectDate({selectedDay, rangeDate, time: selectedTime});
     onClose();
   };
-
+  const onDateChange = (date, type) => {
+    console.log(date, type);
+    if (type === 'END_DATE') {
+      setRangeDate(p => ({...p, to: new Date(date)}));
+    } else {
+      setRangeDate({
+        from: new Date(date),
+        to: null,
+      });
+    }
+  };
+  const setDay = day => {
+    setSelectedDay(p => {
+      let exist = p?._id === day._id;
+      if (exist) {
+        return null;
+      }
+      return day;
+    });
+    dateCompRef.current?.resetSelections();
+    setRangeDate({
+      to: null,
+      from: null,
+    });
+  };
   return (
     <Modal
       size="xl"
@@ -586,23 +657,69 @@ const ScheduleModal = ({handleSelectDate, onClose, day}) => {
               <CustomText>No Schedule Days Available</CustomText>
             </Center>
           ) : (
-            <Flex flexDirection="row" flexWrap="wrap">
-              {days?.map((field, index) => (
-                <Pressable onPress={() => setSelectedDay(field)}>
-                  <Badge
-                    rounded="sm"
-                    variant={
-                      selectedDay?._id === field._id ? 'solid' : 'outline'
-                    }
-                    colorScheme="primary"
-                    key={field._id}
-                    m={1}
-                    alignSelf="center">
-                    {field.days} Days
-                  </Badge>
-                </Pressable>
-              ))}
-            </Flex>
+            <>
+              <Flex flexDirection="row" flexWrap="wrap">
+                {days?.map((field, index) => (
+                  <Pressable key={field._id} onPress={() => setDay(field)}>
+                    <Badge
+                      rounded="sm"
+                      variant={
+                        selectedDay?._id === field._id ? 'solid' : 'outline'
+                      }
+                      colorScheme="primary"
+                      key={field._id}
+                      m={1}
+                      alignSelf="center">
+                      {field.days} Days
+                    </Badge>
+                  </Pressable>
+                ))}
+              </Flex>
+              {selectedDay && <Divider my={2} />}
+              {/* <Pressable onPress={showTime}> */}
+              <Box>
+                {/* <DateTimePicker
+                value={selectedTime}
+                mode="time"
+                // display="default"
+                onChange={handleTimeChange}
+                onConfirm={()=>{}}
+                onError={(e)=>console.log(e)}
+                /> */}
+                {selectedDay && (
+                  <Flex justifyContent="center">
+                    <CustomText textAlign="center">Select Time</CustomText>
+                    <Box flex={1} justifyContent="center" alignItems="center">
+                      <RNDateTimePicker
+                        value={selectedTime}
+                        mode="time"
+                        // display="inline"
+                        onChange={handleTimeChange}
+                        onConfirm={() => {}}
+                        onError={e => console.log(e)}
+                      />
+                    </Box>
+                  </Flex>
+                )}
+              </Box>
+              {/* </Pressable> */}
+              {selectedDay && (
+                <Box mt={2}>
+                  <CalendarPicker
+                    ref={dateCompRef}
+                    onDateChange={onDateChange}
+                    width={Dimensions.get('window').width - 50}
+                    previousTitle="<"
+                    nextTitle=">"
+                    selectedDayColor="#0D103D"
+                    selectedDayTextColor="#FFFFFF"
+                    minDate={new Date()}
+                    allowRangeSelection
+                    maxRangeDuration={(selectedDay?.days || 7) - 1}
+                  />
+                </Box>
+              )}
+            </>
           )}
           <HStack justifyContent="space-between" mt={5} style={{gap: 5}}>
             <CustomButton
@@ -624,7 +741,10 @@ const ScheduleModal = ({handleSelectDate, onClose, day}) => {
             <CustomButton
               textProps={{color: COLORS.white, bold: true}}
               buttonProps={{
-                isDisabled: !days.length || isLoading,
+                isDisabled:
+                  !days.length ||
+                  isLoading ||
+                  (selectedDay && (!rangeDate.from || !rangeDate.to)),
                 flex: 1,
                 // _loading: {
                 //   bg: COLORS.primary,
